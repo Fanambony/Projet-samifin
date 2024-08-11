@@ -15,8 +15,6 @@ public class TypeCongeService {
 
 	public TypeCongeService(TypeCongeRepository typeCongeRepository) {this.typeCongeRepository = typeCongeRepository;}
 
-
-
 	/* -- READ ONE -- */
 	public Optional<TypeConge> getOne(Object id) { return typeCongeRepository.findById(id); }
 

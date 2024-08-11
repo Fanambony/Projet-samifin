@@ -21,6 +21,8 @@ CREATE SEQUENCE "public".utilisateur_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE "public".type_conge_id_seq START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE "public".demande_conge_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE "public".etat_demande_conge_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE "public".etat_id_seq START WITH 1 INCREMENT BY 1;
 
 custom_seq('DIR'::character varying, 'direction_id_seq'::character varying, 3)
 custom_seq('FON'::character varying, 'fonction_id_seq'::character varying, 3)
@@ -28,6 +30,8 @@ custom_seq('USR'::character varying, 'utilisateur_id_seq'::character varying, 6)
 custom_seq('TCG'::character varying, 'type_conge_id_seq'::character varying, 3)
 
 custom_seq('DEM'::character varying, 'demande_conge_id_seq'::character varying, 6)
+custom_seq('EDC'::character varying, 'etat_demande_conge_id_seq'::character varying, 3)
+custom_seq('ETA'::character varying, 'etat_id_seq'::character varying, 3)
 
 select string_agg(substring('gzhjen1112555dhgffhhgc!/?()_|' FROM floor(random() * 73 + 1)::int FOR 1), '') FROM generate_series(0, 10);
 

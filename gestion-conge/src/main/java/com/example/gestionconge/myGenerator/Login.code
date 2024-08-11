@@ -1,0 +1,12 @@
+/* -- LOGIN -- */
+@PostMapping("login")
+public String Login(@RequestBody Users formData, HttpSession httpSession) {
+    try {
+        Users user = usersService.getUserByEmailAndPassword(formData.getEmail(), formData.getPassword());
+        httpSession.setAttribute("user", user);
+    }
+    catch (Exception e) {
+        return e.getMessage();
+    }
+    return null;
+}

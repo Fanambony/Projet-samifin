@@ -16,7 +16,7 @@ public class Direction {
 	@Column(name = "nom")
 	String nom;
 	@Column(name = "etat")
-	Integer etat;
+	String etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "direction", cascade = CascadeType.ALL)
 	List<Fonction> fonctions;
@@ -35,10 +35,10 @@ public class Direction {
 	public void setNom(String nom){
 		this.nom = nom;
 	}
-	public Integer getEtat(){
+	public String getEtat(){
 		return this.etat;
 	}
-	public void setEtat(Integer etat){
+	public void setEtat(String etat){
 		this.etat = etat;
 	}
 	public List<Fonction> getFonctions(){
@@ -51,7 +51,7 @@ public class Direction {
     //CONSTRUCTORS
 
  	public Direction(){}
-	public Direction(String id, String nom, Integer etat, List<Fonction> fonctions){
+	public Direction(String id, String nom, String etat, List<Fonction> fonctions){
 		setId(id);
 		setNom(nom);
 		setEtat(etat);

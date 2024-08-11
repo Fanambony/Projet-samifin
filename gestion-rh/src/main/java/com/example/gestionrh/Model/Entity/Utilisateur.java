@@ -14,30 +14,30 @@ public class Utilisateur {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	String id;
-	@Column(name = "matricule")
-	Integer matricule;
 	@Column(name = "nom")
 	String nom;
 	@Column(name = "prenom")
 	String prenom;
 	@Column(name = "date_naissance")
 	Date dateNaissance;
-	@Column(name = "email")
-	String email;
-	@Column(name = "mdp")
-	String mdp;
-	@Column(name = "date_entre")
-	Date dateEntre;
-	@Column(name = "id_fonction")
-	String idFonction;
+	@Column(name = "sexe")
+	String sexe;
 	@Column(name = "etat")
-	Integer etat;
+	String etat;
+	@Column(name = "type_utilisateur")
+	String typeUtilisateur;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<DetailUtilisateur> detailUtilisateurs;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<SoldeConge> soldeConges;
 	@ManyToOne
-	@JoinColumn(name = "id_fonction", insertable = false, updatable = false)
-	Fonction fonction;
+	@JoinColumn(name = "type_utilisateur", insertable = false, updatable = false)
+	TypeUtilisateur type_utilisateur;
 
     //SETTERS AND GETTERS
 
@@ -46,12 +46,6 @@ public class Utilisateur {
 	}
 	public void setId(String id){
 		this.id = id;
-	}
-	public Integer getMatricule(){
-		return this.matricule;
-	}
-	public void setMatricule(Integer matricule){
-		this.matricule = matricule;
 	}
 	public String getNom(){
 		return this.nom;
@@ -71,35 +65,23 @@ public class Utilisateur {
 	public void setDateNaissance(Date dateNaissance){
 		this.dateNaissance = dateNaissance;
 	}
-	public String getEmail(){
-		return this.email;
+	public String getSexe(){
+		return this.sexe;
 	}
-	public void setEmail(String email){
-		this.email = email;
+	public void setSexe(String sexe){
+		this.sexe = sexe;
 	}
-	public String getMdp(){
-		return this.mdp;
-	}
-	public void setMdp(String mdp){
-		this.mdp = mdp;
-	}
-	public Date getDateEntre(){
-		return this.dateEntre;
-	}
-	public void setDateEntre(Date dateEntre){
-		this.dateEntre = dateEntre;
-	}
-	public String getIdFonction(){
-		return this.idFonction;
-	}
-	public void setIdFonction(String idFonction){
-		this.idFonction = idFonction;
-	}
-	public Integer getEtat(){
+	public String getEtat(){
 		return this.etat;
 	}
-	public void setEtat(Integer etat){
+	public void setEtat(String etat){
 		this.etat = etat;
+	}
+	public String getTypeUtilisateur(){
+		return this.typeUtilisateur;
+	}
+	public void setTypeUtilisateur(String typeUtilisateur){
+		this.typeUtilisateur = typeUtilisateur;
 	}
 	public List<DemandeConge> getDemandeConges(){
 		return this.demandeConges;
@@ -107,29 +89,39 @@ public class Utilisateur {
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
 	}
-	public Fonction getFonction(){
-		return this.fonction;
+	public List<DetailUtilisateur> getDetailUtilisateurs(){
+		return this.detailUtilisateurs;
 	}
-	public void setFonction(Fonction fonction){
-		this.fonction = fonction;
+	public void setDetailUtilisateurs(List<DetailUtilisateur> detailUtilisateurs){
+		this.detailUtilisateurs = detailUtilisateurs;
+	}
+	public List<SoldeConge> getSoldeConges(){
+		return this.soldeConges;
+	}
+	public void setSoldeConges(List<SoldeConge> soldeConges){
+		this.soldeConges = soldeConges;
+	}
+	public TypeUtilisateur getType_utilisateur(){
+		return this.type_utilisateur;
+	}
+	public void setType_utilisateur(TypeUtilisateur type_utilisateur){
+		this.type_utilisateur = type_utilisateur;
 	}
 
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, Integer matricule, String nom, String prenom, Date dateNaissance, String email, String mdp, Date dateEntre, String idFonction, Integer etat, List<DemandeConge> demandeConges, Fonction fonction){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, String sexe, String etat, String typeUtilisateur, List<DemandeConge> demandeConges, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, TypeUtilisateur type_utilisateur){
 		setId(id);
-		setMatricule(matricule);
 		setNom(nom);
 		setPrenom(prenom);
 		setDateNaissance(dateNaissance);
-		setEmail(email);
-		setMdp(mdp);
-		setDateEntre(dateEntre);
-		setIdFonction(idFonction);
+		setSexe(sexe);
 		setEtat(etat);
+		setTypeUtilisateur(typeUtilisateur);
 		setDemandeConges(demandeConges);
-		setFonction(fonction);
+		setDetailUtilisateurs(detailUtilisateurs);
+		setSoldeConges(soldeConges);
+		setType_utilisateur(type_utilisateur);
 	}
-
 }

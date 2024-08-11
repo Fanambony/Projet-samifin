@@ -1,0 +1,7 @@
+<connectionConfig>
+    <ip>localhost</ip>
+    <port>5432</port>
+    <user>postgres</user>
+    <database>gestion_rh_samifin</database>
+    <password>mdpprom15</password>
+</connectionConfig>

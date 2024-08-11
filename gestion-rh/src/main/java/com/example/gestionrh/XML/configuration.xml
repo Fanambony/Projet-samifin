@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <typeUtilisateur>
+        <type>1</type>
+        <valeur>Employe</valeur>
+    </typeUtilisateur>
+
+    <typeUtilisateur>
+        <type>5</type>
+        <valeur>Directeur departement</valeur>
+    </typeUtilisateur>
+
+    <typeUtilisateur>
+        <type>10</type>
+        <valeur>Directeur general</valeur>
+    </typeUtilisateur>
+
+    <typeUtilisateur>
+        <type>15</type>
+        <valeur>Administrateur</valeur>
+    </typeUtilisateur>
+    
+</configuration>

@@ -1,0 +1,21 @@
+%package%
+
+%imports%
+
+%class% {
+
+%field%
+
+%constructor%
+
+%login%
+
+%read_one%
+
+%read%
+
+%create%
+
+%delete%
+
+}

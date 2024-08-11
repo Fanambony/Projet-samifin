@@ -3,6 +3,7 @@ package com.example.gestionrh.Model.Entity;
 import jakarta.persistence.*;
 import java.sql.Date;
 
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "demande_conge")
@@ -16,6 +17,8 @@ public class DemandeConge {
 	String idTypeConge;
 	@Column(name = "id_utilisateur")
 	String idUtilisateur;
+	@Column(name = "date_demande")
+	Date dateDemande;
 	@Column(name = "date_debut")
 	Date dateDebut;
 	@Column(name = "debut_absence")
@@ -26,14 +29,34 @@ public class DemandeConge {
 	String finAbsence;
 	@Column(name = "commentaire")
 	String commentaire;
-	@Column(name = "etat")
-	Integer etat;
+	@Column(name = "etat_demande")
+	String etatDemande;
+	@ManyToOne
+	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
+	TypeConge type_conge;
+	@ManyToOne
+	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
+	EtatDemande etat_demande;
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
 	@ManyToOne
-	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
-	TypeConge type_conge;
+	@JoinColumn(name = "debut_absence", insertable = false, updatable = false)
+	PeriodeAbsence periode_absence;
+	@ManyToOne
+	@JoinColumn(name = "fin_absence", insertable = false, updatable = false)
+	PeriodeAbsence periode_absence_fin;
+
+
+	@PrePersist
+    protected void onCreate() {
+        if (dateDemande == null) {
+            dateDemande = new java.sql.Date(System.currentTimeMillis());
+        }
+		if (etatDemande == null) {
+			etatDemande = new String("EDC001");
+		}
+    }
 
     //SETTERS AND GETTERS
 
@@ -54,6 +77,12 @@ public class DemandeConge {
 	}
 	public void setIdUtilisateur(String idUtilisateur){
 		this.idUtilisateur = idUtilisateur;
+	}
+	public Date getDateDemande(){
+		return this.dateDemande;
+	}
+	public void setDateDemande(Date dateDemande){
+		this.dateDemande = dateDemande;
 	}
 	public Date getDateDebut(){
 		return this.dateDebut;
@@ -85,17 +114,11 @@ public class DemandeConge {
 	public void setCommentaire(String commentaire){
 		this.commentaire = commentaire;
 	}
-	public Integer getEtat(){
-		return this.etat;
+	public String getEtatDemande(){
+		return this.etatDemande;
 	}
-	public void setEtat(Integer etat){
-		this.etat = etat;
-	}
-	public Utilisateur getUtilisateur(){
-		return this.utilisateur;
-	}
-	public void setUtilisateur(Utilisateur utilisateur){
-		this.utilisateur = utilisateur;
+	public void setEtatDemande(String etatDemande){
+		this.etatDemande = etatDemande;
 	}
 	public TypeConge getType_conge(){
 		return this.type_conge;
@@ -103,12 +126,35 @@ public class DemandeConge {
 	public void setType_conge(TypeConge type_conge){
 		this.type_conge = type_conge;
 	}
+	public EtatDemande getEtat_demande(){
+		return this.etat_demande;
+	}
+	public void setEtat_demande(EtatDemande etat_demande){
+		this.etat_demande = etat_demande;
+	}
+	public Utilisateur getUtilisateur(){
+		return this.utilisateur;
+	}
+	public void setUtilisateur(Utilisateur utilisateur){
+		this.utilisateur = utilisateur;
+	}
+	public PeriodeAbsence getPeriode_absence(){
+		return this.periode_absence;
+	}
+	public void setPeriode_absence(PeriodeAbsence periode_absence){
+		this.periode_absence = periode_absence;
+	}
+	public PeriodeAbsence getPeriode_absence_fin(){
+		return this.periode_absence_fin;
+	}
+	public void setPeriode_absence_fin(PeriodeAbsence periode_absence_fin){
+		this.periode_absence_fin = periode_absence_fin;
+	}
 
     //CONSTRUCTORS
 
  	public DemandeConge(){}
-	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String commentaire, Integer etat, Utilisateur utilisateur, TypeConge type_conge){
-		setId(id);
+	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String commentaire){
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
 		setDateDebut(dateDebut);
@@ -116,9 +162,6 @@ public class DemandeConge {
 		setDateFin(dateFin);
 		setFinAbsence(finAbsence);
 		setCommentaire(commentaire);
-		setEtat(etat);
-		setUtilisateur(utilisateur);
-		setType_conge(type_conge);
 	}
 
 }

@@ -1,0 +1,6 @@
+scaffold -t all -v all -l java
+
+-p      :package
+-t      :table
+-v      :view
+-l      :langage

@@ -17,13 +17,11 @@ public class Fonction {
 	String nom;
 	@Column(name = "id_direction")
 	String idDirection;
-	@Column(name = "type")
-	Integer type;
 	@Column(name = "etat")
-	Integer etat;
+	String etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "fonction", cascade = CascadeType.ALL)
-	List<Utilisateur> utilisateurs;
+	List<DetailUtilisateur> detailUtilisateurs;
 	@ManyToOne
 	@JoinColumn(name = "id_direction", insertable = false, updatable = false)
 	Direction direction;
@@ -48,23 +46,17 @@ public class Fonction {
 	public void setIdDirection(String idDirection){
 		this.idDirection = idDirection;
 	}
-	public Integer getType(){
-		return this.type;
-	}
-	public void setType(Integer type){
-		this.type = type;
-	}
-	public Integer getEtat(){
+	public String getEtat(){
 		return this.etat;
 	}
-	public void setEtat(Integer etat){
+	public void setEtat(String etat){
 		this.etat = etat;
 	}
-	public List<Utilisateur> getUtilisateurs(){
-		return this.utilisateurs;
+	public List<DetailUtilisateur> getDetailUtilisateurs(){
+		return this.detailUtilisateurs;
 	}
-	public void setUtilisateurs(List<Utilisateur> utilisateurs){
-		this.utilisateurs = utilisateurs;
+	public void setDetailUtilisateurs(List<DetailUtilisateur> detailUtilisateurs){
+		this.detailUtilisateurs = detailUtilisateurs;
 	}
 	public Direction getDirection(){
 		return this.direction;
@@ -76,13 +68,12 @@ public class Fonction {
     //CONSTRUCTORS
 
  	public Fonction(){}
-	public Fonction(String id, String nom, String idDirection, Integer type, Integer etat, List<Utilisateur> utilisateurs, Direction direction){
+	public Fonction(String id, String nom, String idDirection, String etat, List<DetailUtilisateur> detailUtilisateurs, Direction direction){
 		setId(id);
 		setNom(nom);
 		setIdDirection(idDirection);
-		setType(type);
 		setEtat(etat);
-		setUtilisateurs(utilisateurs);
+		setDetailUtilisateurs(detailUtilisateurs);
 		setDirection(direction);
 	}
 
