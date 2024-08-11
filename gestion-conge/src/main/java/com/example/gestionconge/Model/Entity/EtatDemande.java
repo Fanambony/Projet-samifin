@@ -15,6 +15,8 @@ public class EtatDemande {
 	String id;
 	@Column(name = "valeur")
 	String valeur;
+	@Column(name = "type")
+	Integer type;
 	@JsonIgnore
 	@OneToMany(mappedBy = "etat_demande", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
@@ -33,6 +35,12 @@ public class EtatDemande {
 	public void setValeur(String valeur){
 		this.valeur = valeur;
 	}
+	public Integer getType(){
+		return this.type;
+	}
+	public void setType(Integer type){
+		this.type = type;
+	}
 	public List<DemandeConge> getDemandeConges(){
 		return this.demandeConges;
 	}
@@ -43,9 +51,10 @@ public class EtatDemande {
     //CONSTRUCTORS
 
  	public EtatDemande(){}
-	public EtatDemande(String id, String valeur, List<DemandeConge> demandeConges){
+	public EtatDemande(String id, String valeur, Integer type, List<DemandeConge> demandeConges){
 		setId(id);
 		setValeur(valeur);
+		setType(type);
 		setDemandeConges(demandeConges);
 	}
 

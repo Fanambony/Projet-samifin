@@ -30,13 +30,13 @@ public class Utilisateur {
 	String typeUtilisateur;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
-	List<DemandeConge> demandeConges;
-	@JsonIgnore
-	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DetailUtilisateur> detailUtilisateurs;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<SoldeConge> soldeConges;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<DemandeConge> demandeConges;
 	@ManyToOne
 	@JoinColumn(name = "type_utilisateur", insertable = false, updatable = false)
 	Type type_utilisateur;
@@ -85,12 +85,6 @@ public class Utilisateur {
 	public void setTypeUtilisateur(String typeUtilisateur){
 		this.typeUtilisateur = typeUtilisateur;
 	}
-	public List<DemandeConge> getDemandeConges(){
-		return this.demandeConges;
-	}
-	public void setDemandeConges(List<DemandeConge> demandeConges){
-		this.demandeConges = demandeConges;
-	}
 	public List<DetailUtilisateur> getDetailUtilisateurs(){
 		return this.detailUtilisateurs;
 	}
@@ -103,6 +97,12 @@ public class Utilisateur {
 	public void setSoldeConges(List<SoldeConge> soldeConges){
 		this.soldeConges = soldeConges;
 	}
+	public List<DemandeConge> getDemandeConges(){
+		return this.demandeConges;
+	}
+	public void setDemandeConges(List<DemandeConge> demandeConges){
+		this.demandeConges = demandeConges;
+	}
 	public Type getType_utilisateur(){
 		return this.type_utilisateur;
 	}
@@ -113,7 +113,7 @@ public class Utilisateur {
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, String sexe, String etat, String typeUtilisateur, List<DemandeConge> demandeConges, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, Type type_utilisateur){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, String sexe, String etat, String typeUtilisateur, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, List<DemandeConge> demandeConges, Type type_utilisateur){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
@@ -121,9 +121,9 @@ public class Utilisateur {
 		setSexe(sexe);
 		setEtat(etat);
 		setTypeUtilisateur(typeUtilisateur);
-		setDemandeConges(demandeConges);
 		setDetailUtilisateurs(detailUtilisateurs);
 		setSoldeConges(soldeConges);
+		setDemandeConges(demandeConges);
 		setType_utilisateur(type_utilisateur);
 	}
 
