@@ -36,5 +36,4 @@ public class DetailUtilisateurService {
 		if(utilisateur == null) throw new Exception("Authentification invalide");
 		return utilisateur;
 	}
-
 }

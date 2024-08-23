@@ -12,6 +12,7 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.sql.Date;
 import java.sql.Date;
+import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 

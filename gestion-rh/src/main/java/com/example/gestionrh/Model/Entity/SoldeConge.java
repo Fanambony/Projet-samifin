@@ -3,7 +3,6 @@ package com.example.gestionrh.Model.Entity;
 import jakarta.persistence.*;
 import java.sql.Date;
 
-
 @Entity
 @Table(name = "solde_conge")
 public class SoldeConge {
@@ -25,8 +24,6 @@ public class SoldeConge {
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
-
-    //SETTERS AND GETTERS
 
 	public String getId(){
 		return this.id;
@@ -71,8 +68,6 @@ public class SoldeConge {
 		this.utilisateur = utilisateur;
 	}
 
-    //CONSTRUCTORS
-
  	public SoldeConge(){}
 	public SoldeConge(String id, String idUtilisateur, Integer annee, Double soldeEntre, Double soldeSortie, Date dateMiseAJour, Utilisateur utilisateur){
 		setId(id);
@@ -83,5 +78,4 @@ public class SoldeConge {
 		setDateMiseAJour(dateMiseAJour);
 		setUtilisateur(utilisateur);
 	}
-
 }

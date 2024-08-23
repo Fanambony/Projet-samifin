@@ -24,9 +24,9 @@ public class EtatDemandeController{
 
 
 	/* -- READ ONE -- */
-	@GetMapping("/{id}")
-	public Optional<EtatDemande> getOne(@PathVariable String id) { 
-		 Optional<EtatDemande> etatDemande = this.etatDemandeService.getOne(id);
+	@GetMapping("/{libelle}")
+	public Optional<EtatDemande> getOne(@PathVariable String libelle) { 
+		 Optional<EtatDemande> etatDemande = this.etatDemandeService.getOne(libelle);
 		return etatDemande;
 	}
 
@@ -54,8 +54,8 @@ public class EtatDemandeController{
 
 
 	/* -- DELETE -- */
-	@DeleteMapping("delete/{id}")
-	public void delete(@PathVariable String id) {
-		etatDemandeService.delete(id);
+	@DeleteMapping("delete/{libelle}")
+	public void delete(@PathVariable String libelle) {
+		etatDemandeService.delete(libelle);
 	}
 }

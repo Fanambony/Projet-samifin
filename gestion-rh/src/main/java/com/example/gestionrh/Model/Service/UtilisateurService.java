@@ -36,9 +36,4 @@ public class UtilisateurService {
         Pageable pageable = PageRequest.of(page, size);
         return utilisateurRepository.findAll(pageable);
     }
-
-	// public Utilisateur getById(String idUtilisateur) {
-	// 	Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur);
-	// 	return utilisateur;
-	// }
 }

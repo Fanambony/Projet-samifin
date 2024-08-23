@@ -7,5 +7,6 @@ import com.example.gestionrh.Model.Entity.VEtatDemande;
 
 public interface VEtatDemandeRepository extends JpaRepository<VEtatDemande, Object> {
     List<VEtatDemande> findByIdUtilisateur(String idUtilisateur);
-    List<VEtatDemande> findByIdDirectionAndEtatUtilisateur(String idDirection, int etatUtilisateur);
+    List<VEtatDemande> findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(String idDirection, int etatUtilisateur, int etatemande);
+    List<VEtatDemande> findByEtatUtilisateurAndIdEtatDemande(int etatUtilisateur, int etatemande);
 }

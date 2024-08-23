@@ -3,8 +3,6 @@ package com.example.gestionrh.Model.Entity;
 import jakarta.persistence.*;
 import java.sql.Date;
 
-import org.hibernate.annotations.ColumnDefault;
-
 @Entity
 @Table(name = "demande_conge")
 public class DemandeConge {
@@ -22,31 +20,30 @@ public class DemandeConge {
 	@Column(name = "date_debut")
 	Date dateDebut;
 	@Column(name = "debut_absence")
-	String debutAbsence;
+	Integer debutAbsence;
 	@Column(name = "date_fin")
 	Date dateFin;
 	@Column(name = "fin_absence")
-	String finAbsence;
+	Integer finAbsence;
 	@Column(name = "commentaire")
 	String commentaire;
 	@Column(name = "etat_demande")
-	String etatDemande;
+	Integer etatDemande;
 	@ManyToOne
 	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
 	TypeConge type_conge;
 	@ManyToOne
-	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
-	EtatDemande etat_demande;
-	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
 	@ManyToOne
-	@JoinColumn(name = "debut_absence", insertable = false, updatable = false)
-	PeriodeAbsence periode_absence;
-	@ManyToOne
 	@JoinColumn(name = "fin_absence", insertable = false, updatable = false)
-	PeriodeAbsence periode_absence_fin;
-
+	TypeAbsence fin_type_absence;
+	@ManyToOne
+	@JoinColumn(name = "debut_absence", insertable = false, updatable = false)
+	TypeAbsence type_absence;
+	@ManyToOne
+	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
+	EtatDemande etat_demande;
 
 	@PrePersist
     protected void onCreate() {
@@ -54,7 +51,7 @@ public class DemandeConge {
             dateDemande = new java.sql.Date(System.currentTimeMillis());
         }
 		if (etatDemande == null) {
-			etatDemande = new String("EDC001");
+			etatDemande = 1;
 		}
     }
 
@@ -90,10 +87,10 @@ public class DemandeConge {
 	public void setDateDebut(Date dateDebut){
 		this.dateDebut = dateDebut;
 	}
-	public String getDebutAbsence(){
+	public Integer getDebutAbsence(){
 		return this.debutAbsence;
 	}
-	public void setDebutAbsence(String debutAbsence){
+	public void setDebutAbsence(Integer debutAbsence){
 		this.debutAbsence = debutAbsence;
 	}
 	public Date getDateFin(){
@@ -102,10 +99,10 @@ public class DemandeConge {
 	public void setDateFin(Date dateFin){
 		this.dateFin = dateFin;
 	}
-	public String getFinAbsence(){
+	public Integer getFinAbsence(){
 		return this.finAbsence;
 	}
-	public void setFinAbsence(String finAbsence){
+	public void setFinAbsence(Integer finAbsence){
 		this.finAbsence = finAbsence;
 	}
 	public String getCommentaire(){
@@ -114,10 +111,10 @@ public class DemandeConge {
 	public void setCommentaire(String commentaire){
 		this.commentaire = commentaire;
 	}
-	public String getEtatDemande(){
+	public Integer getEtatDemande(){
 		return this.etatDemande;
 	}
-	public void setEtatDemande(String etatDemande){
+	public void setEtatDemande(Integer etatDemande){
 		this.etatDemande = etatDemande;
 	}
 	public TypeConge getType_conge(){
@@ -126,35 +123,53 @@ public class DemandeConge {
 	public void setType_conge(TypeConge type_conge){
 		this.type_conge = type_conge;
 	}
-	public EtatDemande getEtat_demande(){
-		return this.etat_demande;
-	}
-	public void setEtat_demande(EtatDemande etat_demande){
-		this.etat_demande = etat_demande;
-	}
 	public Utilisateur getUtilisateur(){
 		return this.utilisateur;
 	}
 	public void setUtilisateur(Utilisateur utilisateur){
 		this.utilisateur = utilisateur;
 	}
-	public PeriodeAbsence getPeriode_absence(){
-		return this.periode_absence;
+	public TypeAbsence getFin_type_absence(){
+		return this.fin_type_absence;
 	}
-	public void setPeriode_absence(PeriodeAbsence periode_absence){
-		this.periode_absence = periode_absence;
+	public void setFin_type_absence(TypeAbsence fin_type_absence){
+		this.fin_type_absence = fin_type_absence;
 	}
-	public PeriodeAbsence getPeriode_absence_fin(){
-		return this.periode_absence_fin;
+	public TypeAbsence getType_absence(){
+		return this.type_absence;
 	}
-	public void setPeriode_absence_fin(PeriodeAbsence periode_absence_fin){
-		this.periode_absence_fin = periode_absence_fin;
+	public void setType_absence(TypeAbsence type_absence){
+		this.type_absence = type_absence;
+	}
+	public EtatDemande getEtat_demande(){
+		return this.etat_demande;
+	}
+	public void setEtat_demande(EtatDemande etat_demande){
+		this.etat_demande = etat_demande;
 	}
 
     //CONSTRUCTORS
 
  	public DemandeConge(){}
-	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String commentaire){
+	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, TypeConge type_conge, Utilisateur utilisateur, TypeAbsence fin_type_absence, TypeAbsence type_absence, EtatDemande etat_demande){
+		setId(id);
+		setIdTypeConge(idTypeConge);
+		setIdUtilisateur(idUtilisateur);
+		setDateDemande(dateDemande);
+		setDateDebut(dateDebut);
+		setDebutAbsence(debutAbsence);
+		setDateFin(dateFin);
+		setFinAbsence(finAbsence);
+		setCommentaire(commentaire);
+		setEtatDemande(etatDemande);
+		setType_conge(type_conge);
+		setUtilisateur(utilisateur);
+		setType_absence(type_absence);
+		setType_absence(type_absence);
+		setEtat_demande(etat_demande);
+	}
+
+	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire){
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
 		setDateDebut(dateDebut);
@@ -164,4 +179,21 @@ public class DemandeConge {
 		setCommentaire(commentaire);
 	}
 
+	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande){
+		setId(id);
+		setIdTypeConge(idTypeConge);
+		setIdUtilisateur(idUtilisateur);
+		setDateDemande(dateDemande);
+		setDateDebut(dateDebut);
+		setDebutAbsence(debutAbsence);
+		setDateFin(dateFin);
+		setFinAbsence(finAbsence);
+		setCommentaire(commentaire);
+		setEtatDemande(etatDemande);
+	}
+
+	public DemandeConge(String id, Integer etatDemande){
+		setId(id);
+		setEtatDemande(etatDemande);
+	}
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
 @Table(name = "type_conge")
 public class TypeConge {
@@ -15,13 +14,11 @@ public class TypeConge {
 	String id;
 	@Column(name = "nom")
 	String nom;
-	@Column(name = "etat")
-	String etat;
+	@Column(name = "nombre_annuel")
+	Double nombreAnnuel;
 	@JsonIgnore
 	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
-
-    //SETTERS AND GETTERS
 
 	public String getId(){
 		return this.id;
@@ -35,11 +32,11 @@ public class TypeConge {
 	public void setNom(String nom){
 		this.nom = nom;
 	}
-	public String getEtat(){
-		return this.etat;
+	public Double getNombreAnnuel(){
+		return this.nombreAnnuel;
 	}
-	public void setEtat(String etat){
-		this.etat = etat;
+	public void setNombreAnnuel(Double nombreAnnuel){
+		this.nombreAnnuel = nombreAnnuel;
 	}
 	public List<DemandeConge> getDemandeConges(){
 		return this.demandeConges;
@@ -48,14 +45,11 @@ public class TypeConge {
 		this.demandeConges = demandeConges;
 	}
 
-    //CONSTRUCTORS
-
  	public TypeConge(){}
-	public TypeConge(String id, String nom, String etat, List<DemandeConge> demandeConges){
+	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges){
 		setId(id);
 		setNom(nom);
-		setEtat(etat);
+		setNombreAnnuel(nombreAnnuel);
 		setDemandeConges(demandeConges);
 	}
-
 }

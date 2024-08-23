@@ -2,14 +2,17 @@ package com.example.gestionrh.Controller;
 
 import com.example.gestionrh.Model.Entity.Direction;
 import com.example.gestionrh.Model.Entity.Fonction;
+import com.example.gestionrh.Model.Entity.Genre;
 import com.example.gestionrh.Model.Entity.Utilisateur;
 import com.example.gestionrh.Model.Service.DirectionService;
 import com.example.gestionrh.Model.Service.FonctionService;
+import com.example.gestionrh.Model.Service.GenreService;
 import com.example.gestionrh.Model.Service.UtilisateurService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +25,17 @@ import java.util.Optional;
 @RequestMapping("/")
 public class UtilisateurController{
 
-	private final UtilisateurService utilisateurService;
-    private final DirectionService directionService;
-    private final FonctionService fonctionService;
+    @Autowired
+	private UtilisateurService utilisateurService;
 
-	public UtilisateurController(UtilisateurService utilisateurService, DirectionService directionService, FonctionService fonctionService){
-        this.utilisateurService = utilisateurService;
-        this.directionService = directionService;
-        this.fonctionService = fonctionService;
-    }
+	@Autowired
+    private DirectionService directionService;
+    
+    @Autowired
+    private FonctionService fonctionService;
+    
+    @Autowired
+    private GenreService genreService;
 
 	@GetMapping("/")
     public String login() {
@@ -51,9 +56,12 @@ public class UtilisateurController{
 		// List<Utilisateur> utilisateurs = utilisateurService.getAll();
         List<Direction> directions = directionService.getAll();
         List<Fonction> fonctions = fonctionService.getAll();
+        List<Genre> genre = genreService.getAll();
         request.setAttribute("utilisateurs", utilisateurPage);
         request.setAttribute("directions", directions);
         request.setAttribute("fonctions", fonctions);
+        request.setAttribute("genre", genre);
+        request.setAttribute("page", page);
 		return "/utilisateur/list-utilisateur";
 	}
 

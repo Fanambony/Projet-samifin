@@ -11,10 +11,8 @@ public class TypeUtilisateur {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	String id;
-	@Column(name = "valeur")
-	String valeur;
+	@Column(name = "libelle")
+	String libelle;
 	@Column(name = "etat")
 	Integer etat;
 	@JsonIgnore
@@ -23,17 +21,11 @@ public class TypeUtilisateur {
 
     //SETTERS AND GETTERS
 
-	public String getId(){
-		return this.id;
+	public String getLibelle(){
+		return this.libelle;
 	}
-	public void setId(String id){
-		this.id = id;
-	}
-	public String getValeur(){
-		return this.valeur;
-	}
-	public void setValeur(String valeur){
-		this.valeur = valeur;
+	public void setLibelle(String libelle){
+		this.libelle = libelle;
 	}
 	public Integer getEtat(){
 		return this.etat;
@@ -51,9 +43,8 @@ public class TypeUtilisateur {
     //CONSTRUCTORS
 
  	public TypeUtilisateur(){}
-	public TypeUtilisateur(String id, String valeur, Integer etat, List<Utilisateur> utilisateurs){
-		setId(id);
-		setValeur(valeur);
+	public TypeUtilisateur(String libelle, Integer etat, List<Utilisateur> utilisateurs){
+		setLibelle(libelle);
 		setEtat(etat);
 		setUtilisateurs(utilisateurs);
 	}

@@ -34,8 +34,13 @@ public class VEtatDemandeService {
 		return etatDemandes;
 	}
 
-	public List<VEtatDemande> demandeCongeParidDirectionParTypeUtilisateur(String idDirection, int etatUtilisateur) {
-		List<VEtatDemande> etatDemandes = vEtatDemandeRepository.findByIdDirectionAndEtatUtilisateur(idDirection, etatUtilisateur);
+	public List<VEtatDemande> demandeCongeParidDirectionParTypeUtilisateur(String idDirection, int etatUtilisateur, int etatemande) {
+		List<VEtatDemande> etatDemandes = vEtatDemandeRepository.findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(idDirection, etatUtilisateur, etatemande);
+		return etatDemandes;
+	}
+
+	public List<VEtatDemande> demandeCongeParTypeUtilisateur(int etatUtilisateur, int etatemande) {
+		List<VEtatDemande> etatDemandes = vEtatDemandeRepository.findByEtatUtilisateurAndIdEtatDemande(etatUtilisateur, etatemande);
 		return etatDemandes;
 	}
 }

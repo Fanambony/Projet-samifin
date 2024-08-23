@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
 @Table(name = "utilisateur")
 public class Utilisateur {
@@ -20,24 +19,30 @@ public class Utilisateur {
 	String prenom;
 	@Column(name = "date_naissance")
 	Date dateNaissance;
-	@Column(name = "sexe")
-	String sexe;
-	@Column(name = "etat")
-	String etat;
+	@Column(name = "genre")
+	Integer idGenre;
 	@Column(name = "type_utilisateur")
-	String typeUtilisateur;
-	@JsonIgnore
-	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
-	List<DemandeConge> demandeConges;
+	Integer typeUtilisateur;
+	@Column(name = "etat")
+	Integer etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DetailUtilisateur> detailUtilisateurs;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<SoldeConge> soldeConges;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<DemandeConge> demandeConges;
 	@ManyToOne
 	@JoinColumn(name = "type_utilisateur", insertable = false, updatable = false)
 	TypeUtilisateur type_utilisateur;
+	@ManyToOne
+	@JoinColumn(name = "etat", insertable = false, updatable = false)
+	EtatUtilisateur etat_utilisateur;
+	@ManyToOne
+	@JoinColumn(name = "genre", insertable = false, updatable = false)
+	Genre genre;
 
     //SETTERS AND GETTERS
 
@@ -65,29 +70,23 @@ public class Utilisateur {
 	public void setDateNaissance(Date dateNaissance){
 		this.dateNaissance = dateNaissance;
 	}
-	public String getSexe(){
-		return this.sexe;
+	public Integer getIdGenre(){
+		return this.idGenre;
 	}
-	public void setSexe(String sexe){
-		this.sexe = sexe;
+	public void setIdGenre(Integer idGenre){
+		this.idGenre = idGenre;
 	}
-	public String getEtat(){
-		return this.etat;
-	}
-	public void setEtat(String etat){
-		this.etat = etat;
-	}
-	public String getTypeUtilisateur(){
+	public Integer getTypeUtilisateur(){
 		return this.typeUtilisateur;
 	}
-	public void setTypeUtilisateur(String typeUtilisateur){
+	public void setTypeUtilisateur(Integer typeUtilisateur){
 		this.typeUtilisateur = typeUtilisateur;
 	}
-	public List<DemandeConge> getDemandeConges(){
-		return this.demandeConges;
+	public Integer getEtat(){
+		return this.etat;
 	}
-	public void setDemandeConges(List<DemandeConge> demandeConges){
-		this.demandeConges = demandeConges;
+	public void setEtat(Integer etat){
+		this.etat = etat;
 	}
 	public List<DetailUtilisateur> getDetailUtilisateurs(){
 		return this.detailUtilisateurs;
@@ -101,27 +100,47 @@ public class Utilisateur {
 	public void setSoldeConges(List<SoldeConge> soldeConges){
 		this.soldeConges = soldeConges;
 	}
+	public List<DemandeConge> getDemandeConges(){
+		return this.demandeConges;
+	}
+	public void setDemandeConges(List<DemandeConge> demandeConges){
+		this.demandeConges = demandeConges;
+	}
 	public TypeUtilisateur getType_utilisateur(){
 		return this.type_utilisateur;
 	}
 	public void setType_utilisateur(TypeUtilisateur type_utilisateur){
 		this.type_utilisateur = type_utilisateur;
 	}
+	public EtatUtilisateur getEtat_utilisateur(){
+		return this.etat_utilisateur;
+	}
+	public void setEtat_utilisateur(EtatUtilisateur etat_utilisateur){
+		this.etat_utilisateur = etat_utilisateur;
+	}
+	public Genre getGenre(){
+		return this.genre;
+	}
+	public void setGenre(Genre genre){
+		this.genre = genre;
+	}
 
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, String sexe, String etat, String typeUtilisateur, List<DemandeConge> demandeConges, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, TypeUtilisateur type_utilisateur){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, Integer etat, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, List<DemandeConge> demandeConges, TypeUtilisateur type_utilisateur, EtatUtilisateur etat_utilisateur, Genre genre){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
 		setDateNaissance(dateNaissance);
-		setSexe(sexe);
-		setEtat(etat);
+		setIdGenre(idGenre);
 		setTypeUtilisateur(typeUtilisateur);
-		setDemandeConges(demandeConges);
+		setEtat(etat);
 		setDetailUtilisateurs(detailUtilisateurs);
 		setSoldeConges(soldeConges);
+		setDemandeConges(demandeConges);
 		setType_utilisateur(type_utilisateur);
+		setEtat_utilisateur(etat_utilisateur);
+		setGenre(genre);
 	}
 }

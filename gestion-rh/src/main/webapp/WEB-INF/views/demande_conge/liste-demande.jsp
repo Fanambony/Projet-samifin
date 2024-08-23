@@ -53,7 +53,7 @@
                                 <td><%= de.getTypeConge() %></td>
                                 <td><%= de.getDateDebut() %> <%= de.getDebutAbsence() %></td>
                                 <td><%= de.getDateFin() %> <%= de.getFinAbsence() %></td>
-                                <td></td>
+                                <td class="font-weight-bold"><%= de.getNombreJoursConge() %> jours</td>
                                 
                                 <td><label class="badge badge-info"><%= de.getEtatDemande() %></label></td>
                                 <td>

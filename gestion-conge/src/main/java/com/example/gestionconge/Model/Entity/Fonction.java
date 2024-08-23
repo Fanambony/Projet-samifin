@@ -17,8 +17,6 @@ public class Fonction {
 	String nom;
 	@Column(name = "id_direction")
 	String idDirection;
-	@Column(name = "etat")
-	String etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "fonction", cascade = CascadeType.ALL)
 	List<DetailUtilisateur> detailUtilisateurs;
@@ -46,12 +44,6 @@ public class Fonction {
 	public void setIdDirection(String idDirection){
 		this.idDirection = idDirection;
 	}
-	public String getEtat(){
-		return this.etat;
-	}
-	public void setEtat(String etat){
-		this.etat = etat;
-	}
 	public List<DetailUtilisateur> getDetailUtilisateurs(){
 		return this.detailUtilisateurs;
 	}
@@ -68,11 +60,10 @@ public class Fonction {
     //CONSTRUCTORS
 
  	public Fonction(){}
-	public Fonction(String id, String nom, String idDirection, String etat, List<DetailUtilisateur> detailUtilisateurs, Direction direction){
+	public Fonction(String id, String nom, String idDirection, List<DetailUtilisateur> detailUtilisateurs, Direction direction){
 		setId(id);
 		setNom(nom);
 		setIdDirection(idDirection);
-		setEtat(etat);
 		setDetailUtilisateurs(detailUtilisateurs);
 		setDirection(direction);
 	}

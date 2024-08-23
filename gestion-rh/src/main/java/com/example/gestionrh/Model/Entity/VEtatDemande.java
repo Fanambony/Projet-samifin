@@ -2,6 +2,7 @@ package com.example.gestionrh.Model.Entity;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "v_etat_demande")
@@ -16,9 +17,9 @@ public class VEtatDemande {
 	@Column(name = "id_direction")
 	String idDirection;
 	@Column(name = "id_type_utilisateur")
-	String idTypeUtilisateur;
+	Integer idTypeUtilisateur;
 	@Column(name = "id_etat_demande")
-	String idEtatDemande;
+	Integer idEtatDemande;
 	@Column(name = "etat_utilisateur")
 	Integer etatUtilisateur;
 	@Column(name = "nom_utilisateur")
@@ -41,6 +42,10 @@ public class VEtatDemande {
 	String finAbsence;
 	@Column(name = "etat_demande")
 	String etatDemande;
+	@Column(name = "commentaire")
+	String commentaire;
+	@Column(name = "nombre_jours_conge")
+	BigDecimal nombreJoursConge;
 
     //SETTERS AND GETTERS
 
@@ -62,16 +67,16 @@ public class VEtatDemande {
 	public void setIdDirection(String idDirection){
 		this.idDirection = idDirection;
 	}
-	public String getIdTypeUtilisateur(){
+	public Integer getIdTypeUtilisateur(){
 		return this.idTypeUtilisateur;
 	}
-	public void setIdTypeUtilisateur(String idTypeUtilisateur){
+	public void setIdTypeUtilisateur(Integer idTypeUtilisateur){
 		this.idTypeUtilisateur = idTypeUtilisateur;
 	}
-	public String getIdEtatDemande(){
+	public Integer getIdEtatDemande(){
 		return this.idEtatDemande;
 	}
-	public void setIdEtatDemande(String idEtatDemande){
+	public void setIdEtatDemande(Integer idEtatDemande){
 		this.idEtatDemande = idEtatDemande;
 	}
 	public Integer getEtatUtilisateur(){
@@ -140,11 +145,23 @@ public class VEtatDemande {
 	public void setEtatDemande(String etatDemande){
 		this.etatDemande = etatDemande;
 	}
+	public String getCommentaire(){
+		return this.commentaire;
+	}
+	public void setCommentaire(String commentaire){
+		this.commentaire = commentaire;
+	}
+	public BigDecimal getNombreJoursConge(){
+		return this.nombreJoursConge;
+	}
+	public void setNombreJoursConge(BigDecimal nombreJoursConge){
+		this.nombreJoursConge = nombreJoursConge;
+	}
 
     //CONSTRUCTORS
 
  	public VEtatDemande(){}
-	public VEtatDemande(String idDemandeConge, String idUtilisateur, String idDirection, String idTypeUtilisateur, String idEtatDemande, Integer etatUtilisateur, String nomUtilisateur, String prenomUtilisateur, String typeUtilisateur, String typeConge, Date dateDemande, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String etatDemande){
+	public VEtatDemande(String idDemandeConge, String idUtilisateur, String idDirection, Integer idTypeUtilisateur, Integer idEtatDemande, Integer etatUtilisateur, String nomUtilisateur, String prenomUtilisateur, String typeUtilisateur, String typeConge, Date dateDemande, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String etatDemande, String commentaire, BigDecimal nombreJoursConge){
 		setIdDemandeConge(idDemandeConge);
 		setIdUtilisateur(idUtilisateur);
 		setIdDirection(idDirection);
@@ -161,5 +178,7 @@ public class VEtatDemande {
 		setDateFin(dateFin);
 		setFinAbsence(finAbsence);
 		setEtatDemande(etatDemande);
+		setCommentaire(commentaire);
+		setNombreJoursConge(nombreJoursConge);
 	}
 }

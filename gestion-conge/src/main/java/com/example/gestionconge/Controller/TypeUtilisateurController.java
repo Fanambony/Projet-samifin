@@ -24,9 +24,9 @@ public class TypeUtilisateurController{
 
 
 	/* -- READ ONE -- */
-	@GetMapping("/{id}")
-	public Optional<TypeUtilisateur> getOne(@PathVariable String id) { 
-		 Optional<TypeUtilisateur> typeUtilisateur = this.typeUtilisateurService.getOne(id);
+	@GetMapping("/{libelle}")
+	public Optional<TypeUtilisateur> getOne(@PathVariable String libelle) { 
+		 Optional<TypeUtilisateur> typeUtilisateur = this.typeUtilisateurService.getOne(libelle);
 		return typeUtilisateur;
 	}
 
@@ -54,8 +54,8 @@ public class TypeUtilisateurController{
 
 
 	/* -- DELETE -- */
-	@DeleteMapping("delete/{id}")
-	public void delete(@PathVariable String id) {
-		typeUtilisateurService.delete(id);
+	@DeleteMapping("delete/{libelle}")
+	public void delete(@PathVariable String libelle) {
+		typeUtilisateurService.delete(libelle);
 	}
 }

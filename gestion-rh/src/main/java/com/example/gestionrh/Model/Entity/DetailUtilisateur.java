@@ -3,7 +3,6 @@ package com.example.gestionrh.Model.Entity;
 import jakarta.persistence.*;
 import java.sql.Date;
 
-
 @Entity
 @Table(name = "detail_utilisateur")
 public class DetailUtilisateur {

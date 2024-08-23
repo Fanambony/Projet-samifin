@@ -4,34 +4,31 @@ import jakarta.persistence.*;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
 @Table(name = "etat_demande")
 public class EtatDemande {
 
+	@Column(name = "libelle")
+	String libelle;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	String id;
-	@Column(name = "valeur")
-	String valeur;
+	@Column(name = "etat")
+	Integer etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "etat_demande", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
 
-    //SETTERS AND GETTERS
-
-	public String getId(){
-		return this.id;
+	public String getLibelle(){
+		return this.libelle;
 	}
-	public void setId(String id){
-		this.id = id;
+	public void setLibelle(String libelle){
+		this.libelle = libelle;
 	}
-	public String getValeur(){
-		return this.valeur;
+	public Integer getEtat(){
+		return this.etat;
 	}
-	public void setValeur(String valeur){
-		this.valeur = valeur;
+	public void setEtat(Integer etat){
+		this.etat = etat;
 	}
 	public List<DemandeConge> getDemandeConges(){
 		return this.demandeConges;
@@ -40,13 +37,10 @@ public class EtatDemande {
 		this.demandeConges = demandeConges;
 	}
 
-    //CONSTRUCTORS
-
  	public EtatDemande(){}
-	public EtatDemande(String id, String valeur, List<DemandeConge> demandeConges){
-		setId(id);
-		setValeur(valeur);
+	public EtatDemande(String libelle, Integer etat, List<DemandeConge> demandeConges){
+		setLibelle(libelle);
+		setEtat(etat);
 		setDemandeConges(demandeConges);
 	}
-
 }

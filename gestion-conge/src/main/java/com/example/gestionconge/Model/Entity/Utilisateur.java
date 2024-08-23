@@ -22,12 +22,12 @@ public class Utilisateur {
 	String prenom;
 	@Column(name = "date_naissance")
 	Date dateNaissance;
-	@Column(name = "sexe")
-	String sexe;
-	@Column(name = "etat")
-	String etat;
+	@Column(name = "genre")
+	Integer genre;
 	@Column(name = "type_utilisateur")
-	String typeUtilisateur;
+	Integer typeUtilisateur;
+	@Column(name = "etat")
+	Integer etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DetailUtilisateur> detailUtilisateurs;
@@ -37,6 +37,12 @@ public class Utilisateur {
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
+	@ManyToOne
+	@JoinColumn(name = "genre", insertable = false, updatable = false)
+	Genre genre;
+	@ManyToOne
+	@JoinColumn(name = "etat", insertable = false, updatable = false)
+	Etat etat_utilisateur;
 	@ManyToOne
 	@JoinColumn(name = "type_utilisateur", insertable = false, updatable = false)
 	Type type_utilisateur;
@@ -67,23 +73,23 @@ public class Utilisateur {
 	public void setDateNaissance(Date dateNaissance){
 		this.dateNaissance = dateNaissance;
 	}
-	public String getSexe(){
-		return this.sexe;
+	public Integer getGenre(){
+		return this.genre;
 	}
-	public void setSexe(String sexe){
-		this.sexe = sexe;
+	public void setGenre(Integer genre){
+		this.genre = genre;
 	}
-	public String getEtat(){
-		return this.etat;
-	}
-	public void setEtat(String etat){
-		this.etat = etat;
-	}
-	public String getTypeUtilisateur(){
+	public Integer getTypeUtilisateur(){
 		return this.typeUtilisateur;
 	}
-	public void setTypeUtilisateur(String typeUtilisateur){
+	public void setTypeUtilisateur(Integer typeUtilisateur){
 		this.typeUtilisateur = typeUtilisateur;
+	}
+	public Integer getEtat(){
+		return this.etat;
+	}
+	public void setEtat(Integer etat){
+		this.etat = etat;
 	}
 	public List<DetailUtilisateur> getDetailUtilisateurs(){
 		return this.detailUtilisateurs;
@@ -103,6 +109,18 @@ public class Utilisateur {
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
 	}
+	public Genre getGenre(){
+		return this.genre;
+	}
+	public void setGenre(Genre genre){
+		this.genre = genre;
+	}
+	public Etat getEtat_utilisateur(){
+		return this.etat_utilisateur;
+	}
+	public void setEtat_utilisateur(Etat etat_utilisateur){
+		this.etat_utilisateur = etat_utilisateur;
+	}
 	public Type getType_utilisateur(){
 		return this.type_utilisateur;
 	}
@@ -113,17 +131,19 @@ public class Utilisateur {
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, String sexe, String etat, String typeUtilisateur, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, List<DemandeConge> demandeConges, Type type_utilisateur){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, List<DemandeConge> demandeConges, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
 		setDateNaissance(dateNaissance);
-		setSexe(sexe);
-		setEtat(etat);
+		setGenre(genre);
 		setTypeUtilisateur(typeUtilisateur);
+		setEtat(etat);
 		setDetailUtilisateurs(detailUtilisateurs);
 		setSoldeConges(soldeConges);
 		setDemandeConges(demandeConges);
+		setGenre(genre);
+		setEtat_utilisateur(etat_utilisateur);
 		setType_utilisateur(type_utilisateur);
 	}
 

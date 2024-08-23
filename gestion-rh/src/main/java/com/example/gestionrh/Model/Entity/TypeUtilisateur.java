@@ -8,29 +8,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "type_utilisateur")
 public class TypeUtilisateur {
 
+	
+	@Column(name = "libelle")
+	String libelle;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	String id;
-	@Column(name = "valeur")
-	String valeur;
 	@Column(name = "etat")
 	Integer etat;
 	@JsonIgnore
 	@OneToMany(mappedBy = "type_utilisateur", cascade = CascadeType.ALL)
 	List<Utilisateur> utilisateurs;
 
-	public String getId(){
-		return this.id;
+	public String getLibelle(){
+		return this.libelle;
 	}
-	public void setId(String id){
-		this.id = id;
-	}
-	public String getValeur(){
-		return this.valeur;
-	}
-	public void setValeur(String valeur){
-		this.valeur = valeur;
+	public void setLibelle(String libelle){
+		this.libelle = libelle;
 	}
 	public Integer getEtat(){
 		return this.etat;
@@ -46,9 +39,8 @@ public class TypeUtilisateur {
 	}
 
  	public TypeUtilisateur(){}
-	public TypeUtilisateur(String id, String valeur, Integer etat, List<Utilisateur> utilisateurs){
-		setId(id);
-		setValeur(valeur);
+	public TypeUtilisateur(String libelle, Integer etat, List<Utilisateur> utilisateurs){
+		setLibelle(libelle);
 		setEtat(etat);
 		setUtilisateurs(utilisateurs);
 	}
