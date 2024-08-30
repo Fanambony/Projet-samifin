@@ -19,6 +19,9 @@ public class TypeConge {
 	@JsonIgnore
 	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
+	@JsonIgnore
+	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
+	List<SoldeConge> soldeConges;
 
 	public String getId(){
 		return this.id;
@@ -43,6 +46,12 @@ public class TypeConge {
 	}
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
+	}
+	public List<SoldeConge> getSoldeConges(){
+		return this.soldeConges;
+	}
+	public void setSoldeConges(List<SoldeConge> soldeConges){
+		this.soldeConges = soldeConges;
 	}
 
  	public TypeConge(){}

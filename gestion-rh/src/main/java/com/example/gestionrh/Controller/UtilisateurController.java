@@ -1,10 +1,12 @@
 package com.example.gestionrh.Controller;
 
 import com.example.gestionrh.Model.Entity.Direction;
+import com.example.gestionrh.Model.Entity.EtatUtilisateur;
 import com.example.gestionrh.Model.Entity.Fonction;
 import com.example.gestionrh.Model.Entity.Genre;
 import com.example.gestionrh.Model.Entity.Utilisateur;
 import com.example.gestionrh.Model.Service.DirectionService;
+import com.example.gestionrh.Model.Service.EtatUtilisateurService;
 import com.example.gestionrh.Model.Service.FonctionService;
 import com.example.gestionrh.Model.Service.GenreService;
 import com.example.gestionrh.Model.Service.UtilisateurService;
@@ -37,6 +39,9 @@ public class UtilisateurController{
     @Autowired
     private GenreService genreService;
 
+    @Autowired
+    private EtatUtilisateurService etatUtilisateurService;
+
 	@GetMapping("/")
     public String login() {
         return "authentification/login";
@@ -57,11 +62,13 @@ public class UtilisateurController{
         List<Direction> directions = directionService.getAll();
         List<Fonction> fonctions = fonctionService.getAll();
         List<Genre> genre = genreService.getAll();
+        List<EtatUtilisateur> etatUtilisateur = etatUtilisateurService.getAll();
         request.setAttribute("utilisateurs", utilisateurPage);
         request.setAttribute("directions", directions);
         request.setAttribute("fonctions", fonctions);
         request.setAttribute("genre", genre);
         request.setAttribute("page", page);
+        request.setAttribute("etat", etatUtilisateur);
 		return "/utilisateur/list-utilisateur";
 	}
 
@@ -72,4 +79,11 @@ public class UtilisateurController{
         return "/utilisateur/detail-utilisateur";
     }
 
+    @GetMapping("page-sante")
+    public String pageSante(HttpSession session, HttpServletRequest request) {
+        String idUtilisateur = (String)session.getAttribute("userId"); 
+        Optional<Utilisateur> utilisateur = utilisateurService.getOne(idUtilisateur);
+        request.setAttribute("utilisateur", utilisateur);
+        return "/sante/page-sante";
+    }
 }

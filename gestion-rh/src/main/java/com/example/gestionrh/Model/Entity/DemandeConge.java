@@ -45,15 +45,15 @@ public class DemandeConge {
 	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
 	EtatDemande etat_demande;
 
-	@PrePersist
-    protected void onCreate() {
-        if (dateDemande == null) {
-            dateDemande = new java.sql.Date(System.currentTimeMillis());
-        }
-		if (etatDemande == null) {
-			etatDemande = 1;
-		}
-    }
+	// @PrePersist
+    // protected void onCreate() {
+    //     if (dateDemande == null) {
+    //         dateDemande = new java.sql.Date(System.currentTimeMillis());
+    //     }
+	// 	if (etatDemande == null) {
+	// 		etatDemande = 1;
+	// 	}
+    // }
 
     //SETTERS AND GETTERS
 
@@ -169,14 +169,16 @@ public class DemandeConge {
 		setEtat_demande(etat_demande);
 	}
 
-	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire){
+	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande){
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
+		setDateDemande(dateDemande);
 		setDateDebut(dateDebut);
 		setDebutAbsence(debutAbsence);
 		setDateFin(dateFin);
 		setFinAbsence(finAbsence);
 		setCommentaire(commentaire);
+		setEtatDemande(etatDemande);
 	}
 
 	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande){

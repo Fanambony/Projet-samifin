@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.EtatDemandeRepository;
 import com.example.gestionrh.Model.Entity.EtatDemande;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +13,8 @@ import java.util.Optional;
 @Service
 public class EtatDemandeService {
 
-	private final EtatDemandeRepository etatDemandeRepository;
-
-	public EtatDemandeService(EtatDemandeRepository etatDemandeRepository) {this.etatDemandeRepository = etatDemandeRepository;}
-
+	@Autowired
+	private EtatDemandeRepository etatDemandeRepository;
 
 
 	/* -- READ ONE -- */
@@ -28,5 +28,9 @@ public class EtatDemandeService {
 
 	/* -- DELETE -- */
 	public void delete(Object id) {  etatDemandeRepository.deleteById(id); }
+
+	public Integer getEtatSoumis() {
+		return etatDemandeRepository.findEtatSoumis();
+	}
 
 }

@@ -29,4 +29,7 @@ public class EtatUtilisateurService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  etatUtilisateurRepository.deleteById(id); }
 
+	public Integer getEtatActive() {
+		return etatUtilisateurRepository.findEtatActive();
+	}
 }

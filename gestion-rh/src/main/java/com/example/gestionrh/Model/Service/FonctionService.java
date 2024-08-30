@@ -29,4 +29,8 @@ public class FonctionService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  fonctionRepository.deleteById(id); }
 
+	public List<Fonction> fonctionParDirection(String direction) {
+		List<Fonction> fonctions = fonctionRepository.findByIdDirection(direction);
+		return fonctions;
+	}
 }

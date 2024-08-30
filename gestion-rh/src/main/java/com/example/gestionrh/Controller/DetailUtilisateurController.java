@@ -5,6 +5,7 @@ import com.example.gestionrh.Model.Entity.TypeAbsence;
 import com.example.gestionrh.Model.Entity.TypeConge;
 import com.example.gestionrh.Model.Entity.VEtatDemande;
 import com.example.gestionrh.Model.Service.DetailUtilisateurService;
+import com.example.gestionrh.Model.Service.EtatUtilisateurService;
 import com.example.gestionrh.Model.Service.TypeAbsenceService;
 import com.example.gestionrh.Model.Service.TypeCongeService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
@@ -35,10 +36,14 @@ public class DetailUtilisateurController{
     @Autowired
     private VEtatDemandeService vEtatDemandeService;
 
+    @Autowired
+    private EtatUtilisateurService etatUtilisateurService;
+
 	@PostMapping("verifierLogin")
     public String Login(@RequestParam String mail, @RequestParam String mdp, HttpSession session, HttpServletRequest request) {
         try {
-            DetailUtilisateur user = detailUtilisateurService.getByUser(mail, mdp);
+            int etat_utilisateur_active = etatUtilisateurService.getEtatActive();
+            DetailUtilisateur user = detailUtilisateurService.getByUser(mail, mdp, etat_utilisateur_active);
             session.setAttribute("userId", user.getUtilisateur().getId());
             session.setAttribute("userDirectionId", user.getFonction().getDirection().getId());
             session.setAttribute("userType", user.getUtilisateur().getTypeUtilisateur());

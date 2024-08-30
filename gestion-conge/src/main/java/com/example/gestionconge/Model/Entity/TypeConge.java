@@ -2,6 +2,7 @@ package com.example.gestionconge.Model.Entity;
 
 import jakarta.persistence.*;
 import java.util.List;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -20,6 +21,9 @@ public class TypeConge {
 	@JsonIgnore
 	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
+	@JsonIgnore
+	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
+	List<SoldeConge> soldeConges;
 
     //SETTERS AND GETTERS
 
@@ -47,15 +51,22 @@ public class TypeConge {
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
 	}
+	public List<SoldeConge> getSoldeConges(){
+		return this.soldeConges;
+	}
+	public void setSoldeConges(List<SoldeConge> soldeConges){
+		this.soldeConges = soldeConges;
+	}
 
     //CONSTRUCTORS
 
  	public TypeConge(){}
-	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges){
+	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges, List<SoldeConge> soldeConges){
 		setId(id);
 		setNom(nom);
 		setNombreAnnuel(nombreAnnuel);
 		setDemandeConges(demandeConges);
+		setSoldeConges(soldeConges);
 	}
 
 }

@@ -2,6 +2,8 @@
 <%@ page import="com.example.gestionrh.Model.Entity.TypeConge" %>
 <%@ page import="com.example.gestionrh.Model.Entity.TypeAbsence" %>
 <%@ page import="com.example.gestionrh.Model.Entity.VEtatDemande" %>
+<%@ page import="com.example.gestionrh.utils.DateUtil" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
@@ -81,24 +83,34 @@
                                     }
                                 %>
                                     <tr>
-                                        <td class="font-weight-bold"><%= etat.getDateDemande() %></td>
+                                        <td class="font-weight-bold"><%= DateUtil.formatDate(etat.getDateDemande()) %></td>
                                         <td><%= etat.getTypeConge() %></td>
-                                        <td><%= etat.getDateDebut() %> <%= etat.getDebutAbsence() %></td>
-                                        <td><%= etat.getDateFin() %> <%= etat.getFinAbsence() %></td>
+                                        <td><%= DateUtil.formatDate(etat.getDateDebut()) %> <%= etat.getDebutAbsence() %></td>
+                                        <td><%= DateUtil.formatDate(etat.getDateFin()) %> <%= etat.getFinAbsence() %></td>
                                         <td class="font-weight-bold"><%= etat.getNombreJoursConge() %> jours</td>
                                         <td class="font-weight-medium"><div class="badge <%= badgeClass %>"><%= etat.getEtatDemande() %></div></td>
                                         <td>
-                                            <% if (!etat.getIdEtatDemande().equals(5)) { %>
-                                                <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" data-target="#confirmationModal<%= etat.getIdDemandeConge() %>">
-                                                    <i class="ti-check"></i>
-                                                </button>
-                                            <% } %>
-                                            <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" data-target="#modifierDemandeModal<%= etat.getIdDemandeConge() %>">
-                                                <i class="ti-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-rounded btn-icon" data-toggle="modal" data-target="#deleteConfirmationModal<%= etat.getIdDemandeConge() %>">
-                                                <i class="ti-trash"></i>
-                                            </button>
+                                            <div class="d-flex align-items-center justify-content-start">
+                                                <div style="width: 50px;">
+                                                    <% if (!etat.getIdEtatDemande().equals(5) && !etat.getIdEtatDemande().equals(10) && !etat.getIdEtatDemande().equals(15)) { %>
+                                                        <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" data-target="#confirmationModal<%= etat.getIdDemandeConge() %>">
+                                                            <i class="ti-check"></i>
+                                                        </button>
+                                                    <% } %>
+                                                </div>
+                                                <% if (!etat.getIdEtatDemande().equals(10) && !etat.getIdEtatDemande().equals(15)) { %>
+                                                    <div style="width: 50px;">
+                                                        <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" data-target="#modifierDemandeModal<%= etat.getIdDemandeConge() %>">
+                                                            <i class="ti-pencil"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div style="width: 50px;">
+                                                        <button type="button" class="btn btn-danger btn-rounded btn-icon" data-toggle="modal" data-target="#deleteConfirmationModal<%= etat.getIdDemandeConge() %>">
+                                                            <i class="ti-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                <% } %>
+                                            </div>
                                         </td>
                                     </tr>
                                 <% } %>
@@ -140,7 +152,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- modal demande conge -->
 <div class="modal fade custom-modal" id="faireDemandeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -250,7 +261,6 @@
     </div>
 </div>
 
-
 <!-- Modal de confirmation -->
 <% for(VEtatDemande etat : etatDemande) { %>
 <div class="modal fade custom-modal" id="confirmationModal<%= etat.getIdDemandeConge() %>" tabindex="-1" role="dialog" aria-labelledby="confirmationLabel" aria-hidden="true">
@@ -297,122 +307,164 @@
 </div>
 <% } %>
 
-
-
-    
-
 <!-- Modal de modification de demande de congé -->
 <% for(VEtatDemande etat : etatDemande) { %>
-<div class="modal fade custom-modal" id="modifierDemandeModal<%= etat.getIdDemandeConge() %>" tabindex="-1" role="dialog" aria-labelledby="modifierDemandeLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modifierDemandeLabel">Modifier une demande de congé</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="modifierDemandeForm" action="/demande_conge/modifier-conge" method="post">
-                    <input type="hidden" name="idDemande" value="<%= etat.getIdDemandeConge() %>">
-                    <div class="container-fluid">
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <div class="row">
-                                    <label class="col-sm-12 col-form-label">Type d'absence</label>
-                                    <div class="col-sm-12">
-                                        <select class="form-control" id="typeConge" name="typeConge">
-                                            <% for(TypeConge type : typeConge) { %>
-                                                <option value="<%= type.getId() %>" <%= etat.getTypeConge().equals(type.getNom()) ? "selected" : "" %>><%= type.getNom() %></option>
-                                            <% } %>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-12 col-form-label">Date début</label>
-                                    <div class="col-sm-12">
-                                        <input type="date" class="form-control" name="date_debut" value="<%= etat.getDateDebut() %>" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <% for(TypeAbsence ta : typeAbsence) { %>
-                                    <div class="col-sm-4">
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="debut_absence" value="<%= ta.getEtat() %>" <%= etat.getDebutAbsence().equals(ta.getLibelle()) ? "checked" : "" %>>
-                                            <%= ta.getLibelle() %>
-                                            </label>
+    <div class="modal fade custom-modal" id="modifierDemandeModal<%= etat.getIdDemandeConge() %>" tabindex="-1" role="dialog" aria-labelledby="modifierDemandeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifierDemandeLabel">Modifier une demande de congé</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="modifierDemandeForm" action="/demande_conge/modifier-conge" method="post">
+                        <input type="hidden" name="idDemande" value="<%= etat.getIdDemandeConge() %>">
+                        <div class="container-fluid">
+                            <!-- Type d'absence -->
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="row">
+                                        <label class="col-sm-12 col-form-label">Type d'absence</label>
+                                        <div class="col-sm-12">
+                                            <select class="form-control" id="typeConge" name="typeConge" disabled>
+                                                <% for(TypeConge type : typeConge) { %>
+                                                    <option value="<%= type.getId() %>" <%= etat.getTypeConge().equals(type.getNom()) ? "selected" : "" %>><%= type.getNom() %></option>
+                                                <% } %>
+                                            </select>
                                         </div>
                                     </div>
-                                    <% } %>
-                                </div>
-                            </div>                            
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-12 col-form-label">Date fin</label>
-                                    <div class="col-sm-12">
-                                        <input type="date" class="form-control" name="date_fin" value="<%= etat.getDateFin() %>" required>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <% for(TypeAbsence ta : typeAbsence) { %>
-                                    <div class="col-sm-4">
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="fin_absence" value="<%= ta.getEtat() %>" <%= etat.getFinAbsence().equals(ta.getLibelle()) ? "checked" : "" %>>
-                                            <%= ta.getLibelle() %>
-                                            </label>
+                            <!-- Date début et options de début d'absence -->
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 col-form-label">Date début</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control" id="dateDebut<%= etat.getIdDemandeConge() %>" name="date_debut" value="<%= etat.getDateDebut() %>" required>
                                         </div>
                                     </div>
-                                    <% } %>
                                 </div>
-                            </div> 
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-12 col-form-label">Nombre de jours</label>
-                                    <div class="col-sm-12">
-                                        <input type="text" class="form-control" id="nombreJours" name="nombreJours" value="<%= etat.getNombreJoursConge() %>" readonly>
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <% for(TypeAbsence ta : typeAbsence) { %>
+                                        <div class="col-sm-4">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="debut_absence" value="<%= ta.getEtat() %>" <%= etat.getDebutAbsence().equals(ta.getLibelle()) ? "checked" : "" %>>
+                                                <%= ta.getLibelle() %>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                </div>                            
+                            </div>
+                            <!-- Date fin et options de fin d'absence -->
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 col-form-label">Date fin</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" class="form-control" id="dateFin<%= etat.getIdDemandeConge() %>" name="date_fin" value="<%= etat.getDateFin() %>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <% for(TypeAbsence ta : typeAbsence) { %>
+                                        <div class="col-sm-4">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="fin_absence" value="<%= ta.getEtat() %>" <%= etat.getFinAbsence().equals(ta.getLibelle()) ? "checked" : "" %>>
+                                                <%= ta.getLibelle() %>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                </div> 
+                            </div>
+                            <!-- Nombre de jours -->
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 col-form-label">Nombre de jours</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" class="form-control" id="nombreJours<%= etat.getIdDemandeConge() %>" name="nombreJours" value="<%= etat.getNombreJoursConge() %>" readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="exampleTextarea1">Commentaire</label>
-                                    <textarea class="form-control" id="exampleTextarea1" rows="4" name="commentaire"><%= etat.getCommentaire() %></textarea>
+                            <!-- Commentaire -->
+                            <div class="row">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="exampleTextarea1">Commentaire</label>
+                                        <textarea class="form-control" id="exampleTextarea1" rows="4" name="commentaire"><%= etat.getCommentaire() %></textarea>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- Boutons d'action -->
+                            <div class="form-group text-right">
+                                <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                            </div>
+    
                         </div>
-                        
-                        <div class="form-group text-right">
-                            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                        </div>
-
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    
+    <script>
+        function calculateNombreJours<%= etat.getIdDemandeConge() %>() {
+            const dateDebut = document.getElementById('dateDebut<%= etat.getIdDemandeConge() %>').value;
+            const dateFin = document.getElementById('dateFin<%= etat.getIdDemandeConge() %>').value;
+            const debutAbsence = document.querySelector('input[name="debut_absence"]:checked').value;
+            const finAbsence = document.querySelector('input[name="fin_absence"]:checked').value;
+    
+            if (dateDebut && dateFin && debutAbsence && finAbsence) {
+                const debut = new Date(dateDebut);
+                const fin = new Date(dateFin);
+    
+                let differenceJours = (fin - debut) / (1000 * 60 * 60 * 24);
+    
+                if (debutAbsence == 1 && finAbsence == 5) {
+                    // Congé complet sur une journée
+                    differenceJours += 1;
+                } else if ((debutAbsence == 1 && finAbsence == 1) || (debutAbsence == 5 && finAbsence == 5)) {
+                    // Congé AM à AM ou PM à PM
+                    differenceJours += 0.5;
+                } else if (debutAbsence == 5 && finAbsence == 1) {
+                    // Congé PM un jour et AM le jour suivant
+                    differenceJours += 0;
+                } else {
+                    // Congé complet sur plusieurs jours
+                    differenceJours += 1; // Pour inclure le premier jour
+                }
+    
+                document.getElementById('nombreJours<%= etat.getIdDemandeConge() %>').value = differenceJours;
+            } else {
+                document.getElementById('nombreJours<%= etat.getIdDemandeConge() %>').value = "";
+            }
+        }
+    
+        // Ajouter des écouteurs d'événements pour recalculer les jours lorsqu'une date ou une période change
+        document.getElementById('dateDebut<%= etat.getIdDemandeConge() %>').addEventListener('change', calculateNombreJours<%= etat.getIdDemandeConge() %>);
+        document.getElementById('dateFin<%= etat.getIdDemandeConge() %>').addEventListener('change', calculateNombreJours<%= etat.getIdDemandeConge() %>);
+        document.querySelectorAll('input[name="debut_absence"]').forEach(function(elem) {
+            elem.addEventListener('change', calculateNombreJours<%= etat.getIdDemandeConge() %>);
+        });
+        document.querySelectorAll('input[name="fin_absence"]').forEach(function(elem) {
+            elem.addEventListener('change', calculateNombreJours<%= etat.getIdDemandeConge() %>);
+        });
+    </script>    
+    
 <% } %>
-
-
 
 <script>
     function calculerNombreDeJours() {
@@ -450,6 +502,5 @@
     document.querySelectorAll('input[name="debut_absence"]').forEach(radio => radio.addEventListener('change', calculerNombreDeJours));
     document.querySelectorAll('input[name="fin_absence"]').forEach(radio => radio.addEventListener('change', calculerNombreDeJours));
 </script>
-
 
 <%@include file="../utils/footer.jsp" %>
