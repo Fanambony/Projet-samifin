@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "type_conge")
 public class TypeConge {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -21,7 +20,9 @@ public class TypeConge {
 	List<DemandeConge> demandeConges;
 	@JsonIgnore
 	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
-	List<SoldeConge> soldeConges;
+	List<SoldeUtilisateur> soldeUtilisateurs;
+
+    //SETTERS AND GETTERS
 
 	public String getId(){
 		return this.id;
@@ -47,18 +48,21 @@ public class TypeConge {
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
 	}
-	public List<SoldeConge> getSoldeConges(){
-		return this.soldeConges;
+	public List<SoldeUtilisateur> getSoldeUtilisateurs(){
+		return this.soldeUtilisateurs;
 	}
-	public void setSoldeConges(List<SoldeConge> soldeConges){
-		this.soldeConges = soldeConges;
+	public void setSoldeUtilisateurs(List<SoldeUtilisateur> soldeUtilisateurs){
+		this.soldeUtilisateurs = soldeUtilisateurs;
 	}
 
+    //CONSTRUCTORS
+
  	public TypeConge(){}
-	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges){
+	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs){
 		setId(id);
 		setNom(nom);
 		setNombreAnnuel(nombreAnnuel);
 		setDemandeConges(demandeConges);
+		setSoldeUtilisateurs(soldeUtilisateurs);
 	}
 }

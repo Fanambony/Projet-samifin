@@ -23,7 +23,7 @@ public class TypeConge {
 	List<DemandeConge> demandeConges;
 	@JsonIgnore
 	@OneToMany(mappedBy = "type_conge", cascade = CascadeType.ALL)
-	List<SoldeConge> soldeConges;
+	List<SoldeUtilisateur> soldeUtilisateurs;
 
     //SETTERS AND GETTERS
 
@@ -51,22 +51,22 @@ public class TypeConge {
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
 	}
-	public List<SoldeConge> getSoldeConges(){
-		return this.soldeConges;
+	public List<SoldeUtilisateur> getSoldeUtilisateurs(){
+		return this.soldeUtilisateurs;
 	}
-	public void setSoldeConges(List<SoldeConge> soldeConges){
-		this.soldeConges = soldeConges;
+	public void setSoldeUtilisateurs(List<SoldeUtilisateur> soldeUtilisateurs){
+		this.soldeUtilisateurs = soldeUtilisateurs;
 	}
 
     //CONSTRUCTORS
 
  	public TypeConge(){}
-	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges, List<SoldeConge> soldeConges){
+	public TypeConge(String id, String nom, Double nombreAnnuel, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs){
 		setId(id);
 		setNom(nom);
 		setNombreAnnuel(nombreAnnuel);
 		setDemandeConges(demandeConges);
-		setSoldeConges(soldeConges);
+		setSoldeUtilisateurs(soldeUtilisateurs);
 	}
 
 }

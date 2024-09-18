@@ -25,15 +25,20 @@ public class Utilisateur {
 	Integer typeUtilisateur;
 	@Column(name = "etat")
 	Integer etat;
+	@Column(name = "image")
+	byte[] image;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DetailUtilisateur> detailUtilisateurs;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
-	List<SoldeConge> soldeConges;
+	List<SoldeUtilisateur> soldeUtilisateurs;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<Famille> familles;
 	@ManyToOne
 	@JoinColumn(name = "type_utilisateur", insertable = false, updatable = false)
 	TypeUtilisateur type_utilisateur;
@@ -88,23 +93,35 @@ public class Utilisateur {
 	public void setEtat(Integer etat){
 		this.etat = etat;
 	}
+	public byte[] getImage(){
+		return this.image;
+	}
+	public void setImage(byte[] image){
+		this.image = image;
+	}
 	public List<DetailUtilisateur> getDetailUtilisateurs(){
 		return this.detailUtilisateurs;
 	}
 	public void setDetailUtilisateurs(List<DetailUtilisateur> detailUtilisateurs){
 		this.detailUtilisateurs = detailUtilisateurs;
 	}
-	public List<SoldeConge> getSoldeConges(){
-		return this.soldeConges;
+	public List<SoldeUtilisateur> getSoldeUtilisateurs(){
+		return this.soldeUtilisateurs;
 	}
-	public void setSoldeConges(List<SoldeConge> soldeConges){
-		this.soldeConges = soldeConges;
+	public void setSoldeUtilisateurs(List<SoldeUtilisateur> soldeUtilisateurs){
+		this.soldeUtilisateurs = soldeUtilisateurs;
 	}
 	public List<DemandeConge> getDemandeConges(){
 		return this.demandeConges;
 	}
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
+	}
+	public List<Famille> getFamilles(){
+		return this.familles;
+	}
+	public void setFamilles(List<Famille> familles){
+		this.familles = familles;
 	}
 	public TypeUtilisateur getType_utilisateur(){
 		return this.type_utilisateur;
@@ -128,7 +145,7 @@ public class Utilisateur {
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, Integer etat, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, List<DemandeConge> demandeConges, TypeUtilisateur type_utilisateur, EtatUtilisateur etat_utilisateur, Genre genre){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, Integer etat, byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<SoldeUtilisateur> soldeUtilisateurs, List<DemandeConge> demandeConges, List<Famille> familles, TypeUtilisateur type_utilisateur, EtatUtilisateur etat_utilisateur, Genre genre){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
@@ -136,8 +153,10 @@ public class Utilisateur {
 		setIdGenre(idGenre);
 		setTypeUtilisateur(typeUtilisateur);
 		setEtat(etat);
+		setImage(image);
 		setDetailUtilisateurs(detailUtilisateurs);
-		setSoldeConges(soldeConges);
+		setSoldeUtilisateurs(soldeUtilisateurs);
+		setFamilles(familles);
 		setDemandeConges(demandeConges);
 		setType_utilisateur(type_utilisateur);
 		setEtat_utilisateur(etat_utilisateur);

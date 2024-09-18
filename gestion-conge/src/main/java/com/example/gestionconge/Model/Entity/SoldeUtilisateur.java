@@ -1,11 +1,12 @@
-package com.example.gestionrh.Model.Entity;
+package com.example.gestionconge.Model.Entity;
 
 import jakarta.persistence.*;
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
-@Table(name = "solde_conge")
-public class SoldeConge {
+@Table(name = "solde_utilisateur")
+public class SoldeUtilisateur {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,18 +18,16 @@ public class SoldeConge {
 	String idTypeConge;
 	@Column(name = "annee")
 	Integer annee;
-	@Column(name = "solde_entre")
-	Double soldeEntre;
-	@Column(name = "solde_sortie")
-	Double soldeSortie;
-	@Column(name = "date_demande")
-	Date dateDemande;
+	@Column(name = "solde")
+	Double solde;
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
 	@ManyToOne
 	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
-	TypeConge type_conge;
+	Type type_conge;
+
+    //SETTERS AND GETTERS
 
 	public String getId(){
 		return this.id;
@@ -54,23 +53,11 @@ public class SoldeConge {
 	public void setAnnee(Integer annee){
 		this.annee = annee;
 	}
-	public Double getSoldeEntre(){
-		return this.soldeEntre;
+	public Double getSolde(){
+		return this.solde;
 	}
-	public void setSoldeEntre(Double soldeEntre){
-		this.soldeEntre = soldeEntre;
-	}
-	public Double getSoldeSortie(){
-		return this.soldeSortie;
-	}
-	public void setSoldeSortie(Double soldeSortie){
-		this.soldeSortie = soldeSortie;
-	}
-	public Date getDateDemande(){
-		return this.dateDemande;
-	}
-	public void setDateDemande(Date dateDemande){
-		this.dateDemande = dateDemande;
+	public void setSolde(Double solde){
+		this.solde = solde;
 	}
 	public Utilisateur getUtilisateur(){
 		return this.utilisateur;
@@ -78,23 +65,24 @@ public class SoldeConge {
 	public void setUtilisateur(Utilisateur utilisateur){
 		this.utilisateur = utilisateur;
 	}
-	public TypeConge getType_conge(){
+	public Type getType_conge(){
 		return this.type_conge;
 	}
-	public void setType_conge(TypeConge type_conge){
+	public void setType_conge(Type type_conge){
 		this.type_conge = type_conge;
 	}
 
- 	public SoldeConge(){}
-	public SoldeConge(String id, String idUtilisateur, String idTypeConge, Integer annee, Double soldeEntre, Double soldeSortie, Date dateDemande, Utilisateur utilisateur, TypeConge type_conge){
+    //CONSTRUCTORS
+
+ 	public SoldeUtilisateur(){}
+	public SoldeUtilisateur(String id, String idUtilisateur, String idTypeConge, Integer annee, Double solde, Utilisateur utilisateur, Type type_conge){
 		setId(id);
 		setIdUtilisateur(idUtilisateur);
 		setIdTypeConge(idTypeConge);
 		setAnnee(annee);
-		setSoldeEntre(soldeEntre);
-		setSoldeSortie(soldeSortie);
-		setDateDemande(dateDemande);
+		setSolde(solde);
 		setUtilisateur(utilisateur);
 		setType_conge(type_conge);
 	}
+
 }

@@ -1,3 +1,11 @@
+<%@ page import="jakarta.servlet.http.HttpSession" %>
+
+<%
+  String image = (String)session.getAttribute("image");
+  String defaultImage = "/assets/images/faces/user.jpeg";
+  String imgSrc = (image != null && !image.isEmpty()) ? "data:image/jpeg;base64, " + image : defaultImage;
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +23,7 @@
   <link rel="stylesheet" href="/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
   <link rel="stylesheet" href="/assets/vendors/ti-icons/css/themify-icons.css">
   <link rel="stylesheet" type="text/css" href="/assets/js/select.dataTables.min.css">
+  <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="/assets/css/vertical-layout-light/style.css">
@@ -103,10 +112,10 @@
 		
 		<li class="nav-item nav-profile dropdown">
       <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-        <img src="/assets/images/faces/face28.jpg" alt="profile"/>
+        <img src="<%= imgSrc %>" alt="profile"/>
       </a>
       <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-        <a class="dropdown-item" href="/detail-utilisateur?id=<%= session.getAttribute("userId") %>">
+        <a class="dropdown-item" href="/detail-utilisateur">
           <i class="ti-user text-primary"></i>
           Profil
         </a>

@@ -45,18 +45,6 @@ public class DemandeConge {
 	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
 	EtatDemande etat_demande;
 
-	// @PrePersist
-    // protected void onCreate() {
-    //     if (dateDemande == null) {
-    //         dateDemande = new java.sql.Date(System.currentTimeMillis());
-    //     }
-	// 	if (etatDemande == null) {
-	// 		etatDemande = 1;
-	// 	}
-    // }
-
-    //SETTERS AND GETTERS
-
 	public String getId(){
 		return this.id;
 	}
@@ -147,8 +135,6 @@ public class DemandeConge {
 	public void setEtat_demande(EtatDemande etat_demande){
 		this.etat_demande = etat_demande;
 	}
-
-    //CONSTRUCTORS
 
  	public DemandeConge(){}
 	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, TypeConge type_conge, Utilisateur utilisateur, TypeAbsence fin_type_absence, TypeAbsence type_absence, EtatDemande etat_demande){

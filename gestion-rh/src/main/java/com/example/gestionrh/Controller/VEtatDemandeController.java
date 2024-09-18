@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-
 @Controller
 @RequestMapping("v_etat_demande")
 public class VEtatDemandeController{
@@ -54,7 +52,7 @@ public class VEtatDemandeController{
 
 		} else if(typeUtilisateur == 10) {
 			// etatUtilisateur = 5;
-			List<Integer> etatUtilisateurs = Arrays.asList(1, 5);
+			List<Integer> etatUtilisateurs = Arrays.asList(1, 5, 10);
 
 			List<Integer> etatDemandes = Arrays.asList(5, 10, 15);
 			List<VEtatDemande> allDemandes = new ArrayList<>();

@@ -15,8 +15,6 @@ public class DemandeCongeService {
 
 	public DemandeCongeService(DemandeCongeRepository demandeCongeRepository) {this.demandeCongeRepository = demandeCongeRepository;}
 
-
-
 	/* -- READ ONE -- */
 	public Optional<DemandeConge> getOne(Object id) { return demandeCongeRepository.findById(id); }
 

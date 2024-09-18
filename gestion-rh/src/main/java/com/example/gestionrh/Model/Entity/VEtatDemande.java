@@ -2,7 +2,6 @@ package com.example.gestionrh.Model.Entity;
 
 import jakarta.persistence.*;
 import java.sql.Date;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "v_etat_demande")
@@ -20,6 +19,8 @@ public class VEtatDemande {
 	Integer idTypeUtilisateur;
 	@Column(name = "id_etat_demande")
 	Integer idEtatDemande;
+	@Column(name = "id_type_conge")
+	String idTypeConge;
 	@Column(name = "etat_utilisateur")
 	Integer etatUtilisateur;
 	@Column(name = "nom_utilisateur")
@@ -45,9 +46,7 @@ public class VEtatDemande {
 	@Column(name = "commentaire")
 	String commentaire;
 	@Column(name = "nombre_jours_conge")
-	BigDecimal nombreJoursConge;
-
-    //SETTERS AND GETTERS
+	Double nombreJoursConge;
 
 	public String getIdDemandeConge(){
 		return this.idDemandeConge;
@@ -78,6 +77,12 @@ public class VEtatDemande {
 	}
 	public void setIdEtatDemande(Integer idEtatDemande){
 		this.idEtatDemande = idEtatDemande;
+	}
+	public String getIdTypeConge(){
+		return this.idTypeConge;
+	}
+	public void setIdTypeConge(String idTypeConge){
+		this.idTypeConge = idTypeConge;
 	}
 	public Integer getEtatUtilisateur(){
 		return this.etatUtilisateur;
@@ -151,22 +156,21 @@ public class VEtatDemande {
 	public void setCommentaire(String commentaire){
 		this.commentaire = commentaire;
 	}
-	public BigDecimal getNombreJoursConge(){
+	public Double getNombreJoursConge(){
 		return this.nombreJoursConge;
 	}
-	public void setNombreJoursConge(BigDecimal nombreJoursConge){
+	public void setNombreJoursConge(Double nombreJoursConge){
 		this.nombreJoursConge = nombreJoursConge;
 	}
 
-    //CONSTRUCTORS
-
  	public VEtatDemande(){}
-	public VEtatDemande(String idDemandeConge, String idUtilisateur, String idDirection, Integer idTypeUtilisateur, Integer idEtatDemande, Integer etatUtilisateur, String nomUtilisateur, String prenomUtilisateur, String typeUtilisateur, String typeConge, Date dateDemande, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String etatDemande, String commentaire, BigDecimal nombreJoursConge){
+	public VEtatDemande(String idDemandeConge, String idUtilisateur, String idDirection, Integer idTypeUtilisateur, Integer idEtatDemande, String idTypeConge, Integer etatUtilisateur, String nomUtilisateur, String prenomUtilisateur, String typeUtilisateur, String typeConge, Date dateDemande, Date dateDebut, String debutAbsence, Date dateFin, String finAbsence, String etatDemande, String commentaire, Double nombreJoursConge){
 		setIdDemandeConge(idDemandeConge);
 		setIdUtilisateur(idUtilisateur);
 		setIdDirection(idDirection);
 		setIdTypeUtilisateur(idTypeUtilisateur);
 		setIdEtatDemande(idEtatDemande);
+		setIdTypeConge(idTypeConge);
 		setEtatUtilisateur(etatUtilisateur);
 		setNomUtilisateur(nomUtilisateur);
 		setPrenomUtilisateur(prenomUtilisateur);

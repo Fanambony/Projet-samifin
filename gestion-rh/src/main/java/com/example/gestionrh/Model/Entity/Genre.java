@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "genre")
 public class Genre {
-
 	
 	@Column(name = "libelle")
 	String libelle;
@@ -19,8 +18,6 @@ public class Genre {
 	@JsonIgnore
 	@OneToMany(mappedBy = "genre", cascade = CascadeType.ALL)
 	List<Utilisateur> utilisateurs;
-
-    //SETTERS AND GETTERS
 
 	public String getLibelle(){
 		return this.libelle;
@@ -49,5 +46,4 @@ public class Genre {
 		setEtat(etat);
 		setUtilisateurs(utilisateurs);
 	}
-
 }

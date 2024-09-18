@@ -37,14 +37,16 @@ public class DetailUtilisateur {
 	String serviceEmployeur;
 	@Column(name = "localite_service")
 	String localiteService;
+	@Column(name = "numero_decision")
+	String numeroDecision;
+	@Column(name = "mdp_provisoir")
+	Boolean mdpProvisoir;
 	@ManyToOne
 	@JoinColumn(name = "id_fonction", insertable = false, updatable = false)
 	Fonction fonction;
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
-
-    //SETTERS AND GETTERS
 
 	public String getId(){
 		return this.id;
@@ -130,6 +132,18 @@ public class DetailUtilisateur {
 	public void setLocaliteService(String localiteService){
 		this.localiteService = localiteService;
 	}
+	public String getNumeroDecision(){
+		return this.numeroDecision;
+	}
+	public void setNumeroDecision(String numeroDecision){
+		this.numeroDecision = numeroDecision;
+	}
+	public Boolean getMdpProvisoir(){
+		return this.mdpProvisoir;
+	}
+	public void setMdpProvisoir(Boolean mdpProvisoir){
+		this.mdpProvisoir = mdpProvisoir;
+	}
 	public Fonction getFonction(){
 		return this.fonction;
 	}
@@ -143,10 +157,8 @@ public class DetailUtilisateur {
 		this.utilisateur = utilisateur;
 	}
 
-    //CONSTRUCTORS
-
  	public DetailUtilisateur(){}
-	public DetailUtilisateur(String id, String matricule, String email, String mdp, String telephone, Date dateEntre, String idFonction, String idUtilisateur, String qualite, String categorie, String corpsAppartenance, String indice, String serviceEmployeur, String localiteService, Fonction fonction, Utilisateur utilisateur){
+	 public DetailUtilisateur(String id, String matricule, String email, String mdp, String telephone, Date dateEntre, String idFonction, String idUtilisateur, String qualite, String categorie, String corpsAppartenance, String indice, String serviceEmployeur, String localiteService, String numeroDecision, Boolean mdpProvisoir, Fonction fonction, Utilisateur utilisateur){
 		setId(id);
 		setMatricule(matricule);
 		setEmail(email);
@@ -161,8 +173,9 @@ public class DetailUtilisateur {
 		setIndice(indice);
 		setServiceEmployeur(serviceEmployeur);
 		setLocaliteService(localiteService);
+		setNumeroDecision(numeroDecision);
+		setMdpProvisoir(mdpProvisoir);
 		setFonction(fonction);
 		setUtilisateur(utilisateur);
 	}
-
 }

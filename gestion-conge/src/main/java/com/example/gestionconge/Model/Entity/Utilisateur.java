@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.List;
 import java.util.List;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -28,15 +29,20 @@ public class Utilisateur {
 	Integer typeUtilisateur;
 	@Column(name = "etat")
 	Integer etat;
+	@Column(name = "image")
+	Byte[] image;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<DetailUtilisateur> detailUtilisateurs;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
-	List<SoldeConge> soldeConges;
+	List<DemandeConge> demandeConges;
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
-	List<DemandeConge> demandeConges;
+	List<SoldeUtilisateur> soldeUtilisateurs;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<Famille> familles;
 	@ManyToOne
 	@JoinColumn(name = "genre", insertable = false, updatable = false)
 	Genre genre;
@@ -91,23 +97,35 @@ public class Utilisateur {
 	public void setEtat(Integer etat){
 		this.etat = etat;
 	}
+	public Byte[] getImage(){
+		return this.image;
+	}
+	public void setImage(Byte[] image){
+		this.image = image;
+	}
 	public List<DetailUtilisateur> getDetailUtilisateurs(){
 		return this.detailUtilisateurs;
 	}
 	public void setDetailUtilisateurs(List<DetailUtilisateur> detailUtilisateurs){
 		this.detailUtilisateurs = detailUtilisateurs;
 	}
-	public List<SoldeConge> getSoldeConges(){
-		return this.soldeConges;
-	}
-	public void setSoldeConges(List<SoldeConge> soldeConges){
-		this.soldeConges = soldeConges;
-	}
 	public List<DemandeConge> getDemandeConges(){
 		return this.demandeConges;
 	}
 	public void setDemandeConges(List<DemandeConge> demandeConges){
 		this.demandeConges = demandeConges;
+	}
+	public List<SoldeUtilisateur> getSoldeUtilisateurs(){
+		return this.soldeUtilisateurs;
+	}
+	public void setSoldeUtilisateurs(List<SoldeUtilisateur> soldeUtilisateurs){
+		this.soldeUtilisateurs = soldeUtilisateurs;
+	}
+	public List<Famille> getFamilles(){
+		return this.familles;
+	}
+	public void setFamilles(List<Famille> familles){
+		this.familles = familles;
 	}
 	public Genre getGenre(){
 		return this.genre;
@@ -131,7 +149,7 @@ public class Utilisateur {
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, List<DetailUtilisateur> detailUtilisateurs, List<SoldeConge> soldeConges, List<DemandeConge> demandeConges, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, Byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs, List<Famille> familles, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
@@ -139,9 +157,11 @@ public class Utilisateur {
 		setGenre(genre);
 		setTypeUtilisateur(typeUtilisateur);
 		setEtat(etat);
+		setImage(image);
 		setDetailUtilisateurs(detailUtilisateurs);
-		setSoldeConges(soldeConges);
 		setDemandeConges(demandeConges);
+		setSoldeUtilisateurs(soldeUtilisateurs);
+		setFamilles(familles);
 		setGenre(genre);
 		setEtat_utilisateur(etat_utilisateur);
 		setType_utilisateur(type_utilisateur);

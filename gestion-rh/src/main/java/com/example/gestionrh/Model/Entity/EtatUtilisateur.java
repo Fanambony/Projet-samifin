@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "etat_utilisateur")
 public class EtatUtilisateur {
 
-	
 	@Column(name = "libelle")
 	String libelle;
 	@Id

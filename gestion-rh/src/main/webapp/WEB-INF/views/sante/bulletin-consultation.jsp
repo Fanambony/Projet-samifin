@@ -1,10 +1,10 @@
 <%@ page import="java.util.Optional" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Utilisateur" %>
 <%@ page import="com.example.gestionrh.Model.Entity.DetailUtilisateur" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-    Optional<Utilisateur> utilisateur = (Optional<Utilisateur>) request.getAttribute("utilisateur");
-    Utilisateur user = utilisateur.get();
+    Utilisateur user = (Utilisateur) request.getAttribute("utilisateur");
 %>
 
 <%@include file="../utils/header.jsp" %>
@@ -12,34 +12,19 @@
 <div class="col-12 grid-margin">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Sante</h4>
+        <h4 class="card-title">BULLETIN DE CONSULTATION</h4>
 
-        <form class="form-sample" id="santeForm" method="post">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nom</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="nom" value="<%= user.getNom() %>"/>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Prenom</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="prenom" value="<%= user.getPrenom() %>"/>
-                </div>
-              </div>
-            </div>
-          </div>
+        <p class="card-description">Renseignements concernant l'agent</p>
+
+        <form class="form-sample" id="santeForm" method="post" action="generer_pdf/bulletin-consultation">
+
           <% for(DetailUtilisateur detail : user.getDetailUtilisateurs()) { %>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label">Matricule</label>
+                  <label class="col-sm-3 col-form-label">Nom et prenom</label>
                   <div class="col-sm-9">
-                    <input type="number" class="form-control" name="matricule" value="<%= detail.getMatricule() %>">
+                    <input type="text" class="form-control" name="nom" value="<%= user.getNom() %> <%= user.getPrenom() %>"/>
                   </div>
                 </div>
               </div>
@@ -55,12 +40,22 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
+                  <label class="col-sm-3 col-form-label">Matricule</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="matricule" value="<%= detail.getMatricule() %>">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Qualite</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" name="qualite" value="<%= detail.getQualite() %>"/>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Categorie</label>
@@ -69,8 +64,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Corps d'appartenance</label>
@@ -79,6 +72,8 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Grade ou emploi</label>
@@ -87,8 +82,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Indice</label>
@@ -97,6 +90,8 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Service Employeur</label>
@@ -105,8 +100,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-6">
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Localite de service</label>
@@ -118,13 +111,54 @@
             </div>
           <% } %>
 
-          <button type="button" class="btn btn-outline-primary btn-icon-text" onclick="submitForm('generer_pdf/bulletin-consultation')">
-            Bulletin de consultation
-            <i class="ti-printer btn-icon-append"></i>                                                                              
-          </button>
+          <p class="card-description">Renseignements concernant le membre de la famille</p>
 
-          <button type="button" class="btn btn-outline-primary btn-icon-text" onclick="submitForm('demandeRemboursementController')">
-            Demande de remboursement
+          <div class="form-group row mb-2">
+            <label class="col-sm-7 col-form-label">Le malade est-il le fonctionnaire lui-même ?</label>
+            <div class="col-sm-5">
+                <input type="radio" name="fonctionnaire_malade" value="OUI"> Oui -
+                <input type="radio" name="fonctionnaire_malade" value="NON"> Non
+            </div>
+          </div>
+        
+          <div class="form-group row mb-2">
+            <label class="col-sm-7 col-form-label">Le malade est-il un membre de la famille ?</label>
+            <div class="col-sm-5">
+                <input type="radio" name="membre_famille_malade" value="OUI"> Oui -
+                <input type="radio" name="membre_famille_malade" value="NON"> Non
+              </div>
+          </div>
+        
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Nom et Prénom</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control" name="nom_prenom_membre_famille" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Filiation</label>
+            <div class="col-sm-5">
+              <input type="text" class="form-control" name="filiation_membre_famille" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Né(e) le</label>
+            <div class="col-sm-5">
+              <input type="date" class="form-control" name="date_naissance_membre_famille" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Antananarivo, le</label>
+            <div class="col-sm-5">
+                <input type="date" class="form-control" name="date_demande" />
+            </div>
+        </div>
+
+          <button type="submit" class="btn btn-outline-primary btn-icon-text">
+            Exporter PDF
             <i class="ti-printer btn-icon-append"></i>                                                                              
           </button>
 
@@ -132,13 +166,5 @@
       </div>
     </div>
 </div>
-
-<script>
-  function submitForm(actionUrl) {
-    const form = document.getElementById('santeForm');
-    form.action = actionUrl;
-    form.submit();
-  }
-</script>
 
 <%@include file="../utils/footer.jsp" %>

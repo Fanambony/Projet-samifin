@@ -1,8 +1,7 @@
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
 <%@ page import="java.util.Date" %>
-
-
 <%@ page contentType="text/html; charset=UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,7 +10,7 @@
     <title>Bulletin de Consultation</title>
 
     <link rel="stylesheet" href="/assets/css/vertical-layout-light/style.css"/>
-    <link rel="stylesheet" href="/assets/css/pdf/style.css"/>
+    <link rel="stylesheet" href="/assets/css/pdf/bulletin.css"/>
     <!-- endinject -->
     <link rel="shortcut icon" href="/assets/images/favicon.png"/>
 
@@ -41,7 +40,7 @@
             <br/>
             <h5>RENSEIGNEMENTS CONCERNANT L'AGENT</h5>
             <br/>
-            <p><strong>Nom et Prénoms :</strong> <%= request.getAttribute("nom") %> <%= request.getAttribute("prenom") %></p>
+            <p><strong>Nom et Prénoms :</strong> <%= request.getAttribute("nom") %></p>
             <p><strong>Matricule :</strong> <%= request.getAttribute("matricule") %></p>
             <p><strong>QUALITE :</strong> <%= request.getAttribute("qualite") %></p>
             <p><strong>CATEGORIE :</strong> <%= request.getAttribute("categorie") %></p>
@@ -54,15 +53,31 @@
 
             <h5>RENSEIGNEMENTS CONCERNANT LE MEMBRE DE LA FAMILLE</h5>
             <br/>
-            <p><strong>Le malade est-il le fonctionnaire lui-même ?</strong> <span class="option1">OUI - NON</span></p>
-            <p><strong>Le malade est-il un membre de la famille ?</strong> <span class="option2">OUI - NON</span></p>
-            <p><strong>Nom et Prénom :</strong> </p>
-            <p><strong>Filiation :</strong> </p>
-            <p><strong>Né(e) le :</strong> </p>
+            <p>
+              <span class="question"><strong>Le malade est-il le fonctionnaire lui-même ?</strong></span>
+              <span class="option-container">
+                  <span class="option <%= "OUI".equals(request.getAttribute("fonctionnaireMalade")) ? "selected" : "" %>">Oui</span> -
+                  <span class="option <%= "NON".equals(request.getAttribute("fonctionnaireMalade")) ? "selected" : "" %>">Non</span>
+              </span>
+          </p>
+          
+          <p>
+              <span class="question"><strong>Le malade est-il un membre de la famille ?</strong></span>
+              <span class="option-container">
+                  <span class="option <%= "OUI".equals(request.getAttribute("membreFamilleMalade")) ? "selected" : "" %>">Oui</span> -
+                  <span class="option <%= "NON".equals(request.getAttribute("membreFamilleMalade")) ? "selected" : "" %>">Non</span>
+              </span>
+          </p>
+          
+
+
+            <p><strong>Nom et Prénom :</strong> <%= request.getAttribute("nomPrenomMembreFamille") != null ? request.getAttribute("nomPrenomMembreFamille") : "Non spécifié" %></p>
+            <p><strong>Filiation :</strong> <%= request.getAttribute("filiationMembreFamille") != null ? request.getAttribute("filiationMembreFamille") : "Non spécifié" %></p>
+            <p><strong>Né(e) le :</strong> <%= request.getAttribute("dateNaissanceMembreFamille") != null ? DateUtil.formatDate((Date) request.getAttribute("dateNaissanceMembreFamille")) : "" %></p>
 
             <br/>
             <div class="signature">
-                <p class="ville">Antananarivo, le</p>
+                <p class="ville">Antananarivo, le <%= request.getAttribute("date_demande") != null ? DateUtil.formatDate((Date) request.getAttribute("date_demande")) : "" %></p>
                 <p class="medecin">Le Médecin traitant</p>
             </div>
         </div>

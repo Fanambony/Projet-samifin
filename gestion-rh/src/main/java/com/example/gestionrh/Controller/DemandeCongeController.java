@@ -1,14 +1,20 @@
 package com.example.gestionrh.Controller;
 
 import com.example.gestionrh.Model.Entity.DemandeConge;
+import com.example.gestionrh.Model.Entity.VEtatDemande;
+import com.example.gestionrh.Model.Entity.VHistoriqueConge;
 import com.example.gestionrh.Model.Service.DemandeCongeService;
 import com.example.gestionrh.Model.Service.EtatDemandeService;
+import com.example.gestionrh.Model.Service.VEtatDemandeService;
+import com.example.gestionrh.Model.Service.VHistoriqueCongeService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 import java.util.Optional;
@@ -24,6 +30,12 @@ public class DemandeCongeController{
 
 	@Autowired
 	private EtatDemandeService etatDemandeService;
+
+	@Autowired
+	private VEtatDemandeService vEtatDemandeService;
+
+	@Autowired
+	private VHistoriqueCongeService vHistoriqueCongeService;
 
 	@PostMapping("/modifier-conge")
 	public String modifierConge(@RequestParam("idDemande") String idDemande,
@@ -60,19 +72,49 @@ public class DemandeCongeController{
 	@GetMapping("auto-confirmation")
 	public String autoConfirmation(
 									@RequestParam("idDemande") String id,
-									@RequestParam("etat") int etat
-									) {
+									@RequestParam("etat") int etat,
+									HttpSession session,
+									RedirectAttributes redirectAttributes) {
 
 		Optional<DemandeConge> findById = demandeCongeService.getOne(id);
+		if (!findById.isPresent()) {
+			redirectAttributes.addFlashAttribute("message", "Demande introuvable");
+			redirectAttributes.addFlashAttribute("type", "error");
+			System.out.println("Demande introuvable");
+			return "redirect:/detail_utilisateur/page-conge"; 
+		}
 		DemandeConge d = findById.get();
-		d.setEtatDemande(etat);
-		
-		demandeCongeService.create(d);
+
+		Optional<VEtatDemande> findByIdDemande = vEtatDemandeService.getOne(id);
+		if (!findByIdDemande.isPresent()) {
+			redirectAttributes.addFlashAttribute("message", "État de la demande introuvable");
+			redirectAttributes.addFlashAttribute("type", "error");
+			System.out.println("État de la demande introuvable");
+			return "redirect:/detail_utilisateur/page-conge";
+		}
+		VEtatDemande vEtat = findByIdDemande.get();
+		double solde_demander = vEtat.getNombreJoursConge();
+
+		String id_type_conge = d.getIdTypeConge();
+		String idUtilisateur = (String)session.getAttribute("userId");
+		VHistoriqueConge historiqueConge = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, id_type_conge);
+		double solde_restant = historiqueConge.getSoldeRestant();
+
+		if (solde_restant >= solde_demander) {
+			d.setEtatDemande(etat);        
+			demandeCongeService.create(d);
+			redirectAttributes.addFlashAttribute("message", "Demande envoyée avec succès");
+			redirectAttributes.addFlashAttribute("type", "success");
+		} else {
+			redirectAttributes.addFlashAttribute("message", "Le solde restant est insuffisant pour cette demande de congé");
+			redirectAttributes.addFlashAttribute("type", "error");
+		}
+
 		return "redirect:/detail_utilisateur/page-conge";
 	}
-	
 
-	@GetMapping("/ajout_conge")
+	
+	@PostMapping("/ajout_conge")
 	public String demanderConge(HttpSession session,
 								@RequestParam("typeConge") String typeConge,
 								@RequestParam("date_debut") String date_debut_string,

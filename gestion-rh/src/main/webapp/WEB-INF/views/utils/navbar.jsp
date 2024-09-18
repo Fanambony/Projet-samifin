@@ -8,17 +8,17 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="/page-sante">
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
           <i class="ti-heart menu-icon"></i>
           <span class="menu-title">Sante</span>
+          <i class="menu-arrow"></i>
         </a>
-      </li> 
-
-      <li class="nav-item">
-        <a class="nav-link" href="/list-utilisateur">
-          <i class="ti-user menu-icon"></i>
-          <span class="menu-title">Gestion utilisateurs</span>
-        </a>
+        <div class="collapse" id="ui-basic">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/bulletin-consultation">Bulletin</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/demande-remboursement">Remboursement</a></li>
+          </ul>
+        </div>
       </li>
 
       <li class="nav-item">
@@ -29,11 +29,17 @@
       </li>
 
       <li class="nav-item">
+        <a class="nav-link" href="/list-utilisateur">
+          <i class="ti-user menu-icon"></i>
+          <span class="menu-title">Gestion utilisateurs</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link" href="/direction/gerer-direction">
           <i class="ti-briefcase menu-icon"></i>
           <span class="menu-title">Gestion direction</span>
         </a>
       </li>
-      
     </ul>
   </nav>

@@ -7,7 +7,9 @@
 <%@ page import="com.example.gestionrh.Model.Entity.Fonction" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Genre" %>
 <%@ page import="com.example.gestionrh.Model.Entity.EtatUtilisateur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Filiation" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="java.util.Base64" %>
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
@@ -17,11 +19,9 @@
     List<Fonction> fonction = (List<Fonction>)request.getAttribute("fonctions");
     List<Genre> genre = (List<Genre>)request.getAttribute("genre");
     List<EtatUtilisateur> etat = (List<EtatUtilisateur>)request.getAttribute("etat");
-    int pa = (int)request.getAttribute("page");
 %>
 
 <%@include file="../utils/header.jsp" %>
-
 
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
@@ -30,7 +30,7 @@
             <div class="table-responsive">
 
                 <div>
-                    <button type="button" class="btn btn-outline-primary btn-fw" data-toggle="modal" data-target="#ajouterUtilisateurModal">Ajouter une nouvelle utilisateur</button>
+                    <a href="/ajout-utilisateur"><button type="button" class="btn btn-outline-primary btn-fw">Ajouter une nouvelle utilisateur</button></a>
                 </div>
 
                 </br>
@@ -50,8 +50,6 @@
                         <div class="col-sm-3">
                             <select class="form-control">
                                 <option value="">Toutes les etats</option>
-                                <option value="1">Active</option>
-                                <option value="5">Desactive</option>
                             </select>
                         </div>
                         <div class="col-sm-2">
@@ -63,46 +61,57 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th>Image</th>
                             <th>Matricule</th>
-                            <th>Nom</th>
-                            <th>Prenom</th>
+                            <th>Agent</th>
                             <th>Direction</th>
                             <th>Etat</th>
-                            <th>Details</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% for(Utilisateur u : utilisateur) { %>
-                            <tr>
-                                <td>
-                                    <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
-                                        <div><%= du.getMatricule() %></div>
-                                    <% } %>
-                                    </td>
-                                <td><%= u.getNom() %></td>
-                                <td><%= u.getPrenom() %></td>
-                                <td>
+                        <%
+                            for(Utilisateur u : utilisateur) { 
+                                byte[] imageBytes = u.getImage();
+                                String imageUtilisateur = (imageBytes != null && imageBytes.length > 0) ? Base64.getEncoder().encodeToString(imageBytes) : null;
+                                String imageParDefaut = "/assets/images/faces/user.jpeg";
+                                String imageSrc = (imageUtilisateur != null && !imageUtilisateur.isEmpty()) ? "data:image/jpeg;base64, " + imageUtilisateur : imageParDefaut;
+                        %>
+                        <tr>
+                            <td class="py-1">
+                                <img src="<%= imageSrc %>" alt="image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
+                            </td>
+                            <td>
+                                <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
+                                    <div><%= du.getMatricule() %></div>
+                                <% } %>
+                            </td>
+                            <td><%= u.getNom() %> <%= u.getPrenom() %></td>
+                            <td>
                                 <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
                                     <div><%= du.getFonction().getDirection().getNom() %></div>
                                 <% } %>
-                                </td>
-                                <td><label class="badge badge-info">
-                                    <%= u.getEtat_utilisateur().getLibelle() %>
-                                </label></td>
-                                <td>
-                                    <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" data-target="#userDetailModal<%= u.getId() %>">
-                                        <i class="ti-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" data-target="#userModifModal<%= u.getId() %>">
-                                        <i class="ti-pencil"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            </td>
+                            <td><label class="badge badge-info">
+                                <%= u.getEtat_utilisateur().getLibelle() %>
+                            </label></td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voir les détails" data-target="#userDetailModal<%= u.getId() %>">
+                                    <i class="ti-eye"></i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" title="Modifier l'utilisateur" data-target="#userModifModal<%= u.getId() %>">
+                                    <i class="ti-pencil"></i>
+                                </button>
+
+                                <a href="/famille/gererFamille?idUtilisateur=<%= u.getId() %>"><button type="button" class="btn btn-warning btn-rounded btn-icon" title="Gérer la famille">
+                                    <i class="mdi mdi-account-multiple"></i>
+                                </button></a>
+                            </td>
+                            
+                        </tr>
                         <% } %>
                     </tbody>
                 </table>
-
-                <%= pa %>
 
                 <br>
                 
@@ -122,229 +131,15 @@
     </div>
 </div>
 
-<!-- Modal ajout -->
-<div class="modal fade custom-modal" id="ajouterUtilisateurModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ajout utilisateur</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="#" method="post">
-                    <div class="container-fluid">
-                        
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="nom" class="col-sm-3 col-form-label">Nom</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="nom" name="nom" placeholder="Entrer nom" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="prenom" class="col-sm-3 col-form-label">Prenom</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Entrer prenom" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="naissance" class="col-sm-3 col-form-label">Genre</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="genre" name="genre" required>
-                                            <% for(Genre g : genre) { %>
-                                                <option value="<%= g.getEtat() %>"><%= g.getLibelle() %></option>
-                                            <% } %>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="naissance" class="col-sm-3 col-form-label">Date naissance</label>
-                                    <div class="col-sm-8">
-                                        <input type="date" class="form-control" id="naissance" name="naissance" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="email" class="col-sm-3 col-form-label">Matricule</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="matricule" name="matricule" placeholder="Entrer matricule" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="entre" class="col-sm-3 col-form-label">Date entree</label>
-                                    <div class="col-sm-8">
-                                        <input type="date" class="form-control" id="entre" name="entre" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="direction" class="col-sm-3 col-form-label">Direction</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="direction" name="direction" required>
-                                            <option value="" disabled selected>Veuillez choisir une direction</option>
-                                            <% for(Direction d : direction) { %>
-                                                <option value="<%= d.getId() %>"><%= d.getNom() %></option>
-                                            <% } %>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="fonction" class="col-sm-3 col-form-label">Fonction</label>
-                                    <div class="col-sm-8">
-                                        <select class="form-control" id="fonction" name="fonction" required>
-                                            <!-- Les fonctions seront insérées ici par JavaScript -->
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <script src="/assets/js/jquery-3.7.1.min.js"></script>
-                        <script>
-                            $('#direction').on('change', function() {
-                                var directionId = $(this).val();
-                                var fonctionSelect = $('#fonction');
-                        
-                                // Envoyer une requête AJAX pour récupérer les fonctions
-                                $.ajax({
-                                    url: '/fonction/getFonctionsByDirection',
-                                    type: 'GET',
-                                    data: { directionId: directionId },
-                                    success: function(fonctions) {
-                                        // Vider la liste des fonctions
-                                        fonctionSelect.empty();
-                                        
-                                        // Ajouter les nouvelles fonctions
-                                        $.each(fonctions, function(index, fonction) {
-                                            fonctionSelect.append(new Option(fonction.nom, fonction.id));
-                                        });
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.error('Erreur lors de la récupération des fonctions:', error);
-                                    }
-                                });
-                            });
-                        </script>
-                        
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="email" class="col-sm-3 col-form-label">Email</label>
-                                    <div class="col-sm-8">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="email@mail.com" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="telephone" class="col-sm-3 col-form-label">Telephone</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="telephone" name="telephone" placeholder="+261 ** *** **" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="qualite" class="col-sm-3 col-form-label">Qualite</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="qualite" name="qualite" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="categorie" class="col-sm-3 col-form-label">Categorie</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="categorie" name="categorie" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="appartenance" class="col-sm-3 col-form-label">Corps d'appartenance</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="appartenance" name="appartenance" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="indice" class="col-sm-3 col-form-label">Indice</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="indice" name="indice" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="service" class="col-sm-3 col-form-label">Service employeur</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="service" name="service" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <div class="row">
-                                    <label for="localite" class="col-sm-3 col-form-label">Localite de service</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="localite" name="localite" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Ajoutez d'autres champs nécessaires ici en utilisant la même structure -->
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" onclick="submitForm()">Ajouter</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
 
 <!-- Modal détails utilisateur -->
-<% for(Utilisateur u : utilisateur) { %>
+<% 
+    for(Utilisateur u : utilisateur) { 
+        byte[] imageBytes = u.getImage();
+        String imageUtilisateur = (imageBytes != null && imageBytes.length > 0) ? Base64.getEncoder().encodeToString(imageBytes) : null;
+        String imageParDefaut = "/assets/images/faces/user.jpeg";
+        String imageSrc = (imageUtilisateur != null && !imageUtilisateur.isEmpty()) ? "data:image/jpeg;base64, " + imageUtilisateur : imageParDefaut;
+    %>
     <div class="modal fade custom-modal" id="userDetailModal<%= u.getId() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -376,31 +171,49 @@
                                     <li class="list-group-item">
                                         <strong>Matricule :</strong> <%= u.getDetailUtilisateurs().get(0).getMatricule() %>
                                     </li>
+                                    <li class="list-group-item" >
+                                        <strong>Email :</strong> <%= u.getDetailUtilisateurs().get(0).getEmail() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Téléphone :</strong> <%= u.getDetailUtilisateurs().get(0).getTelephone() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Date d'entrée :</strong> <%= DateUtil.formatDate(u.getDetailUtilisateurs().get(0).getDateEntre()) %>
+                                    </li>
                                 </ul>
                             </div>
                             <!-- Colonne du milieu pour la photo de profil -->
                             <div class="col-md-4 text-center">
-                                <img src="/assets/images/faces/face1.jpg" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
+                                <img src="<%= imageSrc %>" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
                                 <h4><%= u.getPrenom() %> <%= u.getNom() %></h4>
                                 <p><%= u.getType_utilisateur().getLibelle() %></p>
                             </div>
                             <!-- Colonne droite pour les informations -->
                             <div class="col-md-4">
                                 <ul class="list-group">
-                                    <li class="list-group-item" style="border-color: white;">
-                                        <strong>Email :</strong> <%= u.getDetailUtilisateurs().get(0).getEmail() %>
-                                    </li>
-                                    <li class="list-group-item" style="border-color: white;">
-                                        <strong>Téléphone :</strong> <%= u.getDetailUtilisateurs().get(0).getTelephone() %>
-                                    </li>
-                                    <li class="list-group-item" style="border-color: white;">
-                                        <strong>Fonction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getNom() %>
-                                    </li>
-                                    <li class="list-group-item" style="border-color: white;">
+                                    <li class="list-group-item" >
                                         <strong>Direction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getDirection().getNom() %>
                                     </li>
-                                    <li class="list-group-item" style="border-color: white;">
-                                        <strong>Date d'entrée :</strong> <%= DateUtil.formatDate(u.getDetailUtilisateurs().get(0).getDateEntre()) %>
+                                    <li class="list-group-item" >
+                                        <strong>Fonction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getNom() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Qualité :</strong> <%= u.getDetailUtilisateurs().get(0).getQualite() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Catégorie :</strong> <%= u.getDetailUtilisateurs().get(0).getCategorie() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Corps d'appartenance :</strong> <%= u.getDetailUtilisateurs().get(0).getCorpsAppartenance() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Indice :</strong> <%= u.getDetailUtilisateurs().get(0).getIndice() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Service Employeur :</strong> <%= u.getDetailUtilisateurs().get(0).getServiceEmployeur() %>
+                                    </li>
+                                    <li class="list-group-item" >
+                                        <strong>Localite de service :</strong> <%= u.getDetailUtilisateurs().get(0).getLocaliteService() %>
                                     </li>
                                 </ul>
                             </div>
@@ -415,15 +228,13 @@
     </div>
 <% } %>
 
-
-
 <!-- Modal modifier utilisateur -->
 <% for(Utilisateur u : utilisateur) { %>
     <div class="modal fade custom-modal" id="userModifModal<%= u.getId() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="userDetailModalLabel">Détails de l'utilisateur</h5>
+                    <h5 class="modal-title" id="userDetailModalLabel">Modification de l'utilisateur</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -432,84 +243,144 @@
                     <div id="userDetailContent">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="nom">Nom</label>
-                                    <input type="text" class="form-control" id="nom" value="<%= u.getNom() %>">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Nom</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="nom" value="<%= u.getNom() %>">
+                                    </div>
                                 </div>
-                                <% for(DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
-                                    <div class="form-group">
-                                        <label>Matricule</label>
-                                        <input type="text" class="form-control" id="matricule" value="<%= detail.getMatricule() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input type="text" class="form-control" id="email" value="<%= detail.getEmail() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Direction</label>
-                                        <select id="direction" name="direction" class="form-control">
-                                            <% for(Direction d : direction) { %>
-                                                <option value="<%= d.getId() %>" <%= d.getId().equals(detail.getFonction().getDirection().getId()) ? "selected" : "" %>><%= d.getNom() %></option>
-                                            <% } %>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Qualité</label>
-                                        <input type="text" class="form-control" id="qualite" value="<%= detail.getQualite() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Corps d'appartenance</label>
-                                        <input type="text" class="form-control" id="appartenance" value="<%= detail.getCorpsAppartenance() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Service employeur</label>
-                                        <input type="text" class="form-control" id="employeur" value="<%= detail.getServiceEmployeur() %>">
-                                    </div>
-                                <% } %>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Prénom</label>
-                                    <input type="text" class="form-control" id="prenom" value="<%= u.getPrenom() %>">
-                                </div>
-                                <% for(DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
-                                    <div class="form-group">
-                                        <label>Date d'Entrée</label>
-                                        <input type="text" class="form-control" id="dateEntree" value="<%= detail.getDateEntre() %>">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Prénom</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="prenom" value="<%= u.getPrenom() %>">
                                     </div>
-                                    <div class="form-group">
-                                        <label>Téléphone</label>
-                                        <input type="text" class="form-control" id="telephone" value="<%= detail.getTelephone() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Fonction</label>
-                                        <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= detail.getFonction().getId() %>">
-                                            <!-- Les options seront mises à jour dynamiquement par JavaScript -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Catégorie</label>
-                                        <input type="text" class="form-control" id="categorie" value="<%= detail.getCategorie() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Indice</label>
-                                        <input type="text" class="form-control" id="indice" value="<%= detail.getIndice() %>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Localité de service</label>
-                                        <input type="text" class="form-control" id="localite" value="<%= detail.getLocaliteService() %>">
-                                    </div>
-                                <% } %>
-                                <div class="form-group">
-                                    <label class="switch">
-                                        Désactiver
-                                        <input type="checkbox" id="toggleSwitch">
-                                        <span class="slider"></span>
-                                        Activer
-                                    </label>
                                 </div>
                             </div>
                         </div>
+
+                        <% for(DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Matricule</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="matricule" value="<%= detail.getMatricule() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Date d'Entrée</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="dateEntree" value="<%= detail.getDateEntre() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Email</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="email" value="<%= detail.getEmail() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Téléphone</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="telephone" value="<%= detail.getTelephone() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Direction</label>
+                                        <div class="col-sm-8">
+                                            <select id="direction" name="direction" class="form-control">
+                                                <% for(Direction d : direction) { %>
+                                                    <option value="<%= d.getId() %>" <%= d.getId().equals(detail.getFonction().getDirection().getId()) ? "selected" : "" %>><%= d.getNom() %></option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Fonction</label>
+                                        <div class="col-sm-8">
+                                            <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= detail.getFonction().getId() %>">
+                                                <!-- Les options seront mises à jour dynamiquement par JavaScript -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Qualité</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="qualite" value="<%= detail.getQualite() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Catégorie</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="categorie" value="<%= detail.getCategorie() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Corps d'appartenance</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="appartenance" value="<%= detail.getCorpsAppartenance() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Indice</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="indice" value="<%= detail.getIndice() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Service employeur</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="employeur" value="<%= detail.getServiceEmployeur() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Localité de service</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="localite" value="<%= detail.getLocaliteService() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -568,7 +439,7 @@
 
 <style>
     .custom-modal .modal-dialog {
-        margin-top: 0px;
+        margin-top: 0%;
     }
 
     .switch input{
@@ -606,6 +477,10 @@
     }
     input:checked + .slider:after{
         transform: translateX(26px);
+    }
+    .mdi-icon {
+        font-size: 1.2rem;
+        color: white;
     }
 </style>
 

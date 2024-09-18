@@ -19,8 +19,6 @@ public class TypeAbsence {
 	@OneToMany(mappedBy = "type_absence", cascade = CascadeType.ALL)
 	List<DemandeConge> demandeConges;
 
-    //SETTERS AND GETTERS
-
 	public String getLibelle(){
 		return this.libelle;
 	}
@@ -48,5 +46,4 @@ public class TypeAbsence {
 		setEtat(etat);
 		setDemandeConges(demandeConges);
 	}
-
 }
