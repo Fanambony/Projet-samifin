@@ -11,6 +11,7 @@ import com.example.gestionrh.Model.Service.TypeAbsenceService;
 import com.example.gestionrh.Model.Service.TypeCongeService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
 import com.example.gestionrh.Model.Service.VHistoriqueCongeService;
+import com.example.gestionrh.utils.PaginationConfig;
 
 import java.util.Base64;
 import java.util.List;
@@ -18,9 +19,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 
 
 @Controller
@@ -45,6 +50,9 @@ public class DetailUtilisateurController{
     @Autowired
     private VHistoriqueCongeService vHistoriqueCongeService;
 
+    @Autowired
+    private PaginationConfig paginationConfig;
+
 	@PostMapping("verifierLogin")
     public String Login(@RequestParam String mail, @RequestParam String mdp, HttpSession session, HttpServletRequest request) {
         try {
@@ -68,9 +76,19 @@ public class DetailUtilisateurController{
     }
     
     @GetMapping("page-conge")
-    public String Accueil(HttpServletRequest request, HttpSession session) {
-        String idUtilisateur = (String)session.getAttribute("userId");
-        List<VEtatDemande> etatDemandes = vEtatDemandeService.getByIdUtilisateur(idUtilisateur);
+    public String Accueil(HttpServletRequest request, HttpSession session,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(required = false) Integer size) {
+        String idUtilisateur = (String) session.getAttribute("userId");
+
+        // Si size n'est pas spécifié dans l'URL, utilisez la valeur par défaut
+        int paginationSize = (size != null) ? size : paginationConfig.getDefaultPaginationSize();
+
+        Pageable pageable = PageRequest.of(page, paginationSize);
+        
+        // Récupérer les demandes avec pagination
+        Page<VEtatDemande> etatDemandesPage = vEtatDemandeService.getByIdUtilisateur(idUtilisateur, pageable);
+        
         List<TypeConge> typeConges = typeCongeService.getAll();
         List<TypeAbsence> typeAbsence = typeAbsenceService.getAll();
         String message = request.getParameter("message");
@@ -81,13 +99,21 @@ public class DetailUtilisateurController{
         
         VHistoriqueConge historiqueConge = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, idConge);
         VHistoriqueConge historiquePersmission = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, idAutorisation);
-        request.setAttribute("etatDemandes", etatDemandes);
+        
+        // Attributs pour la vue
+        request.setAttribute("etatDemandesPage", etatDemandesPage);
+        request.setAttribute("totalPages", etatDemandesPage.getTotalPages());
+        request.setAttribute("currentPage", etatDemandesPage.getNumber());
+        request.setAttribute("size", paginationSize);
+        
         request.setAttribute("typeConge", typeConges);
         request.setAttribute("typeAbsence", typeAbsence);
         request.setAttribute("historiqueConge", historiqueConge);
         request.setAttribute("historiquePersmission", historiquePersmission);
         request.setAttribute("message", message);
         request.setAttribute("type", type);
+        
         return "conge/conge";
     }
+
 }

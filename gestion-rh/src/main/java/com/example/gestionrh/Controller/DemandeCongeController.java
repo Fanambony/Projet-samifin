@@ -8,8 +8,8 @@ import com.example.gestionrh.Model.Service.EtatDemandeService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
 import com.example.gestionrh.Model.Service.VHistoriqueCongeService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 import java.util.Optional;
-
-
+import java.util.List;
 
 @Controller
 @RequestMapping("demande_conge")
@@ -36,6 +35,20 @@ public class DemandeCongeController{
 
 	@Autowired
 	private VHistoriqueCongeService vHistoriqueCongeService;
+
+	@GetMapping("annuler-conge") 
+	public String annuler(@RequestParam("idDemande") String idDemande) {
+		demandeCongeService.delete(idDemande);
+		return "redirect:/demande_conge/annulation-conge";
+	}
+
+	@GetMapping("/annulation-conge")
+	public String annulerConge(HttpServletRequest request) {
+		int etat_demande_valider = 10;
+		List<VEtatDemande> list_demande_valider = vEtatDemandeService.findByIdEtatDemandeAndDateDebutAfter(etat_demande_valider);
+		request.setAttribute("list_demande_valider", list_demande_valider);
+		return "conge/annulation-conge";
+	}
 
 	@PostMapping("/modifier-conge")
 	public String modifierConge(@RequestParam("idDemande") String idDemande,
@@ -62,7 +75,6 @@ public class DemandeCongeController{
 		return "redirect:/detail_utilisateur/page-conge";
 	}
 	
-
 	@GetMapping("/supprimer-conge")
 	public String suppressionConge(@RequestParam("idDemande") String id) {
 		demandeCongeService.delete(id);
@@ -83,7 +95,7 @@ public class DemandeCongeController{
 			System.out.println("Demande introuvable");
 			return "redirect:/detail_utilisateur/page-conge"; 
 		}
-		DemandeConge d = findById.get();
+		DemandeConge demande_conge = findById.get();
 
 		Optional<VEtatDemande> findByIdDemande = vEtatDemandeService.getOne(id);
 		if (!findByIdDemande.isPresent()) {
@@ -95,14 +107,19 @@ public class DemandeCongeController{
 		VEtatDemande vEtat = findByIdDemande.get();
 		double solde_demander = vEtat.getNombreJoursConge();
 
-		String id_type_conge = d.getIdTypeConge();
+		String id_type_conge = demande_conge.getIdTypeConge();
 		String idUtilisateur = (String)session.getAttribute("userId");
 		VHistoriqueConge historiqueConge = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, id_type_conge);
-		double solde_restant = historiqueConge.getSoldeRestant();
+		
+		double solde_restant = 0;
+
+		if (historiqueConge != null) {
+			solde_restant = historiqueConge.getSoldeRestant();
+		}
 
 		if (solde_restant >= solde_demander) {
-			d.setEtatDemande(etat);        
-			demandeCongeService.create(d);
+			demande_conge.setEtatDemande(etat);        
+			demandeCongeService.create(demande_conge);
 			redirectAttributes.addFlashAttribute("message", "Demande envoyée avec succès");
 			redirectAttributes.addFlashAttribute("type", "success");
 		} else {

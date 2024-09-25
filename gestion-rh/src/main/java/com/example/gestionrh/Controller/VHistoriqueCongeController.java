@@ -31,26 +31,4 @@ public class VHistoriqueCongeController{
 		List<VHistoriqueConge> listVHistoriqueConge = this.vHistoriqueCongeService.getAll();
 		return listVHistoriqueConge;
 	}
-
-	/* -- CREATE -- */
-	@PostMapping("create")
-	public void create(@RequestBody VHistoriqueConge formData) {
-		VHistoriqueConge vHistoriqueConge = new VHistoriqueConge();
-		vHistoriqueCongeService.create(formData);
-	}
-
-
-	/* -- UPDATE -- */
-	@PutMapping("update")
-	public void update(@RequestBody VHistoriqueConge formData) {
-		VHistoriqueConge vHistoriqueConge = new VHistoriqueConge();
-		vHistoriqueCongeService.create(formData);
-	}
-
-
-	/* -- DELETE -- */
-	@DeleteMapping("delete/{numLigne}")
-	public void delete(@PathVariable Long numLigne) {
-		vHistoriqueCongeService.delete(numLigne);
-	}
 }

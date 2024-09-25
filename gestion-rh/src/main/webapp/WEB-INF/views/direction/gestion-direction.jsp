@@ -15,13 +15,7 @@
             
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <button type="button" class="btn btn-outline-primary btn-fw btn-block">Ajout direction</button>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-outline-primary btn-fw btn-block">Ajout fonction</button>
+                    <button type="button" class="btn btn-outline-primary btn-fw btn-block">Ajout fonction dans direction</button>
                 </div>
             </div>
 
@@ -31,16 +25,19 @@
                     <tr>
                         <th>Direction</th>
                         <th>Fonction</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                         <% for(Direction d : direction) { %>
                             <tr>
-                                <td><%= d.getNom() %></td>
+                                <td><strong><%= d.getNom() %></strong></td>
+                                </tr>
+                                
+                                <td></td>
                                 <% for(Fonction f : d.getFonctions()) { %>
                                     <td><%= f.getNom() %></td>
                                 <% } %>
-                                </tr>
                         <% } %>
                     </tbody>
                 </table>

@@ -25,6 +25,7 @@
     .custom-modal-content {
         min-height: 250px; /* Réduire la hauteur */
     }
+    
 </style>
 
 <div class="col-lg-12 grid-margin stretch-card">
@@ -34,7 +35,7 @@
             <div class="table-responsive">
 
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <button type="button" class="btn btn-outline-primary btn-fw btn-block" data-toggle="modal" title="Ajouter Famille" data-target="#addFamilyModal">
                             <i class="mdi mdi-account-multiple-plus mdi-icon"></i> Ajouter Famille
                         </button>
@@ -61,7 +62,7 @@
                                 <td>
                                     <div class="d-flex align-items-center justify-content-start">
                                         <div style="width: 50px;">
-                                            <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" title="Voir les détails" data-target="#userDetailModal<%= utilisateur.getId() %>">    
+                                            <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" title="Voir les détails" data-target="#modifierModal<%= f.getId() %>">    
                                                 <i class="ti-pencil"></i>
                                             </button>
                                         </div>
@@ -160,7 +161,53 @@
             </div>
         </div>
     </div>
-    
+<% } %>
+
+
+<!-- Modal Modifier Famille -->
+<% for(Famille f : utilisateur.getFamilles()) { %>
+    <div class="modal fade custom-modal" id="modifierModal<%= f.getId() %>" tabindex="-1" role="dialog" aria-labelledby="modifierModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifierModalLabel">Modifier Information pour la Famille</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/famille/modifierFamille" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="nomFamille">Nom</label>
+                            <input type="text" class="form-control" name="nom" value="<%= f.getNom() %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="prenomFamille">Prénom</label>
+                            <input type="text" class="form-control" name="prenom" value="<%= f.getPrenom() %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateNaissanceFamille">Date de naissance</label>
+                            <input type="date" class="form-control" name="date_naissance" value="<%= f.getDateNaissance() %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="filiationFamille">Filiation</label>
+                            <select class="form-control" name="filiation">
+                                <% for(Filiation fil : filiation) { %>
+                                    <option value="<%= fil.getId() %>" <%= f.getFiliation().getId().equals(fil.getId()) ? "selected" : "" %>><%= fil.getFiliation() %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <input type="hidden" name="id_famille" value="<%= f.getId() %>">
+                        <input type="hidden" name="id_utilisateur" value="<%= utilisateur.getId() %>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer la modification</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 <% } %>
 
 <%@include file="../utils/footer.jsp" %>

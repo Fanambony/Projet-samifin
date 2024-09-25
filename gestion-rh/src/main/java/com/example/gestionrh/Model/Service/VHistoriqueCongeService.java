@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.VHistoriqueCongeRepository;
 import com.example.gestionrh.Model.Entity.VHistoriqueConge;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +13,8 @@ import java.util.Optional;
 @Service
 public class VHistoriqueCongeService {
 
-	private final VHistoriqueCongeRepository vHistoriqueCongeRepository;
-
-	public VHistoriqueCongeService(VHistoriqueCongeRepository vHistoriqueCongeRepository) {this.vHistoriqueCongeRepository = vHistoriqueCongeRepository;}
-
-
+	@Autowired
+	private VHistoriqueCongeRepository vHistoriqueCongeRepository;
 
 	/* -- READ ONE -- */
 	public Optional<VHistoriqueConge> getOne(Object id) { return vHistoriqueCongeRepository.findById(id); }

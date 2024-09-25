@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.FamilleRepository;
 import com.example.gestionrh.Model.Entity.Famille;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +13,8 @@ import java.util.Optional;
 @Service
 public class FamilleService {
 
-	private final FamilleRepository familleRepository;
-
-	public FamilleService(FamilleRepository familleRepository) {this.familleRepository = familleRepository;}
-
-
+	@Autowired
+	private FamilleRepository familleRepository;
 
 	/* -- READ ONE -- */
 	public Optional<Famille> getOne(Object id) { return familleRepository.findById(id); }
@@ -29,4 +28,7 @@ public class FamilleService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  familleRepository.deleteById(id); }
 
+	public List<Famille> findByIdEmploye(String idEmploye) {
+		return familleRepository.findByIdEmploye(idEmploye);
+	}
 }

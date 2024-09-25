@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.TypeUtilisateurRepository;
 import com.example.gestionrh.Model.Entity.TypeUtilisateur;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +11,8 @@ import java.util.Optional;
 @Service
 public class TypeUtilisateurService {
 
-	private final TypeUtilisateurRepository typeUtilisateurRepository;
-
-	public TypeUtilisateurService(TypeUtilisateurRepository typeUtilisateurRepository) {this.typeUtilisateurRepository = typeUtilisateurRepository;}
-
-
+	@Autowired
+	private TypeUtilisateurRepository typeUtilisateurRepository;
 
 	/* -- READ ONE -- */
 	public Optional<TypeUtilisateur> getOne(Object id) { return typeUtilisateurRepository.findById(id); }

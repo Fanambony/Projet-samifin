@@ -158,7 +158,7 @@ public class DetailUtilisateur {
 	}
 
  	public DetailUtilisateur(){}
-	 public DetailUtilisateur(String id, String matricule, String email, String mdp, String telephone, Date dateEntre, String idFonction, String idUtilisateur, String qualite, String categorie, String corpsAppartenance, String indice, String serviceEmployeur, String localiteService, String numeroDecision, Boolean mdpProvisoir, Fonction fonction, Utilisateur utilisateur){
+	public DetailUtilisateur(String id, String matricule, String email, String mdp, String telephone, Date dateEntre, String idFonction, String idUtilisateur, String qualite, String categorie, String corpsAppartenance, String indice, String serviceEmployeur, String localiteService, String numeroDecision, Boolean mdpProvisoir, Fonction fonction, Utilisateur utilisateur){
 		setId(id);
 		setMatricule(matricule);
 		setEmail(email);
@@ -177,5 +177,22 @@ public class DetailUtilisateur {
 		setMdpProvisoir(mdpProvisoir);
 		setFonction(fonction);
 		setUtilisateur(utilisateur);
+	}
+	public DetailUtilisateur(String matricule, String email, String mdp, String telephone, Date dateEntre, String idFonction, String qualite, String categorie, String corpsAppartenance, String indice, String serviceEmployeur, String localiteService, String numeroDecision, Boolean mdpProvisoir){
+		setMatricule(matricule);
+		setEmail(email);
+		setMdp(mdp);
+		setTelephone(telephone);
+		setDateEntre(dateEntre);
+		setIdFonction(idFonction);
+		setIdUtilisateur(idUtilisateur);
+		setQualite(qualite);
+		setCategorie(categorie);
+		setCorpsAppartenance(corpsAppartenance);
+		setIndice(indice);
+		setServiceEmployeur(serviceEmployeur);
+		setLocaliteService(localiteService);
+		setNumeroDecision(numeroDecision);
+		setMdpProvisoir(mdpProvisoir);
 	}
 }

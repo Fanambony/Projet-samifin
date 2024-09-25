@@ -3,6 +3,7 @@ package com.example.gestionrh.Model.Service;
 import com.example.gestionrh.Context.DetailUtilisateurRepository;
 import com.example.gestionrh.Model.Entity.DetailUtilisateur;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -11,12 +12,9 @@ import java.util.Optional;
 
 @Service
 public class DetailUtilisateurService {
-
-	private final DetailUtilisateurRepository detailUtilisateurRepository;
-
-	public DetailUtilisateurService(DetailUtilisateurRepository detailUtilisateurRepository) {this.detailUtilisateurRepository = detailUtilisateurRepository;}
-
-
+	
+	@Autowired
+	private DetailUtilisateurRepository detailUtilisateurRepository;
 
 	/* -- READ ONE -- */
 	public Optional<DetailUtilisateur> getOne(Object id) { return detailUtilisateurRepository.findById(id); }
@@ -36,4 +34,9 @@ public class DetailUtilisateurService {
 		if(utilisateur == null) throw new Exception("Authentification invalide");
 		return utilisateur;
 	}
+
+	public boolean existeMatricule(String matricule) {
+		return detailUtilisateurRepository.existsByMatricule(matricule);
+	}
+	
 }

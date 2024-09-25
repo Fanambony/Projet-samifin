@@ -6,4 +6,5 @@ import com.example.gestionrh.Model.Entity.DetailUtilisateur;
 public interface DetailUtilisateurRepository extends JpaRepository<DetailUtilisateur, Object> {
     // DetailUtilisateur findByEmailAndMdp(String email, String mdp);
     DetailUtilisateur findByEmailAndMdpAndUtilisateur_Etat(String email, String mdp, Integer etat);
+    boolean existsByMatricule(String matricule);
 }

@@ -29,6 +29,30 @@ public class FamilleController{
 	@Autowired
 	private FiliationService filiationService;
 
+	@PostMapping("modifierFamille")
+	public String modifierFamille(@RequestParam("id_utilisateur") String idUtilisateur,
+								@RequestParam("id_famille") String idFamille,
+								@RequestParam("nom") String nom,
+								@RequestParam("prenom") String prenom,
+								@RequestParam("date_naissance") String dateNaissanceString,
+								@RequestParam("filiation") String filiation
+								) {
+
+		Date dateNaissance = Date.valueOf(dateNaissanceString);
+		
+		Optional<Famille> findById = familleService.getOne(idFamille);
+		Famille famille = findById.get();
+
+		famille.setNom(nom);
+		famille.setPrenom(prenom);
+		famille.setDateNaissance(dateNaissance);
+		famille.setIdFiliation(filiation);
+
+		familleService.create(famille);
+
+		return "redirect:/famille/gererFamille?idUtilisateur=" + idUtilisateur;
+	}
+
 	@GetMapping("gererFamille")
 	public String gererFamille(@RequestParam("idUtilisateur") String idUtilisateur,
 								HttpServletRequest request
@@ -36,7 +60,6 @@ public class FamilleController{
 		Optional<Utilisateur> utilisateurOpt = utilisateurService.getOne(idUtilisateur);
 		
         List<Filiation> filiations = filiationService.getAll();
-
 
 		if (utilisateurOpt.isPresent()) {
             Utilisateur utilisateur = utilisateurOpt.get();
@@ -70,5 +93,4 @@ public class FamilleController{
 
 		return "redirect:/famille/gererFamille?idUtilisateur=" + id_utilisateur;
 	}
-	
 }

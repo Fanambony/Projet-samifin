@@ -2,7 +2,12 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.VEtatDemandeRepository;
 import com.example.gestionrh.Model.Entity.VEtatDemande;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,11 +16,8 @@ import java.util.Optional;
 @Service
 public class VEtatDemandeService {
 
-	private final VEtatDemandeRepository vEtatDemandeRepository;
-
-	public VEtatDemandeService(VEtatDemandeRepository vEtatDemandeRepository) {this.vEtatDemandeRepository = vEtatDemandeRepository;}
-
-
+	@Autowired
+	private VEtatDemandeRepository vEtatDemandeRepository;
 
 	/* -- READ ONE -- */
 	public Optional<VEtatDemande> getOne(Object id) { return vEtatDemandeRepository.findById(id); }
@@ -29,18 +31,20 @@ public class VEtatDemandeService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  vEtatDemandeRepository.deleteById(id); }
 
-	public List<VEtatDemande> getByIdUtilisateur(String idUtilisateur) {
-		List<VEtatDemande> etatDemandes = vEtatDemandeRepository.findByIdUtilisateur(idUtilisateur);
-		return etatDemandes;
-	}
+	public Page<VEtatDemande> getByIdUtilisateur(String idUtilisateur, Pageable pageable) {
+        return vEtatDemandeRepository.findByIdUtilisateur(idUtilisateur, pageable);
+    }
 
 	public List<VEtatDemande> demandeCongeParidDirectionParTypeUtilisateur(String idDirection, int etatUtilisateur, int etatemande) {
-		List<VEtatDemande> etatDemandes = vEtatDemandeRepository.findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(idDirection, etatUtilisateur, etatemande);
-		return etatDemandes;
+		return vEtatDemandeRepository.findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(idDirection, etatUtilisateur, etatemande);
 	}
 
 	public List<VEtatDemande> demandeCongeParTypeUtilisateur(int etatUtilisateur, int etatemande) {
-		List<VEtatDemande> etatDemandes = vEtatDemandeRepository.findByEtatUtilisateurAndIdEtatDemande(etatUtilisateur, etatemande);
-		return etatDemandes;
+		return vEtatDemandeRepository.findByEtatUtilisateurAndIdEtatDemande(etatUtilisateur, etatemande);
+	}
+
+	// prendre demande valider la date debut est superieur a la date aujourd'hui qui doit etre annuler
+	public List<VEtatDemande> findByIdEtatDemandeAndDateDebutAfter(int etatDemande) {
+		return vEtatDemandeRepository.findByIdEtatDemandeAndDateDebutAfter(etatDemande);
 	}
 }

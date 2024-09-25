@@ -21,6 +21,8 @@
                         <img src="<%= imgSrc %>" alt="Image de l'utilisateur" class="img-fluid rounded-circle shadow" style="width: 150px; height: 150px;" />
                     </div>
                     <h4 class="font-weight-bold mb-0"><%= user.getNom() %> <%= user.getPrenom() %></h4>
+                    <br>
+                    <span class="text-muted d-block mb-2"><%= user.getType_utilisateur().getLibelle() %></span>
                     <% for(DetailUtilisateur detail : user.getDetailUtilisateurs()) { %>
                         <span class="text-muted d-block mb-2">Matricule : <%= detail.getMatricule() %></span>
                     <% } %>
@@ -50,6 +52,13 @@
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Date d'Entrée :</h6>
                                 <p class="text-dark"><%= DateUtil.formatDate(detail.getDateEntre()) %></p>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <h6 class="font-weight-bold text-muted">Numéro de décision :</h6>
+                                <p class="text-dark"><%= detail.getNumeroDecision() %></p>
+                            </div><div class="col-sm-6 mb-3">
+                                <h6 class="font-weight-bold text-muted">Genre :</h6>
+                                <p class="text-dark"><%= user.getGenre().getLibelle() %></p>
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Direction :</h6>

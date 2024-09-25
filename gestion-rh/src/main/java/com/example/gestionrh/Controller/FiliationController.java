@@ -2,6 +2,8 @@ package com.example.gestionrh.Controller;
 
 import com.example.gestionrh.Model.Entity.Filiation;
 import com.example.gestionrh.Model.Service.FiliationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,11 +14,8 @@ import java.util.Optional;
 @RequestMapping("filiation")
 public class FiliationController{
 
-	private final FiliationService filiationService;
-
-	public FiliationController(FiliationService filiationService){this.filiationService = filiationService;}
-
-
+	@Autowired
+	private FiliationService filiationService;
 
 	/* -- READ ONE -- */
 	@GetMapping("/{id}")

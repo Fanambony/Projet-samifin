@@ -162,4 +162,12 @@ public class Utilisateur {
 		setEtat_utilisateur(etat_utilisateur);
 		setGenre(genre);
 	}
+	public Utilisateur(String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, Integer etat){
+		setNom(nom);
+		setPrenom(prenom);
+		setDateNaissance(dateNaissance);
+		setIdGenre(idGenre);
+		setTypeUtilisateur(typeUtilisateur);
+		setEtat(etat);
+	}
 }

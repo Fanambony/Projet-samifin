@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.DirectionRepository;
 import com.example.gestionrh.Model.Entity.Direction;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +13,8 @@ import java.util.Optional;
 @Service
 public class DirectionService {
 
-	private final DirectionRepository directionRepository;
-
-	public DirectionService(DirectionRepository directionRepository) {this.directionRepository = directionRepository;}
-
-
+	@Autowired
+	private DirectionRepository directionRepository;
 
 	/* -- READ ONE -- */
 	public Optional<Direction> getOne(Object id) { return directionRepository.findById(id); }
