@@ -29,6 +29,8 @@ public class DemandeConge {
 	String commentaire;
 	@Column(name = "etat_demande")
 	Integer etatDemande;
+	@Column(name = "id_validateur")
+	String idValidateur;
 	@ManyToOne
 	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
 	TypeConge type_conge;
@@ -44,6 +46,9 @@ public class DemandeConge {
 	@ManyToOne
 	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
 	EtatDemande etat_demande;
+	@ManyToOne
+	@JoinColumn(name = "id_validateur", insertable = false, updatable = false)
+	Utilisateur validateur;
 
 	public String getId(){
 		return this.id;
@@ -105,6 +110,12 @@ public class DemandeConge {
 	public void setEtatDemande(Integer etatDemande){
 		this.etatDemande = etatDemande;
 	}
+	public String getIdValidateur(){
+		return this.idValidateur;
+	}
+	public void setIdValidateur(String idValidateur){
+		this.idValidateur = idValidateur;
+	}
 	public TypeConge getType_conge(){
 		return this.type_conge;
 	}
@@ -135,9 +146,15 @@ public class DemandeConge {
 	public void setEtat_demande(EtatDemande etat_demande){
 		this.etat_demande = etat_demande;
 	}
+	public Utilisateur getValidateur(){
+		return this.validateur;
+	}
+	public void setValidateur(Utilisateur validateur){
+		this.validateur = validateur;
+	}
 
  	public DemandeConge(){}
-	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, TypeConge type_conge, Utilisateur utilisateur, TypeAbsence fin_type_absence, TypeAbsence type_absence, EtatDemande etat_demande){
+	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, TypeConge type_conge, Utilisateur utilisateur, TypeAbsence fin_type_absence, TypeAbsence type_absence, EtatDemande etat_demande, Utilisateur validateur){
 		setId(id);
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
@@ -153,6 +170,7 @@ public class DemandeConge {
 		setType_absence(type_absence);
 		setType_absence(type_absence);
 		setEtat_demande(etat_demande);
+		setValidateur(validateur);
 	}
 
 	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande){
@@ -167,21 +185,21 @@ public class DemandeConge {
 		setEtatDemande(etatDemande);
 	}
 
-	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande){
-		setId(id);
-		setIdTypeConge(idTypeConge);
-		setIdUtilisateur(idUtilisateur);
-		setDateDemande(dateDemande);
-		setDateDebut(dateDebut);
-		setDebutAbsence(debutAbsence);
-		setDateFin(dateFin);
-		setFinAbsence(finAbsence);
-		setCommentaire(commentaire);
-		setEtatDemande(etatDemande);
-	}
+	// public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur){
+	// 	setId(id);
+	// 	setIdTypeConge(idTypeConge);
+	// 	setIdUtilisateur(idUtilisateur);
+	// 	setDateDemande(dateDemande);
+	// 	setDateDebut(dateDebut);
+	// 	setDebutAbsence(debutAbsence);
+	// 	setDateFin(dateFin);
+	// 	setFinAbsence(finAbsence);
+	// 	setCommentaire(commentaire);
+	// 	setEtatDemande(etatDemande);
+	// }
 
-	public DemandeConge(String id, Integer etatDemande){
-		setId(id);
-		setEtatDemande(etatDemande);
-	}
+	// public DemandeConge(String id, Integer etatDemande){
+	// 	setId(id);
+	// 	setEtatDemande(etatDemande);
+	// }
 }

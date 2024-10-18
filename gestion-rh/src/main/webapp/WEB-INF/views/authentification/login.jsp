@@ -41,14 +41,11 @@
                             <h4>Bonjour! C'est parti</h4>
                             <h6 class="font-weight-light">Connectez-vous pour continuer.</h6>
                             <form class="pt-3" action="/detail_utilisateur/verifierLogin" method="post">
-                                
-                                
-
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" name="mail" required value="rakotomalala@samifin.mg">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" name="mdp" required value="rakoto">                                
+                                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" name="mdp" required value="rakotomalala">                                
                                 </div>
                                 <% if (errorMessage != null) { %>
                                     <p class="error-message"><%= errorMessage %></p>

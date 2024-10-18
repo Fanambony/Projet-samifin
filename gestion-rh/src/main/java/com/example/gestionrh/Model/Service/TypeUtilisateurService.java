@@ -26,4 +26,7 @@ public class TypeUtilisateurService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  typeUtilisateurRepository.deleteById(id); }
 
+	// public TypeUtilisateur findByEtat(int etat) {
+	// 	return typeUtilisateurRepository.findByEtat(etat);
+	// }
 }

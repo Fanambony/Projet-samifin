@@ -31,7 +31,7 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Membres de la Famille de <%= utilisateur.getNom() %> <%= utilisateur.getPrenom() %></h4>
+            <h4 class="card-title">MEMBRES DE LA FAMILLE DE <span class="card-title text-danger"><%= utilisateur.getNom() %> <%= utilisateur.getPrenom() %></span></h4>
             <div class="table-responsive">
 
                 <div class="row mb-3">

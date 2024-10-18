@@ -7,18 +7,22 @@ import com.example.gestionrh.Model.Service.DemandeCongeService;
 import com.example.gestionrh.Model.Service.EtatDemandeService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
 import com.example.gestionrh.Model.Service.VHistoriqueCongeService;
+import com.example.gestionrh.utils.EtatCongeConfig;
+import com.example.gestionrh.utils.PaginationConfig;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
 import java.util.Optional;
-import java.util.List;
 
 @Controller
 @RequestMapping("demande_conge")
@@ -36,6 +40,9 @@ public class DemandeCongeController{
 	@Autowired
 	private VHistoriqueCongeService vHistoriqueCongeService;
 
+	@Autowired
+    private PaginationConfig paginationConfig;
+
 	@GetMapping("annuler-conge") 
 	public String annuler(@RequestParam("idDemande") String idDemande) {
 		demandeCongeService.delete(idDemande);
@@ -43,9 +50,17 @@ public class DemandeCongeController{
 	}
 
 	@GetMapping("/annulation-conge")
-	public String annulerConge(HttpServletRequest request) {
-		int etat_demande_valider = 10;
-		List<VEtatDemande> list_demande_valider = vEtatDemandeService.findByIdEtatDemandeAndDateDebutAfter(etat_demande_valider);
+	public String annulerConge(HttpServletRequest request,
+								@RequestParam(defaultValue = "0") int page, 
+                                @RequestParam(required = false) Integer size) {
+
+		int paginationSize = (size != null) ? size : paginationConfig.getDefaultPaginationSize();
+
+        Pageable pageable = PageRequest.of(page, paginationSize);
+		
+		EtatCongeConfig etatConge = new EtatCongeConfig();
+		int etat_demande_valide = etatConge.getEtatValider();
+		Page<VEtatDemande> list_demande_valider = vEtatDemandeService.findByIdEtatDemandeAndDateDebutAfter(etat_demande_valide, pageable);
 		request.setAttribute("list_demande_valider", list_demande_valider);
 		return "conge/annulation-conge";
 	}
@@ -156,12 +171,16 @@ public class DemandeCongeController{
 	@GetMapping("valider-conge")
 	public String validerConge(
 									@RequestParam("idDemande") String id,
-									@RequestParam("etat") int etat
+									@RequestParam("etat") int etat,
+									HttpSession session
 									) {
 
 		Optional<DemandeConge> findById = demandeCongeService.getOne(id);
 		DemandeConge d = findById.get();
+		String utilisateur = (String)session.getAttribute("userId");
+
 		d.setEtatDemande(etat);
+		d.setIdValidateur(utilisateur);
 		
 		demandeCongeService.create(d);
 		return "redirect:/v_etat_demande/liste-demande";
@@ -180,13 +199,4 @@ public class DemandeCongeController{
 		demandeCongeService.create(d);
 		return "redirect:/v_etat_demande/liste-demande";
 	}
-
-	// @GetMapping("/demande-conge")
-	// public String demandeConge(HttpServletRequest request) {
-	// 	List<TypeConge> typeConge = typeCongeService.getAll();
-	// 	request.setAttribute("typeConge", typeConge);
-	// 	return "conge/demande-conge";
-	// }
-	
-	
 }

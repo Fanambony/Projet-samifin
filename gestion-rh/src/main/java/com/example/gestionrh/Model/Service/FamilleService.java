@@ -31,4 +31,24 @@ public class FamilleService {
 	public List<Famille> findByIdEmploye(String idEmploye) {
 		return familleRepository.findByIdEmploye(idEmploye);
 	}
+
+	public List<Famille> findFamillesByAgentId(String agentId) {
+        return familleRepository.findByIdEmploye(agentId);
+    }
+
+	
+
+	// public List<Famille> findByIdEmploye(String agentId) {
+    //     // Implémentez la logique pour récupérer les familles associées à l'agent
+    //     // Par exemple, une requête JPA ou JDBC
+    //     List<Famille> familles = familleRepository.findByIdEmploye(agentId);
+        
+    //     if (familles.isEmpty()) {
+    //         System.out.println("Aucune famille trouvée pour l'agent avec ID: " + agentId);
+    //     } else {
+    //         System.out.println("Familles trouvées pour l'agent avec ID: " + agentId + " : " + familles);
+    //     }
+        
+    //     return familles;
+    // }
 }

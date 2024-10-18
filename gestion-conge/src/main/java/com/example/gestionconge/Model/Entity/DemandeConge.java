@@ -33,9 +33,11 @@ public class DemandeConge {
 	String commentaire;
 	@Column(name = "etat_demande")
 	Integer etatDemande;
+	@Column(name = "id_validateur")
+	String idValidateur;
 	@ManyToOne
 	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
-	Type type_conge;
+	TypeConge type_conge;
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
@@ -48,6 +50,9 @@ public class DemandeConge {
 	@ManyToOne
 	@JoinColumn(name = "etat_demande", insertable = false, updatable = false)
 	Etat etat_demande;
+	@ManyToOne
+	@JoinColumn(name = "id_validateur", insertable = false, updatable = false)
+	Utilisateur validateur;
 
     //SETTERS AND GETTERS
 
@@ -111,6 +116,12 @@ public class DemandeConge {
 	public void setEtatDemande(Integer etatDemande){
 		this.etatDemande = etatDemande;
 	}
+	public String getIdValidateur(){
+		return this.idValidateur;
+	}
+	public void setIdValidateur(String idValidateur){
+		this.idValidateur = idValidateur;
+	}
 	public Type getType_conge(){
 		return this.type_conge;
 	}
@@ -141,11 +152,17 @@ public class DemandeConge {
 	public void setEtat_demande(Etat etat_demande){
 		this.etat_demande = etat_demande;
 	}
+	public Utilisateur getUtilisateur(){
+		return this.utilisateur;
+	}
+	public void setUtilisateur(Utilisateur utilisateur){
+		this.utilisateur = utilisateur;
+	}
 
     //CONSTRUCTORS
 
  	public DemandeConge(){}
-	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, Type type_conge, Utilisateur utilisateur, Type type_absence, Type type_absence, Etat etat_demande){
+	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, Type type_conge, Utilisateur utilisateur, Type type_absence, Type type_absence, Etat etat_demande, Utilisateur utilisateur){
 		setId(id);
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
@@ -156,11 +173,13 @@ public class DemandeConge {
 		setFinAbsence(finAbsence);
 		setCommentaire(commentaire);
 		setEtatDemande(etatDemande);
+		setIdValidateur(idValidateur);
 		setType_conge(type_conge);
 		setUtilisateur(utilisateur);
 		setType_absence(type_absence);
 		setType_absence(type_absence);
 		setEtat_demande(etat_demande);
+		setUtilisateur(utilisateur);
 	}
 
 }

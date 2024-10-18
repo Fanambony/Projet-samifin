@@ -4,6 +4,9 @@ import com.example.gestionrh.Context.VHistoriqueCongeRepository;
 import com.example.gestionrh.Model.Entity.VHistoriqueConge;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -30,5 +33,13 @@ public class VHistoriqueCongeService {
 
 	public VHistoriqueConge historiqueCongeParUtilisateur(String idUtilisateur, String idTypeConge) {
 		return vHistoriqueCongeRepository.findByIdUtilisateurAndIdTypeConge(idUtilisateur, idTypeConge);
+	}
+
+	public Page<VHistoriqueConge> getHistoriqueConge(Pageable pageable) {
+        return vHistoriqueCongeRepository.findAll(pageable);
+    }
+
+	public List<VHistoriqueConge> getByIdUtilisateur(String idutilisateur) {
+		return vHistoriqueCongeRepository.findByIdUtilisateur(idutilisateur);
 	}
 }

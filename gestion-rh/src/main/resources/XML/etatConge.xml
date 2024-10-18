@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<etatConge>
+    <affichage>
+        <etatSoumis>1</etatSoumis>
+        <etatAttente>5</etatAttente>
+        <etatValider>10</etatValider>
+        <etatRefuser>15</etatRefuser>
+    </affichage>
+</etatConge>

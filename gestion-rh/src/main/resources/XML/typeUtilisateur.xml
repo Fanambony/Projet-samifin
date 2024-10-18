@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<typeUtilisateur>
+    <affichage>
+        <collaborateur>1</collaborateur>
+        <direction>5</direction>
+        <directeurGeneral>10</directeurGeneral>
+        <admin>15</admin>
+    </affichage>
+</typeUtilisateur>

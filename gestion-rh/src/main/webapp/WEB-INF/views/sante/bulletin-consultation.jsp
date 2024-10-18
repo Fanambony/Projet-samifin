@@ -2,12 +2,29 @@
 <%@ page import="com.example.gestionrh.Model.Entity.Utilisateur" %>
 <%@ page import="com.example.gestionrh.Model.Entity.DetailUtilisateur" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Famille" %>
+
+<%@ page import="com.example.gestionrh.Model.Entity.Categorie" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Qualite" %>
+<%@ page import="com.example.gestionrh.Model.Entity.ServiceEmployeur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.LocaliteService" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Indice" %>
+<%@ page import="com.example.gestionrh.Model.Entity.CorpsAppartenance" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Fonction" %>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
 
 <%
     Utilisateur user = (Utilisateur) request.getAttribute("utilisateur");
     List<Famille> familles = (List<Famille>)request.getAttribute("famille");
+
+    List<Categorie> categories = (List<Categorie>)request.getAttribute("categories");
+    List<Qualite> qualites = (List<Qualite>)request.getAttribute("qualites");
+    List<ServiceEmployeur> serviceEmployeurs = (List<ServiceEmployeur>)request.getAttribute("serviceEmployeurs");
+    List<LocaliteService> localiteServices = (List<LocaliteService>)request.getAttribute("localiteServices");
+    List<Indice> indices = (List<Indice>)request.getAttribute("indices");
+    List<CorpsAppartenance> corpsAppartenances = (List<CorpsAppartenance>)request.getAttribute("corpsAppartenances");
+    List<Fonction> fonctions = (List<Fonction>)request.getAttribute("fonctions");
 %>
 
 <%@include file="../utils/header.jsp" %>
@@ -53,7 +70,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Qualite</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="qualite" value="<%= detail.getQualite() %>"/>
+                    <select class="form-control" name="qualite">
+                      <% for(Qualite q : qualites) { 
+                        String selected = q.getLibelle().equals(detail.getQualite().getLibelle()) ? "selected" : "";  
+                      %>
+                        <option value="<%= q.getLibelle() %>" <%= selected %>><%= q.getLibelle() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -63,7 +86,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Categorie</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="categorie" value="<%= detail.getCategorie() %>"/>
+                    <select class="form-control" name="categorie">
+                      <% for(Categorie c : categories) { 
+                        String selected = c.getLibelle().equals(detail.getCategorie().getLibelle()) ? "selected" : "";  
+                      %>
+                        <option value="<%= c.getLibelle() %>" <%= selected %>><%= c.getLibelle() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -71,7 +100,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Corps d'appartenance</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="corps_appartenance" value="<%= detail.getCorpsAppartenance() %>"/>
+                    <select class="form-control" name="corps_appartenance">
+                      <% for(CorpsAppartenance ca : corpsAppartenances) { 
+                        String selected = ca.getLibelle().equals(detail.getCorps_appartenance().getLibelle()) ? "selected" : "";  
+                      %>
+                        <option value="<%= ca.getLibelle() %>" <%= selected %>><%= ca.getLibelle() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -81,7 +116,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Grade ou emploi</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="grade" value="<%= detail.getFonction().getNom() %>"/>
+                    <select class="form-control" name="grade">
+                      <% for(Fonction f : fonctions) { 
+                        String selected = f.getNom().equals(detail.getFonction().getNom()) ? "selected" : "";  
+                      %>
+                        <option value="<%= f.getNom() %>" <%= selected %>><%= f.getNom() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -89,7 +130,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Indice</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="indice" value="<%= detail.getIndice() %>"/>
+                    <select class="form-control" name="indice">
+                      <% for(Indice i : indices) { 
+                        String selected = i.getLibelle().equals(detail.getIndice().getLibelle()) ? "selected" : "";  
+                      %>
+                        <option value="<%= i.getLibelle() %>" <%= selected %>><%= i.getLibelle() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -99,7 +146,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Service Employeur</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="service" value="<%= detail.getServiceEmployeur() %>"/>
+                    <select class="form-control" name="service">
+                      <% for(ServiceEmployeur se : serviceEmployeurs) { 
+                        String selected = se.getLibelle().equals(detail.getService_employeur().getLibelle()) ? "selected" : "";  
+                      %>
+                        <option value="<%= se.getLibelle() %>" <%= selected %>><%= se.getLibelle() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -107,7 +160,13 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label">Localite de service</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="localite" value="<%= detail.getLocaliteService() %>"/>
+                    <select class="form-control" name="localite">
+                      <% for(LocaliteService l : localiteServices) { 
+                        String selected = l.getLibelle().equals(detail.getLocalite_service().getLibelle()) ? "selected" : "";  
+                      %>
+                        <option value="<%= l.getLibelle() %>" <%= selected %>><%= l.getLibelle() %></option>
+                      <% } %>
+                    </select>
                   </div>
                 </div>
               </div>

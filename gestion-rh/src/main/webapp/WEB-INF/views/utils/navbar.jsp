@@ -24,6 +24,13 @@
       </li>
 
       <li class="nav-item">
+        <a class="nav-link" href="/attestation-non-paiement">
+          <i class="ti-alert menu-icon"></i>
+          <span class="menu-title">Attestation non paiement</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link" href="/v_etat_demande/liste-demande">
           <i class="ti-check-box menu-icon"></i>
           <span class="menu-title">Validation congé</span>
@@ -45,17 +52,24 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="ti-receipt menu-icon"></i>
-          <span class="menu-title">Générer solde de congé</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
         <a class="nav-link" href="/demande_conge/annulation-conge">
             <i class="ti-back-left menu-icon"></i>
             <span class="menu-title">Annuler congé</span>
         </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+        <i class="ti-receipt menu-icon"></i>
+        <span class="menu-title">Générer solde de congé</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="/v_historique_conge/etat-conge">
+        <i class="ti-receipt menu-icon"></i>
+        <span class="menu-title">Etat congé personnels</span>
+      </a>
     </li>
     
       

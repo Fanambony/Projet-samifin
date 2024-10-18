@@ -29,14 +29,18 @@ public class DetailUtilisateurService {
 	public void delete(Object id) {  detailUtilisateurRepository.deleteById(id); }
 
 	
-	public DetailUtilisateur getByUser(String email, String mdp, int etat_utilisateur) throws Exception {
-		DetailUtilisateur utilisateur = detailUtilisateurRepository.findByEmailAndMdpAndUtilisateur_Etat(email, mdp, etat_utilisateur);
+	public DetailUtilisateur getByUser(String email, int etat_utilisateur) throws Exception {
+		DetailUtilisateur utilisateur = detailUtilisateurRepository.findByEmailAndUtilisateur_Etat(email, etat_utilisateur);
 		if(utilisateur == null) throw new Exception("Authentification invalide");
 		return utilisateur;
 	}
 
 	public boolean existeMatricule(String matricule) {
 		return detailUtilisateurRepository.existsByMatricule(matricule);
+	}
+
+	public DetailUtilisateur findByIdUtilisateur(String idUtilisateur) {
+		return detailUtilisateurRepository.findByIdUtilisateur(idUtilisateur);
 	}
 	
 }

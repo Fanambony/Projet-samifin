@@ -3,6 +3,12 @@
 <%@ page import="com.example.gestionrh.Model.Entity.Fonction" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Genre" %>
 <%@ page import="com.example.gestionrh.Model.Entity.TypeUtilisateur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Qualite" %>
+<%@ page import="com.example.gestionrh.Model.Entity.ServiceEmployeur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.LocaliteService" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Indice" %>
+<%@ page import="com.example.gestionrh.Model.Entity.CorpsAppartenance" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Categorie" %>
 <%@ page import="java.util.List" %>
 
 <%
@@ -10,6 +16,12 @@
     List<Fonction> fonction = (List<Fonction>)request.getAttribute("fonctions");
     List<Genre> genre = (List<Genre>)request.getAttribute("genre");
     List<TypeUtilisateur> typeUser = (List<TypeUtilisateur>)request.getAttribute("typeUtilisateurs");
+    List<Qualite> qualites = (List<Qualite>)request.getAttribute("qualites");
+    List<ServiceEmployeur> serviceEmployeurs = (List<ServiceEmployeur>)request.getAttribute("serviceEmployeurs");
+    List<LocaliteService> localiteServices = (List<LocaliteService>)request.getAttribute("localiteServices");
+    List<Indice> indices = (List<Indice>)request.getAttribute("indices");
+    List<CorpsAppartenance> corpsAppartenances = (List<CorpsAppartenance>)request.getAttribute("corpsAppartenances");
+    List<Categorie> categories = (List<Categorie>)request.getAttribute("categories");
 %>
 
 <%@include file="../utils/header.jsp" %>
@@ -17,7 +29,7 @@
 <div class="col-12 grid-margin">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Ajout Utilisateur</h4>
+            <h4 class="card-title">AJOUTER UTILISATEURS</h4>
             <form class="form-sample" method="post" action="ajoutUtilisateur">
                 <p class="card-description">
                     Informations Personnelles
@@ -156,7 +168,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Qualité</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="qualite" name="qualite" placeholder="Ex : Contractuel" required>
+                                <select class="form-control" name="qualite" id="qualite" required>
+                                    <option value="" disabled selected>Veuillez sélectionner une qualité</option>
+                                    <% for(Qualite qualite : qualites) { %>
+                                        <option value="<%= qualite.getId() %>"><%= qualite.getLibelle() %></option>
+                                    <% } %>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -164,7 +181,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Catégorie</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="categorie" name="categorie" placeholder="Ex : A" required>
+                                <select class="form-control" name="categorie" id="categorie" required>
+                                    <option value="" disabled selected>Veuillez sélectionner une catégorie</option>
+                                    <% for(Categorie categorie : categories) { %>
+                                        <option value="<%= categorie.getId() %>"><%= categorie.getLibelle() %></option>
+                                    <% } %>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -174,7 +196,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Corps d'appartenance</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="corps_appartenance" name="corps_appartenance" placeholder="Ex : Concepteur" required>
+                                <select class="form-control" name="corps_appartenance" id="corps_appartenance" required>
+                                    <option value="" disabled selected>Veuillez sélectionner une corps d'appartenance</option>
+                                    <% for(CorpsAppartenance appartenance : corpsAppartenances) { %>
+                                        <option value="<%= appartenance.getId() %>"><%= appartenance.getLibelle() %></option>
+                                    <% } %>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -182,7 +209,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Indice</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="indice" name="indice" placeholder="Ex : 950" required>
+                                <select class="form-control" name="indice" id="indice" required>
+                                    <option value="" disabled selected>Veuillez sélectionner une indice</option>
+                                    <% for(Indice indice : indices) { %>
+                                        <option value="<%= indice.getId() %>"><%= indice.getLibelle() %></option>
+                                    <% } %>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -192,7 +224,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Service Employeur</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="service_employeur" name="service_employeur" placeholder="Ex : SAMIFIN" required>
+                                <select class="form-control" name="service_employeur" id="service_employeur" required>
+                                    <option value="" disabled selected>Veuillez sélectionner une service employeur</option>
+                                    <% for(ServiceEmployeur service : serviceEmployeurs) { %>
+                                        <option value="<%= service.getId() %>"><%= service.getLibelle() %></option>
+                                    <% } %>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -200,7 +237,12 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Localité de Service</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="localite_service" name="localite_service" placeholder="Ex : Antananarivo" required>
+                                <select class="form-control" name="localite_service" id="localite_service" required>
+                                    <option value="" disabled selected>Veuillez sélectionner une localite de service</option>
+                                    <% for(LocaliteService localite : localiteServices) { %>
+                                        <option value="<%= localite.getId() %>"><%= localite.getLibelle() %></option>
+                                    <% } %>
+                                </select>
                             </div>
                         </div>
                     </div>

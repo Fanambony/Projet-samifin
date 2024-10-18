@@ -15,7 +15,7 @@ import jakarta.annotation.PostConstruct;
 
 @Configuration
 public class PaginationConfig {  // Cette classe n'a pas besoin d'être mappée sur XML
-    private static final String XML_FILE = "/XML/configuration.xml"; // Assurez-vous que ce chemin est correct
+    private static final String XML_FILE = "/XML/configurationPagination.xml"; // Assurez-vous que ce chemin est correct
     private int defaultPaginationSize;
 
     @PostConstruct
@@ -36,7 +36,7 @@ public class PaginationConfig {  // Cette classe n'a pas besoin d'être mappée 
     }
 
     // Classe interne pour la structure XML
-    @XmlRootElement(name = "configuration")  // Ceci est l'élément racine du fichier XML
+    @XmlRootElement(name = "configurationPagination")  // Ceci est l'élément racine du fichier XML
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class XmlConfiguration {
 

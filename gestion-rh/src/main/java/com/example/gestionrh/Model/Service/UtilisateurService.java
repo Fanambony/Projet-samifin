@@ -1,8 +1,11 @@
 package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.DetailUtilisateurRepository;
+import com.example.gestionrh.Context.TypeUtilisateurRepository;
 import com.example.gestionrh.Context.UtilisateurRepository;
 import com.example.gestionrh.Model.Entity.DetailUtilisateur;
+import com.example.gestionrh.Model.Entity.Famille;
+import com.example.gestionrh.Model.Entity.TypeUtilisateur;
 import com.example.gestionrh.Model.Entity.Utilisateur;
 
 import jakarta.persistence.EntityManager;
@@ -32,6 +35,9 @@ public class UtilisateurService {
 	@Autowired
 	private DetailUtilisateurRepository detailUtilisateurRepository;
 
+    @Autowired
+    private TypeUtilisateurRepository typeUtilisateurRepository;
+
 	/* -- READ ONE -- */
 	public Optional<Utilisateur> getOne(Object id) { return utilisateurRepository.findById(id); }
 
@@ -44,10 +50,36 @@ public class UtilisateurService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  utilisateurRepository.deleteById(id); }
 
-	public Page<Utilisateur> getUtilisateurs(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+	public Page<Utilisateur> getUtilisateurs(Pageable pageable) {
         return utilisateurRepository.findAll(pageable);
     }
+
+	public List<Utilisateur> getUtilisateurActive(int etat) {
+		return utilisateurRepository.findByEtat(etat);
+	}
+
+	public String getUserRole(String userId) {
+        Utilisateur utilisateur = utilisateurRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // return mapTypeUtilisateurToRole(utilisateur.getTypeUtilisateur());
+        TypeUtilisateur role = typeUtilisateurRepository.findByEtat(utilisateur.getTypeUtilisateur());
+
+        if(role == null){
+            throw new RuntimeException("Role not found");
+        }
+
+        return role.getLibelle();
+    }
+
+	// private String mapTypeUtilisateurToRole(int typeUtilisateur) {
+    //     switch (typeUtilisateur) {
+    //         case 10: return "DIRECTEUR_GENERAL";
+    //         case 5: return "CHEF_DE_DEPARTEMENT";
+    //         case 15: return "ADMIN";
+    //         default: return "COLLABORATEUR";
+    //     }
+    // }
 
 	@Transactional
     public String genererMdp(int length) {
@@ -57,7 +89,7 @@ public class UtilisateurService {
         return password;
     }
 
-	@Transactional // Cette annotation gère la transaction pour cette méthode
+	@Transactional
     public void ajouterUtilisateurAvecDetails(Utilisateur utilisateur, DetailUtilisateur detailUtilisateur) {
         utilisateurRepository.save(utilisateur); 
 

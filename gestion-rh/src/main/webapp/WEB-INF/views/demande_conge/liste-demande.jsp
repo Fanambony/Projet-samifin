@@ -36,7 +36,7 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Validation ou refus de demande conge</h4>
+            <h4 class="card-title">VALIDATION OU REFUS DE DEMANDE DE CONGE</h4>
             <div class="table-responsive">
 
                 <br>

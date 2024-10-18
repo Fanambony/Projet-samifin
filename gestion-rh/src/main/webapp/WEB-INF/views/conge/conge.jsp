@@ -91,80 +91,19 @@
         color: red;
     }
 
-
     /* pagination */
     .pagination {
         display: flex;
         justify-content: center;
         margin-top: 20px;
     }
-
     .page-item {
         margin: 0 5px;
     }
-
     .page-item.active .page-link {
         background-color: #007bff;
         color: white;
     }
-/* 
-    .custom-modal .modal-dialog {
-        margin-top: 1rem;
-    }
-
-    .custom-modal .modal-content {
-        border-radius: 0.5rem;
-    }
-
-    .custom-modal .modal-header {
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .custom-modal .modal-title {
-        font-weight: bold;
-    }
-
-    .custom-modal .form-control {
-        border-radius: 0.25rem;
-        box-shadow: none;
-    }
-
-    .custom-modal .form-check {
-        margin-bottom: 0.5rem;
-    }
-
-    .custom-modal .form-check-input {
-        margin-right: 0.5rem;
-    }
-
-    .custom-modal .form-check-label {
-        font-size: 0.875rem;
-    }
-
-    .custom-modal .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .custom-modal .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #004085;
-    }
-
-    .custom-modal .btn-outline-secondary {
-        border-color: #6c757d;
-        color: #6c757d;
-    }
-
-    .custom-modal .btn-outline-secondary:hover {
-        background-color: #6c757d;
-        color: white;
-    }
-
-    .custom-modal .form-group label {
-        font-weight: bold;
-    } */
-
     .custom-modal .form-group label {
         font-weight: bold;
     }
@@ -177,11 +116,11 @@
         <div class="col-md-9 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Gestion de conge</h4>
+                    <h4 class="card-title">GESTION DE CONGE</h4>
                     
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-outline-primary btn-fw btn-block" data-toggle="modal" data-target="#faireDemandeModal">Faire une demande de conge</button>
+                            <button type="button" class="btn btn-outline-primary btn-fw btn-block" data-toggle="modal" data-target="#faireDemandeModal">Faire une demande de congé</button>
                         </div>
                     </div>
                     
@@ -220,9 +159,12 @@
                                             <div class="d-flex align-items-center justify-content-start">
                                                 <div style="width: 50px;">
                                                     <% if (!etat.getIdEtatDemande().equals(5) && !etat.getIdEtatDemande().equals(10) && !etat.getIdEtatDemande().equals(15)) { %>
+                                                        
                                                         <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" data-target="#confirmationModal<%= etat.getIdDemandeConge() %>">
                                                             <i class="ti-check"></i>
                                                         </button>
+                                                        
+
                                                     <% } %>
                                                 </div>
                                                 <% if (!etat.getIdEtatDemande().equals(10) && !etat.getIdEtatDemande().equals(15)) { %>
@@ -273,7 +215,7 @@
 
         <!-- Cartes -->
         <div class="col-md-3 grid-margin stretch-card">
-            <div class="row">
+            <div class="row" style="height: 75%;">
                 <!-- Carte pour les conges restants -->
                 <div class="col-md-12 mb-4">
                     <div class="card text-center" style="height: 300px;">
@@ -281,7 +223,7 @@
                             <h4 class="card-title">Conge restant</h4>
                             <div class="circle-card" style="border: solid rgb(17, 142, 46) 20px;">
                                 <% if (historiqueConge != null) { %>
-                                <h3><%= historiqueConge.getSoldeRestant() %> jours</h3>
+                                    <h3><%= historiqueConge.getSoldeRestant() %> jours</h3>
                                 <% } else { %>
                                     <h4>Pas de solde</h4> <!-- Ou une autre information pour indiquer qu'il n'y a pas de congé -->
                                 <% } %>
@@ -307,8 +249,6 @@
                 </div>
             </div>
         </div>
-
-        
     </div>
 </div>
 
@@ -383,6 +323,8 @@
                             <button type="button" class="btn btn-outline-secondary mr-2" data-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-primary">Valider</button>
                         </div>
+
+                        
                     </div>
                 </form>
             </div>
@@ -417,11 +359,6 @@
         });
     });
 </script>
-
-<style>
-    
-</style>
-
 
 <!-- Modal de confirmation -->
 <% for(VEtatDemande etat : etatDemandesPage) { %>
@@ -527,7 +464,7 @@
     <div class="modal fade custom-modal" id="modifierDemandeModal<%= etat.getIdDemandeConge() %>" tabindex="-1" role="dialog" aria-labelledby="modifierDemandeLabel" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="modifierDemandeLabel">
                         <i class="mdi mdi-calendar-edit"></i> Modifier une demande de congé
                     </h5>
@@ -599,7 +536,7 @@
                             <!-- Boutons d'action -->
                             <div class="form-group text-right">
                                 <button type="button" class="btn btn-outline-secondary mr-2" data-dismiss="modal">Fermer</button>
-                                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                                <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
                             </div>
                         </div>
                     </form>

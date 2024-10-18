@@ -11,6 +11,82 @@
 
 <%@include file="../utils/header.jsp" %>
 
+<style>
+    .custom-modal .modal-dialog {
+        margin-top: -1%;
+    }
+
+    #messageModal .modal-dialog {
+        position: fixed;
+        top: 1rem; /* Distance du haut de la page */
+        left: 50%; /* Positionnement horizontal central */
+        transform: translateX(-50%); /* Ajuste pour centrer le modal */
+        margin: 0;
+        /* max-width: 300px; Ajustez selon vos besoins */
+    }
+
+    #messageModal .modal-content {
+        border-radius: 0.5rem;
+    }
+
+    #messageModal .modal-header.modal-success {
+        background-color: #28a745; /* Vert pour le succès */
+        color: white;
+    }
+
+    #messageModal .modal-header.modal-error {
+        background-color: #dc3545; /* Rouge pour l'erreur */
+        color: white;
+    }
+
+    #messageBox {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        position: fixed;
+        top: 10%;
+        right: 35%;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(-50px); /* Position initiale en haut (hors de la vue) */
+        transition: all 0.5s ease; /* Durée et effet de la transition */
+    }
+
+    #messageBox.show {
+        opacity: 1;
+        transform: translateY(0); /* L'alerte descend à sa position normale */
+    }
+
+    #messageBox.hide {
+        opacity: 0;
+        transform: translateY(-50px); /* L'alerte remonte */
+    }
+
+    #messageBox button {
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    #messageBox.success {
+        background-color: #4CAF50; /* Vert pour succès */
+        color: white;
+    }
+
+    #messageBox.error {
+        background-color: #f44336; /* Rouge pour erreur */
+        color: white;
+    }
+
+</style>
+
 <!-- Profil utilisateur en card -->
 <div class="container">
     <div class="row">
@@ -34,7 +110,7 @@
         <div class="col-md-8 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-info-circle"></i> Détails Utilisateur</h5>
+                    <h5 class="card-title"><i class="fas fa-info-circle"></i> DETAILS DE L'UTILISATEUR</h5>
                     <div class="row">
                         <% for(DetailUtilisateur detail : user.getDetailUtilisateurs()) { %>
                             <div class="col-sm-6 mb-3">
@@ -70,27 +146,27 @@
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Qualité :</h6>
-                                <p class="text-dark"><%= detail.getQualite() %></p>
+                                <p class="text-dark"><%= detail.getQualite().getLibelle() %></p>
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Categorie :</h6>
-                                <p class="text-dark"><%= detail.getCategorie() %></p>
+                                <p class="text-dark"><%= detail.getCategorie().getLibelle() %></p>
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Corps d'appartenance :</h6>
-                                <p class="text-dark"><%= detail.getCorpsAppartenance() %></p>
+                                <p class="text-dark"><%= detail.getCorps_appartenance().getLibelle() %></p>
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Indice :</h6>
-                                <p class="text-dark"><%= detail.getIndice() %></p>
+                                <p class="text-dark"><%= detail.getIndice().getLibelle() %></p>
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Service employeur :</h6>
-                                <p class="text-dark"><%= detail.getServiceEmployeur() %></p>
+                                <p class="text-dark"><%= detail.getService_employeur().getLibelle() %></p>
                             </div>
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Localité de service :</h6>
-                                <p class="text-dark"><%= detail.getLocaliteService() %></p>
+                                <p class="text-dark"><%= detail.getLocalite_service().getLibelle() %></p>
                             </div>
                         <% } %>
                     </div>
@@ -119,7 +195,7 @@
 <div class="modal fade custom-modal" id="modalUploadImage" tabindex="-1" role="dialog" aria-labelledby="modalUploadImageLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-success text-white">
                 <h5 class="modal-title" id="modalUploadImageLabel">Modifier l'image de profil</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -129,7 +205,7 @@
             <div class="modal-body">
                 <form action="/modifier-image" method="post" enctype="multipart/form-data">
                     <div class="form-group text-center">
-                        <label for="file" class="btn btn-outline-primary">
+                        <label for="file" class="btn btn-outline-success">
                             <i class="fas fa-upload"></i> Choisir une nouvelle image
                         </label>
                         <input type="file" id="file" name="file" class="form-control-file d-none" required onchange="displayFileName(this)">
@@ -137,7 +213,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Valider</button>
+                        <button type="submit" class="btn btn-success">Valider</button>
                     </div>
                 </form>
             </div>
@@ -157,7 +233,7 @@
 <div class="modal fade custom-modal" id="modalChangePassword" tabindex="-1" role="dialog" aria-labelledby="modalChangePasswordLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="modalChangePasswordLabel">Changer le mot de passe</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -186,7 +262,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                        <button type="submit" id="submitButton" class="btn btn-primary" disabled>Valider</button>
+                        <button type="submit" id="submitButton" class="btn btn-danger" disabled>Valider</button>
                     </div>
                 </form>
             </div>
@@ -237,75 +313,51 @@
     });
 </script>
 
-<!-- Modal pour afficher les messages -->
-<div class="modal fade custom-modal" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header" id="modalHeader">
-                <h5 class="modal-title" id="messageModalLabel">Message</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="messageContent"><%= message %></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            </div>
-        </div>
+<!-- Message d'erreur ou de succès -->
+<% if (message != null && !message.isEmpty()) { %>
+    <div id="messageBox" class="alert">
+        <span id="messageContent"><%= message %></span>
+        <button onclick="closeMessage()">OK</button>
     </div>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const message = '<%= message != null ? message : "" %>';
+            const messageBox = document.getElementById('messageBox');
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const message = '<%= message != null ? message : "" %>';
-        const messageModal = $('#messageModal');
-        const modalHeader = document.querySelector('#messageModal .modal-header');
+            if (message.trim() !== '') {
+                document.getElementById('messageContent').textContent = message;
 
-        if (message.trim() !== '') {
-            document.getElementById('messageContent').textContent = message;
+                // Détermine le type de message : succès ou erreur
+                if (message.includes('succès')) {
+                    messageBox.classList.add('success');
+                    messageBox.classList.remove('error');
+                } else {
+                    messageBox.classList.add('error');
+                    messageBox.classList.remove('success');
+                }
 
-            if (message.includes('succès')) {
-                modalHeader.classList.remove('modal-error');
-                modalHeader.classList.add('modal-success');
-            } else {
-                modalHeader.classList.remove('modal-success');
-                modalHeader.classList.add('modal-error');
+                // Affiche l'alerte avec un effet de descente
+                messageBox.classList.add('show');
+
+                // Disparaît automatiquement après 5 secondes
+                setTimeout(function() {
+                    closeMessage();
+                }, 5000);
             }
 
-            messageModal.modal('show');
-        }
-    });
-</script>
+            function closeMessage() {
+                messageBox.classList.remove('show');
+                messageBox.classList.add('hide');
+                // Retire complètement l'alerte après la transition (0.5s)
+                setTimeout(function() {
+                    messageBox.style.display = 'none';
+                }, 500);
+            }
+        });
+    </script>
+<% } %>
 
-<style>
-    .custom-modal .modal-dialog {
-        margin-top: -1%;
-    }
 
-    #messageModal .modal-dialog {
-        position: fixed;
-        top: 1rem; /* Distance du haut de la page */
-        left: 50%; /* Positionnement horizontal central */
-        transform: translateX(-50%); /* Ajuste pour centrer le modal */
-        margin: 0;
-        /* max-width: 300px; Ajustez selon vos besoins */
-    }
 
-    #messageModal .modal-content {
-        border-radius: 0.5rem;
-    }
-
-    #messageModal .modal-header.modal-success {
-        background-color: #28a745; /* Vert pour le succès */
-        color: white;
-    }
-
-    #messageModal .modal-header.modal-error {
-        background-color: #dc3545; /* Rouge pour l'erreur */
-        color: white;
-    }
-</style>
 
 <%@include file="../utils/footer.jsp" %>

@@ -49,6 +49,9 @@ public class Utilisateur {
 	@JoinColumn(name = "genre", insertable = false, updatable = false)
 	Genre genre;
 
+	@Transient
+	List<VHistoriqueConge> historiqueConges;
+
     //SETTERS AND GETTERS
 
 	public String getId(){
@@ -141,6 +144,13 @@ public class Utilisateur {
 	public void setGenre(Genre genre){
 		this.genre = genre;
 	}
+
+    public List<VHistoriqueConge> getHistoriqueConges() {
+        return historiqueConges;
+    }
+    public void setHistoriqueConges(List<VHistoriqueConge> historiqueConges) {
+        this.historiqueConges = historiqueConges;
+    }
 
     //CONSTRUCTORS
 

@@ -15,6 +15,7 @@ public interface VEtatDemandeRepository extends JpaRepository<VEtatDemande, Obje
     List<VEtatDemande> findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(String idDirection, int etatUtilisateur, int etatemande);
     List<VEtatDemande> findByEtatUtilisateurAndIdEtatDemande(int etatUtilisateur, int etatemande);
     @Query("SELECT v FROM VEtatDemande v WHERE v.idEtatDemande = :idEtatDemande AND v.dateDebut > CURRENT_DATE")
-    List<VEtatDemande> findByIdEtatDemandeAndDateDebutAfter(@Param("idEtatDemande") int idEtatDemande);
+    Page<VEtatDemande> findByIdEtatDemandeAndDateDebutAfter(@Param("idEtatDemande") int idEtatDemande, Pageable pageable);
+    List<VEtatDemande> findByIdEtatDemande(int idEtatDemande);
     
 }

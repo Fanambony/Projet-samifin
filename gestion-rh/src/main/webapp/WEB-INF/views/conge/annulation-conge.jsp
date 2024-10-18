@@ -3,9 +3,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="org.springframework.data.domain.Page" %>
 
 <%
-    List<VEtatDemande> demande_valider = (List<VEtatDemande>)request.getAttribute("list_demande_valider");
+    Page<VEtatDemande> demande_valider = (Page<VEtatDemande>)request.getAttribute("list_demande_valider");
 %>
 
 <%@include file="../utils/header.jsp" %>
@@ -30,12 +31,29 @@
     .custom-detail-modal .modal-content {
         min-height: 400px; /* Ajustez la hauteur selon vos besoins */
     }
+
+    /* pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .page-item {
+        margin: 0 5px;
+    }
+    .page-item.active .page-link {
+        background-color: #007bff;
+        color: white;
+    }
+    .custom-modal .form-group label {
+        font-weight: bold;
+    }
 </style>
 
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Annulation demande conge valider</h4>
+            <h4 class="card-title">ANNULATION DE DEMANDE DE CONGE</h4>
             <div class="table-responsive">
 
                 <br>
@@ -74,6 +92,26 @@
                         <% } %>
                     </tbody>
                 </table>
+
+                <br>
+                
+                <div class="pagination">
+                    <ul class="pagination">
+                        <li class="page-item <%= demande_valider.isFirst() ? "disabled" : "" %>">
+                            <a class="page-link" href="?page=<%= demande_valider.getNumber() - 1 %>&size=<%= demande_valider.getSize() %>"><< Précédent</a>
+                        </li>
+                
+                        <% for (int i = 0; i < demande_valider.getTotalPages(); i++) { %>
+                            <li class="page-item <%= (i == demande_valider.getNumber()) ? "active" : "" %>">
+                                <a class="page-link" href="?page=<%= i %>&size=<%= demande_valider.getSize() %>"><%= i + 1 %></a>
+                            </li>
+                        <% } %>
+                
+                        <li class="page-item <%= demande_valider.isLast() ? "disabled" : "" %>">
+                            <a class="page-link" href="?page=<%= demande_valider.getNumber() + 1 %>&size=<%= demande_valider.getSize() %>">Suivant >></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -196,6 +234,5 @@
         </div>
     </div>
 <% } %>
-
 
 <%@include file="../utils/footer.jsp" %>

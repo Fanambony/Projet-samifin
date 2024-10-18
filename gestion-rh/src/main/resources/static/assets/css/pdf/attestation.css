@@ -1,0 +1,167 @@
+@page {
+    size: A4;
+    margin: 0;
+    font-size: 5px;
+}
+body {
+    margin: 0;
+    padding: 0;
+    /* font-family: 'Times New Roman', Times, serif; */
+    position: relative;
+}
+.header, .footer {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    z-index: 1000; 
+}
+.header {
+    top: 0;
+    padding: 5px 10px; 
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    margin: auto;
+}
+.header p{
+    font-size: 12px;
+    line-height: 1.25;
+}
+.footer {
+    bottom: 0;
+    padding: 10px 5px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    box-sizing: border-box;
+}
+.footer p {
+    font-size: 10px;
+    margin: 0;
+    line-height: 1.25;
+}
+.header img {
+    max-width: 80px;
+}
+.content {
+    margin-top: 80px; 
+    padding: 50px;
+    width: 80%;
+}
+.drapeau{
+    width: 300px;
+    margin-left: 250px;
+    text-align: center;
+    margin-top: 10px;
+}
+.lettre{
+    width: 250px;
+    float: left;
+    margin-top: -40px;
+    text-align: center;
+}
+.sary{
+    width: 250px;
+    margin-left: 500px;
+    margin-top: -65px;
+}
+.sary img {
+    max-width: 150px;
+    margin-left: 85px;
+}
+
+.content h4 {
+    margin-left: 190px;
+}
+
+.content h5 {
+    text-decoration: underline;
+    margin-top: 20px;
+    margin-left: 50px;
+}
+.paragraphe {
+    text-indent: 3em; /* Ajustez la valeur selon vos besoins */
+}
+
+
+.entete {
+    text-align: center;
+    margin-top: -10px;
+}
+.entete p {
+    line-height: 1;
+}
+.contenue p{
+    line-height: 1.25;
+    font-size: 12px;
+    margin: 5px 0; /* Réduit l'espacement vertical (haut et bas) */
+    padding: 0;    /* Supprime tout padding */
+}
+.decide p {
+    line-height: 1;
+    font-size: 12px;
+}
+.article {
+    text-decoration: underline; /* Souligner uniquement le texte dans les span */
+}
+
+
+
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Supprime les espaces entre les bordures */
+    border: 0.5px solid; /* Bordure autour du tableau entier */
+}
+
+thead th {
+    border: 0.5px solid; /* Bordure uniquement pour les cellules d'en-tête */
+    padding: 8px;
+    font-size: 12px;
+}
+
+tbody td {
+    padding: 8px; /* Ajoutez un peu d'espace dans les cellules */
+    font-size: 12px;
+    border-left: 0.5px solid; /* Bordure verticale à gauche de chaque colonne */
+    border-right: 0.5px solid; /* Bordure verticale à droite de chaque colonne */
+}
+
+tbody tr td:first-child {
+    border-left: none; /* Supprimer la bordure gauche pour la première colonne */
+}
+
+tbody tr td:last-child {
+    border-right: none; /* Supprimer la bordure droite pour la dernière colonne */
+}
+tbody tr.total-row td {
+    border-top: 0.5px solid; /* Bordure supérieure plus épaisse pour la ligne du total */
+    text-align: center;
+}
+
+thead th:nth-child(1), tbody td:nth-child(1) {
+    width: 15%; /* Colonne Date */
+}
+
+thead th:nth-child(2), tbody td:nth-child(2) {
+    width: 25%; /* Colonne Justificatif */
+}
+
+thead th:nth-child(3), tbody td:nth-child(3) {
+    width: 45%; /* Colonne Libelle */
+}
+
+thead th:nth-child(4), tbody td:nth-child(4) {
+    width: 15%; /* Colonne Montant */
+}
+
+
+
+.ville{
+    margin-left: 350px;
+}
+.ordonnateur {
+    margin-left: 350px;
+    margin-top: 100px;
+}

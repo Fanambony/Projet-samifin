@@ -7,6 +7,7 @@ import com.example.gestionrh.Model.Entity.VEtatDemande;
 import com.example.gestionrh.Model.Entity.VHistoriqueConge;
 import com.example.gestionrh.Model.Service.DetailUtilisateurService;
 import com.example.gestionrh.Model.Service.EtatUtilisateurService;
+import com.example.gestionrh.Model.Service.PasswordService;
 import com.example.gestionrh.Model.Service.TypeAbsenceService;
 import com.example.gestionrh.Model.Service.TypeCongeService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
@@ -15,7 +16,9 @@ import com.example.gestionrh.utils.PaginationConfig;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +56,29 @@ public class DetailUtilisateurController{
     @Autowired
     private PaginationConfig paginationConfig;
 
+    @Autowired
+    private PasswordService passwordService;
+
 	@PostMapping("verifierLogin")
     public String Login(@RequestParam String mail, @RequestParam String mdp, HttpSession session, HttpServletRequest request) {
         try {
             int etat_utilisateur_active = etatUtilisateurService.getEtatActive();
-            DetailUtilisateur user = detailUtilisateurService.getByUser(mail, mdp, etat_utilisateur_active);
+            DetailUtilisateur user = detailUtilisateurService.getByUser(mail, etat_utilisateur_active);
+
+            if (user == null) {
+                throw new Exception("Authentification invalide");
+            }
+
+            // Vérifier si le mot de passe correspond
+            if (!BCrypt.checkpw(mdp, user.getMdp())) { // Assurez-vous que getMdp() retourne le mot de passe chiffré
+                throw new Exception("Mot de passe non valide");
+            }
+
+            if (user.getMdpProvisoir() != null && user.getMdpProvisoir()) {
+                // Rediriger vers la page de modification du mot de passe si le mot de passe est provisoire
+                session.setAttribute("userId", user.getUtilisateur().getId());
+                return "authentification/modifier-mdp"; // Page pour modifier le mot de passe
+            }
             
             byte[] imageBytes = user.getUtilisateur().getImage();
             if (imageBytes != null && imageBytes.length > 0) {
@@ -72,6 +93,43 @@ public class DetailUtilisateurController{
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Mot de passe ou email non valide");
             return "authentification/login";
+        }
+    }
+
+    @PostMapping("/modifier-mdp-provisoir")
+    public String modifierMotDePasse(@RequestParam String nouveauMdp, 
+                                     @RequestParam String confirmerMdp, 
+                                     HttpSession session, 
+                                     HttpServletRequest request) {
+        try {
+            String userId = (String) session.getAttribute("userId");
+
+            if (userId == null) {
+                // Rediriger vers la page de login si l'utilisateur n'est pas connecté
+                return "authentification/login";
+            }
+
+            DetailUtilisateur detailUtilisateur = detailUtilisateurService.findByIdUtilisateur(userId);
+
+            if (!nouveauMdp.equals(confirmerMdp)) {
+                // Les mots de passe ne correspondent pas
+                request.setAttribute("errorMessage", "Les mots de passe ne correspondent pas.");
+                return "authentification/login";
+            }
+
+            // Mettre à jour le mot de passe de l'utilisateur
+            Optional<DetailUtilisateur> utilisateurOptional = detailUtilisateurService.getOne(detailUtilisateur.getId());
+            DetailUtilisateur utilisateur = utilisateurOptional.get();
+            String mdp_cripter = passwordService.encryptPassword(nouveauMdp);
+            utilisateur.setMdp(mdp_cripter);
+            utilisateur.setMdpProvisoir(false);  // Mettre à jour pour indiquer que le mot de passe n'est plus provisoire
+            detailUtilisateurService.create(utilisateur);
+
+            // Rediriger vers une autre page après la mise à jour (ex: page d'accueil)
+            return "redirect:/detail_utilisateur/page-conge";
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Erreur lors de la modification du mot de passe.");
+            return "authentification/modifier-mdp";
         }
     }
     
@@ -115,5 +173,4 @@ public class DetailUtilisateurController{
         
         return "conge/conge";
     }
-
 }

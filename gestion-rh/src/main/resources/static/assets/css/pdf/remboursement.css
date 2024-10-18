@@ -25,6 +25,7 @@ body {
 }
 .header p{
     font-size: 12px;
+    line-height: 1.25;
 }
 .footer {
     bottom: 0;
@@ -36,14 +37,14 @@ body {
 .footer p {
     font-size: 10px;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.25;
 }
 .header img {
     max-width: 80px;
 }
 
 .content {
-    margin-top: 150px; 
+    margin-top: 100px; 
     padding: 50px;
 }
 .haut{
@@ -67,7 +68,7 @@ body {
 .sary{
     width: 250px;
     float: right;
-    margin-top: -45px;
+    margin-top: -65px;
 }
 .sary img {
     max-width: 150px;

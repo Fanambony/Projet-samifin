@@ -15,8 +15,14 @@ public class VHistoriqueConge {
 	Long numLigne;
 	@Column(name = "id_utilisateur")
 	String idUtilisateur;
+	@Column(name = "nom_utilisateur")
+	String nomUtilisateur;
+	@Column(name = "prenom_utilisateur")
+	String prenomUtilisateur;
 	@Column(name = "id_type_conge")
 	String idTypeConge;
+	@Column(name = "type_conge")
+	String typeConge;
 	@Column(name = "solde_disponible")
 	Double soldeDisponible;
 	@Column(name = "nombre_jours_pris")
@@ -38,11 +44,29 @@ public class VHistoriqueConge {
 	public void setIdUtilisateur(String idUtilisateur){
 		this.idUtilisateur = idUtilisateur;
 	}
+	public String getNomUtilisateur(){
+		return this.nomUtilisateur;
+	}
+	public void setNomUtilisateur(String nomUtilisateur){
+		this.nomUtilisateur = nomUtilisateur;
+	}
+	public String getPrenomUtilisateur(){
+		return this.prenomUtilisateur;
+	}
+	public void setPrenomUtilisateur(String prenomUtilisateur){
+		this.prenomUtilisateur = prenomUtilisateur;
+	}
 	public String getIdTypeConge(){
 		return this.idTypeConge;
 	}
 	public void setIdTypeConge(String idTypeConge){
 		this.idTypeConge = idTypeConge;
+	}
+	public String getTypeConge(){
+		return this.typeConge;
+	}
+	public void setTypeConge(String typeConge){
+		this.typeConge = typeConge;
 	}
 	public Double getSoldeDisponible(){
 		return this.soldeDisponible;
@@ -66,10 +90,13 @@ public class VHistoriqueConge {
     //CONSTRUCTORS
 
  	public VHistoriqueConge(){}
-	public VHistoriqueConge(Long numLigne, String idUtilisateur, String idTypeConge, Double soldeDisponible, BigDecimal nombreJoursPris, Double soldeRestant){
+	public VHistoriqueConge(Long numLigne, String idUtilisateur, String nomUtilisateur, String prenomUtilisateur, String idTypeConge, String typeConge, Double soldeDisponible, BigDecimal nombreJoursPris, Double soldeRestant){
 		setNumLigne(numLigne);
 		setIdUtilisateur(idUtilisateur);
+		setNomUtilisateur(nomUtilisateur);
+		setPrenomUtilisateur(prenomUtilisateur);
 		setIdTypeConge(idTypeConge);
+		setTypeConge(typeConge);
 		setSoldeDisponible(soldeDisponible);
 		setNombreJoursPris(nombreJoursPris);
 		setSoldeRestant(soldeRestant);

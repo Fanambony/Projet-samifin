@@ -44,7 +44,15 @@ public class VEtatDemandeService {
 	}
 
 	// prendre demande valider la date debut est superieur a la date aujourd'hui qui doit etre annuler
-	public List<VEtatDemande> findByIdEtatDemandeAndDateDebutAfter(int etatDemande) {
-		return vEtatDemandeRepository.findByIdEtatDemandeAndDateDebutAfter(etatDemande);
+	public Page<VEtatDemande> findByIdEtatDemandeAndDateDebutAfter(int etatDemande, Pageable pageable) {
+		return vEtatDemandeRepository.findByIdEtatDemandeAndDateDebutAfter(etatDemande, pageable);
 	}
+
+	public List<VEtatDemande> demandeValiderParUtilisateur(int idEtatDemande) {
+		return vEtatDemandeRepository.findByIdEtatDemande(idEtatDemande);
+	}
+
+	// public List<VEtatDemande> demandeValiderParUtilisateur(String idUtilisateur, int idEtatDemande) {
+	// 	return vEtatDemandeRepository.findByIdUttilisateurAndIdEtatDemande(idUtilisateur, idEtatDemande);
+	// }
 }

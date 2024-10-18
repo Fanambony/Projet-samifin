@@ -8,6 +8,14 @@
 <%@ page import="com.example.gestionrh.Model.Entity.Genre" %>
 <%@ page import="com.example.gestionrh.Model.Entity.EtatUtilisateur" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Filiation" %>
+<%@ page import="com.example.gestionrh.Model.Entity.TypeUtilisateur" %>
+
+<%@ page import="com.example.gestionrh.Model.Entity.Categorie" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Qualite" %>
+<%@ page import="com.example.gestionrh.Model.Entity.ServiceEmployeur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.LocaliteService" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Indice" %>
+<%@ page import="com.example.gestionrh.Model.Entity.CorpsAppartenance" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
@@ -19,14 +27,164 @@
     List<Fonction> fonction = (List<Fonction>)request.getAttribute("fonctions");
     List<Genre> genre = (List<Genre>)request.getAttribute("genre");
     List<EtatUtilisateur> etat = (List<EtatUtilisateur>)request.getAttribute("etat");
+    List<TypeUtilisateur> typeUtilisateur = (List<TypeUtilisateur>)request.getAttribute("typeUtilisateurs");
+
+    List<Categorie> categories = (List<Categorie>)request.getAttribute("categories");
+    List<Qualite> qualites = (List<Qualite>)request.getAttribute("qualites");
+    List<ServiceEmployeur> serviceEmployeurs = (List<ServiceEmployeur>)request.getAttribute("serviceEmployeurs");
+    List<LocaliteService> localiteServices = (List<LocaliteService>)request.getAttribute("localiteServices");
+    List<Indice> indices = (List<Indice>)request.getAttribute("indices");
+    List<CorpsAppartenance> corpsAppartenances = (List<CorpsAppartenance>)request.getAttribute("corpsAppartenances");
 %>
 
 <%@include file="../utils/header.jsp" %>
 
+
+<style>
+    .custom-modal .modal-dialog {
+        margin-top: 1rem;
+    }
+
+    .switch input{
+        display: none;
+    }
+    .slider{
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+    .slider:before{
+        content: "";
+        position: absolute;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+        width: 50px;
+        height: 24px;
+    }
+    .slider:after{
+        content: "";
+        position: absolute;
+        background-color: rgb(255, 255, 255);
+        transition: .4s;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        bottom: 4px;
+        left: 4px;
+    }
+    input:checked + .slider:before{
+        background-color: #008234;
+    }
+    input:checked + .slider:after{
+        transform: translateX(26px);
+    }
+    .mdi-icon {
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    /* pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .page-item {
+        margin: 0 5px;
+    }
+
+    .page-item.active .page-link {
+        background-color: #007bff;
+        color: white;
+    }
+
+
+    /* Conteneur du switch */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    /* Cacher l'input checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* Style de la glissière (slider) */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 0px;
+        width: 0px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+    }
+
+    /* Couleur lorsque l'état est activé */
+    input:checked + .slider {
+        background-color: #4CAF50; /* Vert pour activé */
+    }
+
+    /* Style de l'effet de focus */
+    input:focus + .slider {
+        box-shadow: 0 0 1px #4CAF50;
+    }
+
+    /* Animation de déplacement du cercle lorsque coché */
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Rendre le switch circulaire */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    /* Espacement des légendes */
+    .ml-2 {
+        margin-left: 10px;
+    }
+
+    .mr-2 {
+        margin-right: 10px;
+    }
+
+    .d-flex {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Liste des utilisateurs</h4>
+            <h4 class="card-title">GESTION DES UTILISATEURS</h4>
             <div class="table-responsive">
 
                 <div>
@@ -227,22 +385,22 @@
                                         <strong>Fonction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getNom() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Qualité :</strong> <%= u.getDetailUtilisateurs().get(0).getQualite() %>
+                                        <strong>Qualité :</strong> <%= u.getDetailUtilisateurs().get(0).getQualite().getLibelle() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Catégorie :</strong> <%= u.getDetailUtilisateurs().get(0).getCategorie() %>
+                                        <strong>Catégorie :</strong> <%= u.getDetailUtilisateurs().get(0).getCategorie().getLibelle() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Corps d'appartenance :</strong> <%= u.getDetailUtilisateurs().get(0).getCorpsAppartenance() %>
+                                        <strong>Corps d'appartenance :</strong> <%= u.getDetailUtilisateurs().get(0).getCorps_appartenance().getLibelle() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Indice :</strong> <%= u.getDetailUtilisateurs().get(0).getIndice() %>
+                                        <strong>Indice :</strong> <%= u.getDetailUtilisateurs().get(0).getIndice().getLibelle() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Service Employeur :</strong> <%= u.getDetailUtilisateurs().get(0).getServiceEmployeur() %>
+                                        <strong>Service Employeur :</strong> <%= u.getDetailUtilisateurs().get(0).getService_employeur().getLibelle() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Localite de service :</strong> <%= u.getDetailUtilisateurs().get(0).getLocaliteService() %>
+                                        <strong>Localite de service :</strong> <%= u.getDetailUtilisateurs().get(0).getLocalite_service().getLibelle() %>
                                     </li>
                                 </ul>
                             </div>
@@ -256,96 +414,6 @@
         </div>
     </div>
 <% } %>
-<!-- <% 
-    for(Utilisateur u : utilisateur) { 
-        byte[] imageBytes = u.getImage();
-        String imageUtilisateur = (imageBytes != null && imageBytes.length > 0) ? Base64.getEncoder().encodeToString(imageBytes) : null;
-        String imageParDefaut = "/assets/images/faces/user.jpeg";
-        String imageSrc = (imageUtilisateur != null && !imageUtilisateur.isEmpty()) ? "data:image/jpeg;base64, " + imageUtilisateur : imageParDefaut;
-    %>
-    <div class="modal fade custom-modal" id="userDetailModal<%= u.getId() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="userDetailModalLabel">Profil de l'utilisateur</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="userDetailContent">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-account"></i> <strong>Nom :</strong> <%= u.getNom() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-account"></i> <strong>Prénom :</strong> <%= u.getPrenom() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-gender-male-female"></i> <strong>Genre :</strong> <%= u.getGenre().getLibelle() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-calendar"></i> <strong>Date de naissance :</strong> <%= DateUtil.formatDate(u.getDateNaissance()) %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-account-box"></i> <strong>Matricule :</strong> <%= u.getDetailUtilisateurs().get(0).getMatricule() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-email"></i> <strong>Email :</strong> <%= u.getDetailUtilisateurs().get(0).getEmail() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-phone"></i> <strong>Téléphone :</strong> <%= u.getDetailUtilisateurs().get(0).getTelephone() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-calendar"></i> <strong>Date d'entrée :</strong> <%= DateUtil.formatDate(u.getDetailUtilisateurs().get(0).getDateEntre()) %>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <img src="<%= imageSrc %>" class="img-fluid rounded-circle border mb-3" alt="Photo de profil" style="width: 150px; height: 150px;">
-                                <h4><%= u.getPrenom() %> <%= u.getNom() %></h4>
-                                <p class="text-muted"><%= u.getType_utilisateur().getLibelle() %></p>
-                            </div>
-                            <div class="col-md-4">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-domain"></i> <strong>Direction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getDirection().getNom() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-account-tie"></i> <strong>Fonction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getNom() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-star"></i> <strong>Qualité :</strong> <%= u.getDetailUtilisateurs().get(0).getQualite() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-sitemap"></i> <strong>Catégorie :</strong> <%= u.getDetailUtilisateurs().get(0).getCategorie() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-shield-account"></i> <strong>Corps d'appartenance :</strong> <%= u.getDetailUtilisateurs().get(0).getCorpsAppartenance() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-account-badge"></i> <strong>Indice :</strong> <%= u.getDetailUtilisateurs().get(0).getIndice() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-office-building"></i> <strong>Service Employeur :</strong> <%= u.getDetailUtilisateurs().get(0).getServiceEmployeur() %>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <i class="mdi mdi-map-marker"></i> <strong>Localité de service :</strong> <%= u.getDetailUtilisateurs().get(0).getLocaliteService() %>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-<% } %> -->
 
 
 <!-- Modal modifier utilisateur -->
@@ -359,42 +427,23 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div id="userDetailContent">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-4 col-form-label">Nom</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="nom" value="<%= u.getNom() %>">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-4 col-form-label">Prénom</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="prenom" value="<%= u.getPrenom() %>">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <% for(DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
+                <form class="form-sample" method="post" action="modifierUtilisateur">
+                    <div class="modal-body">
+                        <div id="userDetailContent">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Matricule</label>
+                                        <label class="col-sm-4 col-form-label">Nom</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="matricule" value="<%= detail.getMatricule() %>">
+                                            <input type="text" class="form-control" name="nom" id="nom" value="<%= u.getNom() %>">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Date d'Entrée</label>
+                                        <label class="col-sm-4 col-form-label">Prénom</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="dateEntree" value="<%= detail.getDateEntre() %>">
+                                            <input type="text" class="form-control" name="prenom" id="prenom" value="<%= u.getPrenom() %>">
                                         </div>
                                     </div>
                                 </div>
@@ -403,109 +452,257 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Email</label>
+                                        <label class="col-sm-4 col-form-label">Date de naissance</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="email" value="<%= detail.getEmail() %>">
+                                            <input type="date" class="form-control" name="dtn" id="dtn" value="<%= u.getDateNaissance() %>">
+                                            <span id="error-date-naissance" style="color: red; display: none;">L'utilisateur doit avoir au moins 18 ans.</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Téléphone</label>
+                                        <label class="col-sm-4 col-form-label">Genre</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="telephone" value="<%= detail.getTelephone() %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Direction</label>
-                                        <div class="col-sm-8">
-                                            <select id="direction" name="direction" class="form-control">
-                                                <% for(Direction d : direction) { %>
-                                                    <option value="<%= d.getId() %>" <%= d.getId().equals(detail.getFonction().getDirection().getId()) ? "selected" : "" %>><%= d.getNom() %></option>
+                                            <select name="genre" id="genre" class="form-control">
+                                                <% for(Genre g : genre) {
+                                                    String selected = g.getEtat().equals(u.getGenre().getEtat()) ? "selected" : "";
+                                                %>
+                                                    <option value="<%= g.getEtat() %>" <%= selected %>><%= g.getLibelle() %></option>
                                                 <% } %>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Fonction</label>
-                                        <div class="col-sm-8">
-                                            <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= detail.getFonction().getId() %>">
-                                                <!-- Les options seront mises à jour dynamiquement par JavaScript -->
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Qualité</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="qualite" value="<%= detail.getQualite() %>">
+                            <% for(DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Matricule</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="matricule" id="matricule" value="<%= detail.getMatricule() %>">
+                                                <span id="error-matricule" style="color: red; display: none;">Ce matricule existe déjà. Veuillez en saisir un autre.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Date d'Entrée</label>
+                                            <div class="col-sm-8">
+                                                <input type="date" class="form-control" name="dateEntree" id="dateEntree" value="<%= detail.getDateEntre() %>">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Catégorie</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="categorie" value="<%= detail.getCategorie() %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Corps d'appartenance</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="appartenance" value="<%= detail.getCorpsAppartenance() %>">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Email</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="email" id="email" value="<%= detail.getEmail() %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Téléphone</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="telephone" id="telephone" value="<%= detail.getTelephone() %>">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Indice</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="indice" value="<%= detail.getIndice() %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Service employeur</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="employeur" value="<%= detail.getServiceEmployeur() %>">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Direction</label>
+                                            <div class="col-sm-8">
+                                                <select id="direction" name="direction" class="form-control">
+                                                    <% for(Direction d : direction) { %>
+                                                        <option value="<%= d.getId() %>" <%= d.getId().equals(detail.getFonction().getDirection().getId()) ? "selected" : "" %>><%= d.getNom() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Fonction</label>
+                                            <div class="col-sm-8">
+                                                <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= detail.getFonction().getId() %>">
+                                                    <!-- Les options seront mises à jour dynamiquement par JavaScript -->
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Localité de service</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" id="localite" value="<%= detail.getLocaliteService() %>">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Qualité</label>
+                                            <div class="col-sm-8">
+                                                <select name="qualite" id="qualite" class="form-control">
+                                                    <% for(Qualite q : qualites) { 
+                                                        String selected = q.getId().equals(detail.getQualite().getId()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= q.getId() %>" <%= selected %>><%= q.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Catégorie</label>
+                                            <div class="col-sm-8">
+                                                <select name="categorie" id="categorie" class="form-control">
+                                                    <% for(Categorie c : categories) { 
+                                                        String selected = c.getId().equals(detail.getCategorie().getId()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= c.getId() %>" <%= selected %>><%= c.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        <% } %>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Corps d'appartenance</label>
+                                            <div class="col-sm-8">
+                                                <select name="appartenance" id="appartenance" class="form-control">
+                                                    <% for(CorpsAppartenance ca : corpsAppartenances) { 
+                                                        String selected = ca.getId().equals(detail.getCorps_appartenance().getId()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= ca.getId() %>" <%= selected %>><%= ca.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Indice</label>
+                                            <div class="col-sm-8">
+                                                <select name="indice" id="indice" class="form-control">
+                                                    <% for(Indice i : indices) { 
+                                                        String selected = i.getId().equals(detail.getIndice().getId()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= i.getId() %>" <%= selected %>><%= i.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Service employeur</label>
+                                            <div class="col-sm-8">
+                                                <select name="employeur" id="employeur" class="form-control">
+                                                    <% for(ServiceEmployeur se : serviceEmployeurs) { 
+                                                        String selected = se.getId().equals(detail.getService_employeur().getId()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= se.getId() %>" <%= selected %>><%= se.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Localité de service</label>
+                                            <div class="col-sm-8">
+                                                <select name="localite" id="localite" class="form-control">
+                                                    <% for(LocaliteService ls : localiteServices) { 
+                                                        String selected = ls.getId().equals(detail.getLocalite_service().getId()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= ls.getId() %>" <%= selected %>><%= ls.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Type utilisateur</label>
+                                            <div class="col-sm-8">
+                                                <select name="typeUtilisateur" id="typeUtilisateur" class="form-control">
+                                                    <% for(TypeUtilisateur tu : typeUtilisateur) { 
+                                                        String selected = tu.getEtat().equals(u.getType_utilisateur().getEtat()) ? "selected" : "";
+                                                    %>
+                                                        <option value="<%= tu.getEtat() %>" <%= selected %>><%= tu.getLibelle() %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Numéro de décision</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="decision" name="decision" value="<%= detail.getNumeroDecision() %>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Mot de passe</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="motdepasse" name="mot_de_passe" placeholder="Saisissez le mot de passe">
+                                                <button type="button" class="btn btn-secondary mt-2" id="generatePassword">Générer un mot de passe</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Etat</label>
+                                            <div class="col-sm-8 d-flex align-items-center">
+                                                <span class="mr-2">Désactivé</span>
+                                            
+                                                <label class="switch">
+                                                    <input type="checkbox" name="etatUtilisateur" id="etatUtilisateur" 
+                                                        value="1" 
+                                                        <%= u.getEtat_utilisateur().getEtat() == 1 ? "checked" : "" %> 
+                                                        onchange="toggleEtat()">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            
+                                                <span class="ml-2">Activé</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Champ caché pour s'assurer qu'une valeur est envoyée si la checkbox est décochée -->
+                                        <input type="hidden" name="etatUtilisateur" value="5">
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="id_utilisateur" value="<%= u.getId() %>">
+                                <input type="hidden" name="id_detail_utilisateur" value="<%= detail.getId() %>">
+                            <% } %>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer la modification</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -555,129 +752,100 @@
     });
 </script>
 
+<!-- generer mot de passe -->
+<script>
+    document.getElementById("generatePassword").addEventListener("click", function() {
+        // Appelle l'API pour générer le mot de passe
+        fetch("/generer-mot-de-passe")
+            .then(response => response.text())
+            .then(motDePasse => {
+                // Insère le mot de passe généré dans l'input
+                document.getElementById("motdepasse").value = motDePasse;
+            })
+            .catch(error => console.error('Erreur:', error));
+    });
+</script>
 
-
-<style>
-    .custom-modal .modal-dialog {
-        margin-top: 1rem;
-    }
-
-    .switch input{
-        display: none;
-    }
-    .slider{
-        position: relative;
-        cursor: pointer;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-    }
-    .slider:before{
-        content: "";
-        position: absolute;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 24px;
-        width: 50px;
-        height: 24px;
-    }
-    .slider:after{
-        content: "";
-        position: absolute;
-        background-color: rgb(255, 255, 255);
-        transition: .4s;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        bottom: 4px;
-        left: 4px;
-    }
-    input:checked + .slider:before{
-        background-color: #008234;
-    }
-    input:checked + .slider:after{
-        transform: translateX(26px);
-    }
-    .mdi-icon {
-        font-size: 1.2rem;
-        color: white;
+<!-- envoyer etat utilisateur -->
+<script>
+    function toggleEtat() {
+        var etatUtilisateur = document.getElementById('etatUtilisateur');
+        
+        // Si la checkbox est cochée, sa valeur est "1", sinon, elle est "5"
+        etatUtilisateur.value = etatUtilisateur.checked ? "1" : "5";
     }
 
-    /* pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
+    // Initialiser la bonne valeur au chargement de la page
+    document.addEventListener("DOMContentLoaded", function() {
+        var etatUtilisateur = document.getElementById('etatUtilisateur');
+        etatUtilisateur.value = etatUtilisateur.checked ? "1" : "5"; 
+    });
+</script>
 
-    .page-item {
-        margin: 0 5px;
-    }
+<!-- verifier age -->
+<script>
+    $(document).ready(function() {
+        $('#dtn').on('change', function() {
+            var dob = new Date($(this).val());
+            var today = new Date();
+            var age = today.getFullYear() - dob.getFullYear();
+            var monthDifference = today.getMonth() - dob.getMonth();
+            
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        color: white;
-    }
+            if (age < 18) {
+                $('#error-date-naissance').show(); // Afficher le message d'erreur
+                $('#dtn').val(''); // Réinitialiser la date
+            } else {
+                $('#error-date-naissance').hide(); // Cacher le message si l'âge est correct
+            }
+        });
 
-    
-    /* .custom-modal .modal-content {
-        border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+        $('form').on('submit', function(e) {
+            var dob = new Date($('#dtn').val());
+            var today = new Date();
+            var age = today.getFullYear() - dob.getFullYear();
+            var monthDifference = today.getMonth() - dob.getMonth();
+            
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
 
-    .custom-modal .modal-header {
-        background-color: #4e73df;
-        color: white;
-        border-bottom: none;
-        border-radius: 15px 15px 0 0;
-    }
+            if (age < 18) {
+                e.preventDefault(); // Empêche l'envoi du formulaire
+                $('#error-date-naissance').show(); // Afficher le message d'erreur
+            }
+        });
+    });
+</script>
 
-    .custom-modal .modal-title {
-        font-weight: bold;
-    }
+<!-- verifier matricule -->
+<script>
+    $(document).ready(function() {
+        $('#matricule').on('blur', function() {
+            var matricule = $(this).val();
 
-    .custom-modal .close {
-        color: white;
-        opacity: 1;
-    }
-
-    .custom-modal .modal-body {
-        padding: 20px 30px;
-        background-color: #f8f9fc;
-    }
-
-    .custom-modal .modal-footer {
-        border-top: none;
-        padding: 15px 30px;
-    }
-
-    .custom-modal .form-group label {
-        font-weight: bold;
-        color: #5a5c69;
-    }
-
-    .custom-modal .form-control {
-        border-radius: 10px;
-        border: 1px solid #d1d3e2;
-    }
-
-    .custom-modal .btn-secondary {
-        background-color: #858796;
-        border-radius: 8px;
-    }
-
-    .custom-modal .section-header {
-        font-weight: bold;
-        font-size: 1.1rem;
-        color: #4e73df;
-        margin: 10px 0;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 5px;
-    }
-
-    .custom-modal .row {
-        margin-bottom: 15px;
-    } */
-</style>
+            // Appel AJAX pour vérifier si le matricule existe
+            $.ajax({
+                url: '/verifier-matricule',
+                type: 'GET',
+                data: { matricule: matricule },
+                success: function(existe) {
+                    if (existe) {
+                        $('#error-matricule').show(); // Afficher le message d'erreur
+                        $('#matricule').val(''); // Réinitialiser le champ matricule
+                    } else {
+                        $('#error-matricule').hide(); // Cacher le message si le matricule est valide
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Erreur lors de la vérification du matricule:', error);
+                }
+            });
+        });
+    });
+</script>
 
 <%@include file="../utils/footer.jsp" %>

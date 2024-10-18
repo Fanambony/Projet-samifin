@@ -1,13 +1,28 @@
 <%@ page import="java.util.Optional" %>
+<%@ page import="java.util.List" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Utilisateur" %>
 <%@ page import="com.example.gestionrh.Model.Entity.DetailUtilisateur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.Direction" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
     Utilisateur user = (Utilisateur) request.getAttribute("utilisateur");
+    List<Direction> directions = (List<Direction>)request.getAttribute("directions");
 %>
 
 <%@include file="../utils/header.jsp" %>
+
+<style>
+    .label {
+        padding-top: 4%;
+    }
+    .checkbox {
+        margin-left: 10%;
+    }
+    td {
+        width: 33%;
+    }
+</style>
 
 <div class="col-12 grid-margin">
     <div class="card">
@@ -54,7 +69,11 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Direction / Service</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="direction" value="<%= detail.getFonction().getDirection().getNom() %>"/>
+                            <select id="direction" name="direction" class="form-control">
+                                <% for(Direction d : directions) { %>
+                                    <option value="<%= d.getId() %>" <%= d.getId().equals(detail.getFonction().getDirection().getId()) ? "selected" : "" %>><%= d.getNom() %></option>
+                                <% } %>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -62,7 +81,9 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Fonction ou grade</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="fonction" value="<%= detail.getFonction().getNom() %>"/>
+                            <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= detail.getFonction().getId() %>">
+                                <!-- Les options seront mises à jour dynamiquement par JavaScript -->
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -178,16 +199,49 @@
     </div>
 </div>
 
-<style>
-    .label {
-        padding-top: 4%;
-    }
-    .checkbox {
-        margin-left: 10%;
-    }
-    td {
-        width: 33%;
-    }
-</style>
+<script src="/assets/js/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+            $(document).ready(function () {
+
+            var modal = $(this);
+            var directionSelect = modal.find('#direction');
+            var fonctionSelect = modal.find('#fonction');
+            var selectedFunctionId = fonctionSelect.data('selected-function');
+
+            // Fonction pour charger les fonctions pour une direction donnée
+            function loadFonctions(directionId) {
+                $.ajax({
+                    url: '/fonction/getFonctionsByDirection',
+                    type: 'GET',
+                    data: { directionId: directionId },
+                    success: function(fonctions) {
+                        fonctionSelect.empty(); // Vider les options actuelles
+                        $.each(fonctions, function(index, fonction) {
+                            var option = new Option(fonction.nom, fonction.id);
+                            if (fonction.id === selectedFunctionId) {
+                                $(option).prop('selected', true);
+                            }
+                            fonctionSelect.append(option);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur lors de la récupération des fonctions:', error);
+                    }
+                });
+            }
+
+            // Lors de l'ouverture du modal, initialisez les fonctions
+            var selectedDirectionId = directionSelect.val();
+            loadFonctions(selectedDirectionId);
+
+            // Mettre à jour les fonctions lorsque la direction change
+            directionSelect.on('change', function() {
+                var newDirectionId = $(this).val();
+                loadFonctions(newDirectionId);
+            });
+        });
+    });
+</script>
 
 <%@include file="../utils/footer.jsp" %>
