@@ -279,24 +279,48 @@
 
                 <br>
                 
-                <div class="pagination">
+                <div class="pagination d-flex justify-content-center">
                     <ul class="pagination">
+                        <!-- Lien vers la page précédente -->
                         <li class="page-item <%= utilisateur.isFirst() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= utilisateur.getNumber() - 1 %>&size=<%= utilisateur.getSize() %>"><< Précédent</a>
+                            <a class="page-link" href="?page=<%= utilisateur.getNumber() - 1 %>&size=<%= utilisateur.getSize() %>">&laquo;</a>
                         </li>
                 
-                        <% for (int i = 0; i < utilisateur.getTotalPages(); i++) { %>
-                            <li class="page-item <%= (i == utilisateur.getNumber()) ? "active" : "" %>">
-                                <a class="page-link" href="?page=<%= i %>&size=<%= utilisateur.getSize() %>"><%= i + 1 %></a>
+                        <% 
+                            int maxPagesToShow = 4;
+                            int currentPage = utilisateur.getNumber() + 1; // Passe en index 1-based
+                            int totalPages = utilisateur.getTotalPages();
+                            int startPage = Math.max(1, currentPage - maxPagesToShow / 2);
+                            int endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+                
+                            if (startPage > 1) { 
+                        %>
+                            <li class="page-item"><a class="page-link" href="?page=0&size=<%= utilisateur.getSize() %>">1</a></li>
+                            <% if (startPage > 2) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                        <% } %>
+                
+                        <!-- Liens pour les pages visibles -->
+                        <% for (int i = startPage; i <= endPage; i++) { %>
+                            <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
+                                <a class="page-link" href="?page=<%= i - 1 %>&size=<%= utilisateur.getSize() %>"><%= i %></a>
                             </li>
                         <% } %>
                 
+                        <% if (endPage < totalPages) { %>
+                            <% if (endPage < totalPages - 1) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                            <li class="page-item"><a class="page-link" href="?page=<%= totalPages - 1 %>&size=<%= utilisateur.getSize() %>"><%= totalPages %></a></li>
+                        <% } %>
+                
+                        <!-- Lien vers la page suivante -->
                         <li class="page-item <%= utilisateur.isLast() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= utilisateur.getNumber() + 1 %>&size=<%= utilisateur.getSize() %>">Suivant >></a>
+                            <a class="page-link" href="?page=<%= utilisateur.getNumber() + 1 %>&size=<%= utilisateur.getSize() %>">&raquo;</a>
                         </li>
                     </ul>
                 </div>
-                
 
             </div>
         </div>

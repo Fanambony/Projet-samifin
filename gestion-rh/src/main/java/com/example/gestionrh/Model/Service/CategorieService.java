@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.CategorieRepository;
 import com.example.gestionrh.Model.Entity.Categorie;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +11,8 @@ import java.util.Optional;
 @Service
 public class CategorieService {
 
-	private final CategorieRepository categorieRepository;
-
-	public CategorieService(CategorieRepository categorieRepository) {this.categorieRepository = categorieRepository;}
-
-
+	@Autowired
+	private CategorieRepository categorieRepository;
 
 	/* -- READ ONE -- */
 	public Optional<Categorie> getOne(Object id) { return categorieRepository.findById(id); }

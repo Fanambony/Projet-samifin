@@ -1,5 +1,7 @@
 package com.example.gestionrh.Model.Entity;
 
+import java.sql.Date;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +20,8 @@ public class SoldeUtilisateur {
 	Integer annee;
 	@Column(name = "solde")
 	Double solde;
+	@Column(name = "date_generer")
+	Date dateGenerer;
 	@ManyToOne
 	@JoinColumn(name = "id_utilisateur", insertable = false, updatable = false)
 	Utilisateur utilisateur;
@@ -57,6 +61,12 @@ public class SoldeUtilisateur {
 	public void setSolde(Double solde){
 		this.solde = solde;
 	}
+	public Date getDateGenerer(){
+		return this.dateGenerer;
+	}
+	public void setDateGenerer(Date dateGenerer){
+		this.dateGenerer = dateGenerer;
+	}
 	public Utilisateur getUtilisateur(){
 		return this.utilisateur;
 	}
@@ -73,14 +83,22 @@ public class SoldeUtilisateur {
     //CONSTRUCTORS
 
  	public SoldeUtilisateur(){}
-	public SoldeUtilisateur(String id, String idUtilisateur, String idTypeConge, Integer annee, Double solde, Utilisateur utilisateur, TypeConge type_conge){
+	 public SoldeUtilisateur(String id, String idUtilisateur, String idTypeConge, Integer annee, Double solde, Date dateGenerer, Utilisateur utilisateur, TypeConge type_conge){
 		setId(id);
 		setIdUtilisateur(idUtilisateur);
 		setIdTypeConge(idTypeConge);
 		setAnnee(annee);
 		setSolde(solde);
+		setDateGenerer(dateGenerer);
 		setUtilisateur(utilisateur);
 		setType_conge(type_conge);
+	}
+	public SoldeUtilisateur(String idUtilisateur, String idTypeConge, Integer annee, Double solde, Date dateGenerer){
+		setIdUtilisateur(idUtilisateur);
+		setIdTypeConge(idTypeConge);
+		setAnnee(annee);
+		setSolde(solde);
+		setDateGenerer(dateGenerer);
 	}
 	public SoldeUtilisateur(String idUtilisateur, String idTypeConge, Double solde){
 		setIdUtilisateur(idUtilisateur);

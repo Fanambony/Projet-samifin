@@ -95,23 +95,49 @@
 
                 <br>
                 
-                <div class="pagination">
+                <div class="pagination d-flex justify-content-center">
                     <ul class="pagination">
+                        <!-- Lien vers la page précédente -->
                         <li class="page-item <%= demande_valider.isFirst() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= demande_valider.getNumber() - 1 %>&size=<%= demande_valider.getSize() %>"><< Précédent</a>
+                            <a class="page-link" href="?page=<%= demande_valider.getNumber() - 1 %>&size=<%= demande_valider.getSize() %>">&laquo;</a>
                         </li>
                 
-                        <% for (int i = 0; i < demande_valider.getTotalPages(); i++) { %>
-                            <li class="page-item <%= (i == demande_valider.getNumber()) ? "active" : "" %>">
-                                <a class="page-link" href="?page=<%= i %>&size=<%= demande_valider.getSize() %>"><%= i + 1 %></a>
+                        <% 
+                            int maxPagesToShow = 4;
+                            int currentPage = demande_valider.getNumber() + 1; // Passe en index 1-based
+                            int totalPages = demande_valider.getTotalPages();
+                            int startPage = Math.max(1, currentPage - maxPagesToShow / 2);
+                            int endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+                
+                            if (startPage > 1) { 
+                        %>
+                            <li class="page-item"><a class="page-link" href="?page=0&size=<%= demande_valider.getSize() %>">1</a></li>
+                            <% if (startPage > 2) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                        <% } %>
+                
+                        <!-- Liens pour les pages visibles -->
+                        <% for (int i = startPage; i <= endPage; i++) { %>
+                            <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
+                                <a class="page-link" href="?page=<%= i - 1 %>&size=<%= demande_valider.getSize() %>"><%= i %></a>
                             </li>
                         <% } %>
                 
+                        <% if (endPage < totalPages) { %>
+                            <% if (endPage < totalPages - 1) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                            <li class="page-item"><a class="page-link" href="?page=<%= totalPages - 1 %>&size=<%= demande_valider.getSize() %>"><%= totalPages %></a></li>
+                        <% } %>
+                
+                        <!-- Lien vers la page suivante -->
                         <li class="page-item <%= demande_valider.isLast() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= demande_valider.getNumber() + 1 %>&size=<%= demande_valider.getSize() %>">Suivant >></a>
+                            <a class="page-link" href="?page=<%= demande_valider.getNumber() + 1 %>&size=<%= demande_valider.getSize() %>">&raquo;</a>
                         </li>
                     </ul>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -221,18 +247,29 @@
                     <p class="mt-3">
                         Voulez-vous vraiment annuler cette demande de congé validée ?
                     </p>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <a href="/demande_conge/annuler-conge?idDemande=<%= dv.getIdDemandeConge() %>" id="confirmCancelBtn" class="btn btn-danger btn-sm">
-                        <i class="ti-back-left"></i> Oui, annuler
-                    </a>
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
-                        <i class="ti-close"></i> Non, revenir
-                    </button>
+                    <!-- Formulaire avec le motif d'annulation -->
+                    <form method="post" action="/demande_conge/annuler-conge">
+                        <!-- Champ caché pour envoyer l'ID de la demande -->
+                        <input type="hidden" name="idDemande" value="<%= dv.getIdDemandeConge() %>" />
+
+                        <!-- Champ texte pour le motif d'annulation -->
+                        <textarea name="motif" class="form-control" rows="3" placeholder="Veuillez indiquer le motif d'annulation" required></textarea>
+
+                        <!-- Boutons du modal -->
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="ti-back-left"></i> Oui, annuler
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+                                <i class="ti-close"></i> Non, revenir
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 <% } %>
+
 
 <%@include file="../utils/footer.jsp" %>

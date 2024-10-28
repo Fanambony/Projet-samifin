@@ -11,4 +11,5 @@ public interface VHistoriqueCongeRepository extends JpaRepository<VHistoriqueCon
     VHistoriqueConge findByIdUtilisateurAndIdTypeConge(String idUtilisateur, String idTypeConge);
     List<VHistoriqueConge> findByIdUtilisateur(String idUtilisateur);
     Page<VHistoriqueConge> findAll(Pageable pageable);
+    List<VHistoriqueConge> findByIdTypeConge(String idTypeConge);
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.List;
 import java.util.List;
 import java.util.List;
+import java.util.List;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -47,6 +49,12 @@ public class Utilisateur {
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<SoldeFinAnnee> soldeFinAnnees;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<NotificationDestinataire> notificationDestinataires;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<Notification> notifications;
 	@ManyToOne
 	@JoinColumn(name = "genre", insertable = false, updatable = false)
 	Genre genre;
@@ -137,6 +145,18 @@ public class Utilisateur {
 	public void setSoldeFinAnnees(List<SoldeFinAnnee> soldeFinAnnees){
 		this.soldeFinAnnees = soldeFinAnnees;
 	}
+	public List<NotificationDestinataire> getNotificationDestinataires(){
+		return this.notificationDestinataires;
+	}
+	public void setNotificationDestinataires(List<NotificationDestinataire> notificationDestinataires){
+		this.notificationDestinataires = notificationDestinataires;
+	}
+	public List<Notification> getNotifications(){
+		return this.notifications;
+	}
+	public void setNotifications(List<Notification> notifications){
+		this.notifications = notifications;
+	}
 	public Genre getGenre(){
 		return this.genre;
 	}
@@ -159,7 +179,7 @@ public class Utilisateur {
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, Byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs, List<Famille> familles, List<SoldeFinAnnee> soldeFinAnnees, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, Byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs, List<Famille> familles, List<SoldeFinAnnee> soldeFinAnnees, List<NotificationDestinataire> notificationDestinataires, List<Notification> notifications, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
@@ -173,6 +193,8 @@ public class Utilisateur {
 		setSoldeUtilisateurs(soldeUtilisateurs);
 		setFamilles(familles);
 		setSoldeFinAnnees(soldeFinAnnees);
+		setNotificationDestinataires(notificationDestinataires);
+		setNotifications(notifications);
 		setGenre(genre);
 		setEtat_utilisateur(etat_utilisateur);
 		setType_utilisateur(type_utilisateur);

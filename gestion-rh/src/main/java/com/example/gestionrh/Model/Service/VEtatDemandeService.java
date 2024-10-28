@@ -2,6 +2,7 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.VEtatDemandeRepository;
 import com.example.gestionrh.Model.Entity.VEtatDemande;
+import com.example.gestionrh.utils.DateUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 
@@ -35,8 +37,8 @@ public class VEtatDemandeService {
         return vEtatDemandeRepository.findByIdUtilisateur(idUtilisateur, pageable);
     }
 
-	public List<VEtatDemande> demandeCongeParidDirectionParTypeUtilisateur(String idDirection, int etatUtilisateur, int etatemande) {
-		return vEtatDemandeRepository.findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(idDirection, etatUtilisateur, etatemande);
+	public List<VEtatDemande> demandeCongeParidDirectionParTypeUtilisateur(String idDirection, int etatUtilisateur, int etatDemande) {
+		return vEtatDemandeRepository.findByIdDirectionAndEtatUtilisateurAndIdEtatDemande(idDirection, etatUtilisateur, etatDemande);
 	}
 
 	public List<VEtatDemande> demandeCongeParTypeUtilisateur(int etatUtilisateur, int etatemande) {
@@ -45,7 +47,7 @@ public class VEtatDemandeService {
 
 	// prendre demande valider la date debut est superieur a la date aujourd'hui qui doit etre annuler
 	public Page<VEtatDemande> findByIdEtatDemandeAndDateDebutAfter(int etatDemande, Pageable pageable) {
-		return vEtatDemandeRepository.findByIdEtatDemandeAndDateDebutAfter(etatDemande, pageable);
+		return vEtatDemandeRepository.findByIdEtatDemande(etatDemande, pageable);
 	}
 
 	public List<VEtatDemande> demandeValiderParUtilisateur(int idEtatDemande) {
@@ -55,4 +57,30 @@ public class VEtatDemandeService {
 	// public List<VEtatDemande> demandeValiderParUtilisateur(String idUtilisateur, int idEtatDemande) {
 	// 	return vEtatDemandeRepository.findByIdUttilisateurAndIdEtatDemande(idUtilisateur, idEtatDemande);
 	// }
+
+	// public List<VEtatDemande> searchByUserAndTerm(String idUtilisateur, String searchTerm) {
+	// 	// Implémenter la logique de recherche, par exemple en recherchant dans le type de congé ou d'autres champs
+	// 	return vEtatDemandeRepository.findByUtilisateurAndSearchTerm(idUtilisateur, searchTerm);
+	// }
+
+	public List<VEtatDemande> searchByUserAndTerm(String idUtilisateur, String searchTerm) {
+		// Récupérer les résultats bruts de la base de données
+		List<VEtatDemande> resultats = vEtatDemandeRepository.findByUtilisateurAndSearchTerm(idUtilisateur, searchTerm);
+		
+		// Filtrer les résultats si le searchTerm inclut un format de date
+		return resultats.stream()
+			.filter(demande -> {
+				String formattedDate = DateUtil.formatDate(demande.getDateDemande());
+				return demande.getTypeConge().toLowerCase().contains(searchTerm.toLowerCase()) || 
+					   demande.getEtatDemande().toLowerCase().contains(searchTerm.toLowerCase()) || 
+					   demande.getNombreJoursConge().toString().contains(searchTerm) || 
+					   formattedDate.toLowerCase().contains(searchTerm.toLowerCase());
+			})
+			.collect(Collectors.toList());
+	}
+	
+	public VEtatDemande getByDemande(String idDemande) {
+		return vEtatDemandeRepository.findByIdDemandeConge(idDemande);
+	}
+	
 }

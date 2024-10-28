@@ -132,7 +132,8 @@
                             <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Numéro de décision :</h6>
                                 <p class="text-dark"><%= detail.getNumeroDecision() %></p>
-                            </div><div class="col-sm-6 mb-3">
+                            </div>
+                            <div class="col-sm-6 mb-3">
                                 <h6 class="font-weight-bold text-muted">Genre :</h6>
                                 <p class="text-dark"><%= user.getGenre().getLibelle() %></p>
                             </div>

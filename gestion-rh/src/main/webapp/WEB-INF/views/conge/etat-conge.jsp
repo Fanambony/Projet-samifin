@@ -110,6 +110,62 @@
     .custom-modal .form-group label {
         font-weight: bold;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* stat */
+    .stat-title {
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+
+    .stat-section {
+        border-left: 1px solid #ddd;
+        padding-left: 20px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        transition: transform 0.3s; /* Ajout d'une transition pour un effet de survol */
+    }
+
+    .stat-item:hover {
+        transform: scale(1.05); /* Agrandissement lors du survol */
+        color: #007bff; /* Changer la couleur de texte au survol */
+    }
+
+    .stat-item i {
+        font-size: 24px; /* Augmenter la taille de l'icône */
+        margin-right: 10px; /* Espacement entre l'icône et le texte */
+        color: #007bff; /* Couleur de l'icône */
+        transition: color 0.3s; /* Transition de couleur */
+    }
+
+    .stat-item:hover i {
+        color: #0056b3; /* Couleur d'icône au survol */
+    }
+
+    .card {
+        border-radius: 8px; /* Arrondir les coins de la carte */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre de la carte */
+    }
+
+    .no-data {
+        color: #6c757d; /* Couleur pour le texte "Aucune donnée" */
+    }
 </style>
 
 <div class="col-lg-12 grid-margin stretch-card">
@@ -164,23 +220,49 @@
 
                 <br>
 
-                <div class="pagination">
+                <div class="pagination d-flex justify-content-center">
                     <ul class="pagination">
+                        <!-- Lien vers la page précédente -->
                         <li class="page-item <%= utilisateur.isFirst() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= utilisateur.getNumber() - 1 %>&size=<%= utilisateur.getSize() %>"><< Précédent</a>
+                            <a class="page-link" href="?page=<%= utilisateur.getNumber() - 1 %>&size=<%= utilisateur.getSize() %>">&laquo;</a>
                         </li>
                 
-                        <% for (int i = 0; i < utilisateur.getTotalPages(); i++) { %>
-                            <li class="page-item <%= (i == utilisateur.getNumber()) ? "active" : "" %>">
-                                <a class="page-link" href="?page=<%= i %>&size=<%= utilisateur.getSize() %>"><%= i + 1 %></a>
+                        <% 
+                            int maxPagesToShow = 4;
+                            int currentPage = utilisateur.getNumber() + 1; // Passe en index 1-based
+                            int totalPages = utilisateur.getTotalPages();
+                            int startPage = Math.max(1, currentPage - maxPagesToShow / 2);
+                            int endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+                
+                            if (startPage > 1) { 
+                        %>
+                            <li class="page-item"><a class="page-link" href="?page=0&size=<%= utilisateur.getSize() %>">1</a></li>
+                            <% if (startPage > 2) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                        <% } %>
+                
+                        <!-- Liens pour les pages visibles -->
+                        <% for (int i = startPage; i <= endPage; i++) { %>
+                            <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
+                                <a class="page-link" href="?page=<%= i - 1 %>&size=<%= utilisateur.getSize() %>"><%= i %></a>
                             </li>
                         <% } %>
                 
+                        <% if (endPage < totalPages) { %>
+                            <% if (endPage < totalPages - 1) { %>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <% } %>
+                            <li class="page-item"><a class="page-link" href="?page=<%= totalPages - 1 %>&size=<%= utilisateur.getSize() %>"><%= totalPages %></a></li>
+                        <% } %>
+                
+                        <!-- Lien vers la page suivante -->
                         <li class="page-item <%= utilisateur.isLast() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= utilisateur.getNumber() + 1 %>&size=<%= utilisateur.getSize() %>">Suivant >></a>
+                            <a class="page-link" href="?page=<%= utilisateur.getNumber() + 1 %>&size=<%= utilisateur.getSize() %>">&raquo;</a>
                         </li>
                     </ul>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -226,44 +308,46 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row"> <!-- Utilisation du système de grille de Bootstrap -->
+                <div class="row">
                     
                     <!-- Colonne gauche : Calendrier -->
                     <div class="col-md-8">
-                        <div id="calendar-conge<%= u.getId() %>" style="width: 100%;"></div> <!-- Calendrier pleine largeur dans sa colonne -->
+                        <div id="calendar-conge<%= u.getId() %>" style="width: 100%;"></div>
                     </div>
                     
                     <!-- Colonne droite : Statistiques -->
-                    <div class="col-md-4" style="border-left: 1px solid #ddd; padding-left: 20px;">
-                        <h5 class="stat-title">Statistiques</h5>
-                        
-                        <% if (u.getHistoriqueConges() != null && !u.getHistoriqueConges().isEmpty()) { %>
-                            <div class="stat-section">
-                                <% for (VHistoriqueConge hi : u.getHistoriqueConges()) { %>
-                                    <div class="stat-item">
-                                        <i class="ti-clipboard"></i>
-                                        <p>Type d'absence : <span><%= hi.getTypeConge() %></span></p>
+                    <div class="col-md-4">
+                        <div class="stat-section">
+                            <h5 class="stat-title">Statistiques</h5>
+                            
+                            <% if (u.getHistoriqueConges() != null && !u.getHistoriqueConges().isEmpty()) { %>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <% for (VHistoriqueConge hi : u.getHistoriqueConges()) { %>
+                                            <div class="stat-item">
+                                                <i class="ti-clipboard"></i>
+                                                <p><strong>Type d'absence :</strong> <span><%= hi.getTypeConge() %></span></p>
+                                            </div>
+                                            <div class="stat-item">
+                                                <i class="ti-time"></i>
+                                                <p><strong>Nombre total de congés :</strong> <span><%= hi.getSoldeDisponible() %></span></p>
+                                            </div>
+                                            <div class="stat-item">
+                                                <i class="ti-check-box"></i>
+                                                <p><strong>Nombre de congés pris :</strong> <span><%= hi.getNombreJoursPris() %></span></p>
+                                            </div>
+                                            <div class="stat-item">
+                                                <i class="ti-calendar"></i>
+                                                <p><strong>Solde disponible :</strong> <span><%= hi.getSoldeRestant() %> jours</span></p>
+                                            </div>
+                                        <% } %>
                                     </div>
-                                    <div class="stat-item">
-                                        <i class="ti-time"></i>
-                                        <p>Nombre total de congés : <span><%= hi.getSoldeDisponible() %></span></p>
-                                    </div>
-                                    <div class="stat-item">
-                                        <i class="ti-check-box"></i>
-                                        <p>Nombre de congés pris : <span><%= hi.getNombreJoursPris() %></span></p>
-                                    </div>
-                                    <div class="stat-item">
-                                        <i class="ti-calendar"></i>
-                                        <p>Solde disponible : <span><%= hi.getSoldeRestant() %> jours</span></p>
-                                    </div>
-                                <% } %>
-                            </div>
-                        <% } else { %>
-                            <p class="no-data">Aucune donnée de congé disponible pour cet utilisateur.</p>
-                        <% } %>
+                                </div>
+                            <% } else { %>
+                                <p class="no-data">Aucune donnée de congé disponible pour cet utilisateur.</p>
+                            <% } %>
+                        </div>
                     </div>
-
-                    
                 </div>
                 
                 <% if (!hasEvents) { %>

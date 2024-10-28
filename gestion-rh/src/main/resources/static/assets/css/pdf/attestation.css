@@ -89,6 +89,7 @@ body {
 }
 .entete p {
     line-height: 1;
+    font-size: 12px;
 }
 .contenue p{
     line-height: 1.25;
@@ -97,16 +98,32 @@ body {
     padding: 0;    /* Supprime tout padding */
 }
 .decide p {
-    line-height: 1;
+    line-height: 1.2; /* Un peu plus d'espacement mais pas excessif */
+    font-size: 12px;
+    margin: 5px 0; /* Réduit l'espacement vertical */
+}
+
+.article {
+    text-decoration: underline;
+    padding: 0; /* Supprimer tout padding éventuel */
+    margin: 0; /* Supprimer toute marge supplémentaire */
+    line-height: inherit; /* Hérite de la ligne des paragraphes */
+}
+
+.article2 p {
+    line-height: 1; /* Un peu plus d'espacement mais pas excessif */
+}
+.article3{
+    margin-top: 10px;
+}
+
+.signature p{
+    margin-left: 325px;
     font-size: 12px;
 }
-.article {
-    text-decoration: underline; /* Souligner uniquement le texte dans les span */
+.dg{
+    margin-top: 55px;
 }
-
-
-
-
 
 
 table {

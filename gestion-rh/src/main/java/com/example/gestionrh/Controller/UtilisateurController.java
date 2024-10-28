@@ -141,10 +141,23 @@ public class UtilisateurController{
 		return "/authentification/login";
 	}
 
+    private boolean isAuthorizedForUtilisateur(String role) {
+        return role.equals("ADMIN");
+    }
+
     @GetMapping("list-utilisateur")
 	public String utilisateur(HttpServletRequest request, 
                                 @RequestParam(defaultValue = "0") int page, 
-                                @RequestParam(required = false) Integer size) {
+                                @RequestParam(required = false) Integer size,
+                                HttpSession session
+                                ) {
+
+        String userId = (String)session.getAttribute("userId");
+        String userRole = utilisateurService.getUserRole(userId);
+
+        if (!isAuthorizedForUtilisateur(userRole)) {
+            return "/utils/errorPage";
+        }
 
         int paginationSize = (size != null) ? size : paginationConfig.getDefaultPaginationSize();
 
@@ -196,9 +209,20 @@ public class UtilisateurController{
         }
     }
 
+    private boolean isAuthorizedForSante(String role) {
+        return role.equals("COLLABORATEUR") || role.equals("CHEF_DE_DEPARTEMENT") || role.equals("DIRECTEUR_GENERAL");
+    }
+
     @GetMapping("bulletin-consultation")
     public String bulletinConsultation(HttpSession session, HttpServletRequest request) {
-        String idUtilisateur = (String)session.getAttribute("userId"); 
+
+        String idUtilisateur = (String) session.getAttribute("userId");
+        String userRole = utilisateurService.getUserRole(idUtilisateur);
+                            
+        if (!isAuthorizedForSante(userRole)) {
+            return "/utils/errorPage";
+        }
+
         Optional<Utilisateur> utilisateur = utilisateurService.getOne(idUtilisateur);
         Utilisateur user = utilisateur.get();
         List<Famille> familles = familleService.findByIdEmploye(idUtilisateur);
@@ -226,7 +250,13 @@ public class UtilisateurController{
 
     @GetMapping("demande-remboursement")
     public String demandeRemboursement(HttpSession session, HttpServletRequest request) {
-        String idUtilisateur = (String)session.getAttribute("userId"); 
+        String idUtilisateur = (String) session.getAttribute("userId");
+        String userRole = utilisateurService.getUserRole(idUtilisateur);
+                            
+        if (!isAuthorizedForSante(userRole)) {
+            return "/utils/errorPage";
+        }
+
         Optional<Utilisateur> utilisateur = utilisateurService.getOne(idUtilisateur);
         Utilisateur user = utilisateur.get();
         List<Direction> directions = directionService.getAll();

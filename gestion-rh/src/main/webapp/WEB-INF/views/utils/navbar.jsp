@@ -1,10 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+  Integer userType = (Integer)session.getAttribute("userType");
+%>
 
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
+
+      <%
+        if (userType == null || userType != 15 ) {
+      %>
+
       <li class="nav-item">
         <a class="nav-link" href="/detail_utilisateur/page-conge">
-          <i class="ti-calendar menu-icon"></i>
+          <i class="ti-user menu-icon"></i>
           <span class="menu-title">Congé</span>
         </a>
       </li>
@@ -22,11 +30,15 @@
           </ul>
         </div>
       </li>
+      <% } %>
 
+      <%
+        if (userType == null || userType != 1 && userType != 5 && userType != 10) {
+      %>
       <li class="nav-item">
         <a class="nav-link" href="/attestation-non-paiement">
-          <i class="ti-alert menu-icon"></i>
-          <span class="menu-title">Attestation non paiement</span>
+          <i class="ti-receipt menu-icon"></i>
+          <span class="menu-title">Attes. non paiement</span>
         </a>
       </li>
 
@@ -44,12 +56,12 @@
         </a>
       </li>
 
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" href="/direction/gerer-direction">
           <i class="ti-briefcase menu-icon"></i>
           <span class="menu-title">Gestion de la direction</span>
         </a>
-      </li>
+      </li> -->
 
       <li class="nav-item">
         <a class="nav-link" href="/demande_conge/annulation-conge">
@@ -59,19 +71,19 @@
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" href="#">
-        <i class="ti-receipt menu-icon"></i>
+      <a class="nav-link" href="/v_soldes_utilisateur/generer-solde">
+        <i class="ti-clipboard menu-icon"></i>
         <span class="menu-title">Générer solde de congé</span>
       </a>
     </li>
 
     <li class="nav-item">
       <a class="nav-link" href="/v_historique_conge/etat-conge">
-        <i class="ti-receipt menu-icon"></i>
+        <i class="ti-calendar menu-icon"></i>
         <span class="menu-title">Etat congé personnels</span>
       </a>
     </li>
-    
-      
+
+  <% } %>
     </ul>
   </nav>

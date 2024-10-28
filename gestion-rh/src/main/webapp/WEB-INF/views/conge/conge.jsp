@@ -122,7 +122,18 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-outline-primary btn-fw btn-block" data-toggle="modal" data-target="#faireDemandeModal">Faire une demande de congé</button>
                         </div>
+                        <form method="GET" action="page-conge" class="col-md-8">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <input type="text" name="search" class="form-control" placeholder="Rechercher...">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                    
                     
                     <div class="table-responsive">
                         <table class="table table-striped table-borderless">
@@ -187,26 +198,49 @@
                         </table>
                     </div>
 
-                    <div class="pagination">
-                        <ul class="pagination">
+                    <div class="pagination d-flex justify-content-center">
+                        <ul class="pagination ">
                             <!-- Lien vers la page précédente -->
-                            <li class="page-item <%= etatDemandesPage.isFirst() ? "disabled" : "" %>"> <!-- Change ici -->
-                                <a class="page-link" href="?page=<%= etatDemandesPage.getNumber() - 1 %>&size=<%= size %>"><< Précédent</a>
+                            <li class="page-item <%= etatDemandesPage.isFirst() ? "disabled" : "" %>">
+                                <a class="page-link" href="?page=<%= etatDemandesPage.getNumber() - 1 %>&size=<%= size %>">&laquo;</a>
                             </li>
-            
-                            <!-- Liens pour chaque page -->
-                            <% for (int i = 0; i < etatDemandesPage.getTotalPages(); i++) { %> <!-- Modifié ici -->
-                                <li class="page-item <%= (i == etatDemandesPage.getNumber()) ? "active" : "" %>">
+                    
+                            <% 
+                                int maxPagesToShow = 4;
+                                int currentPage = etatDemandesPage.getNumber();
+                                int totalPages = etatDemandesPage.getTotalPages();
+                                int startPage = Math.max(0, currentPage - maxPagesToShow / 2);
+                                int endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 1);
+                    
+                                if (startPage > 0) { 
+                            %>
+                                <li class="page-item"><a class="page-link" href="?page=0&size=<%= size %>">1</a></li>
+                                <% if (startPage > 1) { %>
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <% } %>
+                            <% } %>
+                    
+                            <!-- Liens pour les pages visibles -->
+                            <% for (int i = startPage; i <= endPage; i++) { %>
+                                <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
                                     <a class="page-link" href="?page=<%= i %>&size=<%= size %>"><%= i + 1 %></a>
                                 </li>
                             <% } %>
-            
+                    
+                            <% if (endPage < totalPages - 1) { %>
+                                <% if (endPage < totalPages - 2) { %>
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <% } %>
+                                <li class="page-item"><a class="page-link" href="?page=<%= totalPages - 1 %>&size=<%= size %>"><%= totalPages %></a></li>
+                            <% } %>
+                    
                             <!-- Lien vers la page suivante -->
                             <li class="page-item <%= etatDemandesPage.isLast() ? "disabled" : "" %>">
-                                <a class="page-link" href="?page=<%= etatDemandesPage.getNumber() + 1 %>&size=<%= size %>">Suivant >></a>
+                                <a class="page-link" href="?page=<%= etatDemandesPage.getNumber() + 1 %>&size=<%= size %>">&raquo;</a>
                             </li>
                         </ul>
                     </div>
+                    
 
 
                 </div>
@@ -319,12 +353,19 @@
                             <label for="exampleTextarea1">Commentaire</label>
                             <textarea class="form-control" id="exampleTextarea1" rows="4" name="commentaire"></textarea>
                         </div>
+
+                        <div class="form-group">
+                            <label for="interimPerson">Personne intérimaire</label>
+                            <select class="form-control" id="interimPerson" name="interimPerson">
+                                <option value="">Sélectionnez une personne</option>
+                                    <option value=""> personne</option>
+                            </select>
+                        </div>
+
                         <div class="form-group text-right">
                             <button type="button" class="btn btn-outline-secondary mr-2" data-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-primary">Valider</button>
                         </div>
-
-                        
                     </div>
                 </form>
             </div>
@@ -621,6 +662,5 @@
     document.querySelectorAll('input[name="debut_absence"]').forEach(radio => radio.addEventListener('change', calculerNombreDeJours));
     document.querySelectorAll('input[name="fin_absence"]').forEach(radio => radio.addEventListener('change', calculerNombreDeJours));
 </script>
-
-
+    
 <%@include file="../utils/footer.jsp" %>

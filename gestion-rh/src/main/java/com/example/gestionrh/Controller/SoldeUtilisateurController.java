@@ -6,5 +6,4 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("solde_utilisateur")
 public class SoldeUtilisateurController{
-
 }

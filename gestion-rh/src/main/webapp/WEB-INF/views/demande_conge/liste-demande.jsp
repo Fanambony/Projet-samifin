@@ -1,11 +1,15 @@
-<%@ page import="java.util.List" %>
+<%@ page import="org.springframework.data.domain.Page" %>
 <%@ page import="com.example.gestionrh.Model.Entity.VEtatDemande" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
-<%@ page import="java.util.Date" %>
+<%@ page import="java.util.List" %>
 
 <%
-    List<VEtatDemande> demande = (List<VEtatDemande>)request.getAttribute("demande");
+    // Récupération des données de la requête
+    List<VEtatDemande> demande = (List<VEtatDemande>) request.getAttribute("demande");
+    int currentPage = (Integer) request.getAttribute("currentPage");
+    int totalPages = (Integer) request.getAttribute("totalPages");
+    int type_utilisateur = (Integer)session.getAttribute("userType");
 %>
 
 <%@include file="../utils/header.jsp" %>
@@ -30,7 +34,6 @@
     .custom-detail-modal .modal-content {
         min-height: 400px; /* Ajustez la hauteur selon vos besoins */
     }
-
 </style>
 
 <div class="col-lg-12 grid-margin stretch-card">
@@ -41,21 +44,17 @@
 
                 <br>
                     
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label">Etat :</label>
-                        <div class="col-sm-3">
-                            <select class="form-control">
-                                <option value="">Toutes les etats</option>
-                                <option value="1">En attente</option>
-                                <option value="5">Valider</option>
-                                <option value="10">Refuse</option>
-                            </select>
+                <div class="row mb-3">
+                    <form method="GET" action="page-conge" class="col-md-8">
+                        <div class="row align-items-center">
+                            <div class="col-md-5">
+                                <input type="text" name="search" class="form-control" placeholder="Rechercher...">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
+                            </div>
                         </div>
-                        <div class="col-sm-2">
-                            <button type="submit" class="btn btn-primary mr-2">Valider</button>
-                        </div>
-                    </div>
+                    </form>
                 </div>
 
                 <table class="table table-striped">
@@ -63,8 +62,8 @@
                         <tr>
                             <th>Date demande</th>
                             <th>Agent</th>
-                            <th>Type conge</th>
-                            <th>Date debut</th>
+                            <th>Type congé</th>
+                            <th>Date début</th>
                             <th>Date fin</th>
                             <th>Nbr jours</th>
                             <th>Etat</th>
@@ -93,10 +92,11 @@
                                 
                                 <td class="font-weight-medium"><div class="badge <%= badgeClass %>"><%= de.getEtatDemande() %></div></td>
                                 <td>
-                                    <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voire détails" data-target="#detailModal<%= de.getIdDemandeConge() %>">
+                                    <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voir détails" data-target="#detailModal<%= de.getIdDemandeConge() %>">
                                         <i class="ti-eye"></i>
                                     </button>
-                                    <% if (!de.getIdEtatDemande().equals(10) && !de.getIdEtatDemande().equals(15)) { %>
+                                    <% if (!de.getIdEtatDemande().equals(10) && !de.getIdEtatDemande().equals(15)
+                                            && type_utilisateur != 15 && type_utilisateur != 1) { %>
                                         <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" title="Accepter" data-target="#validerModal<%= de.getIdDemandeConge() %>">
                                             <i class="ti-check"></i>
                                         </button>
@@ -109,6 +109,55 @@
                         <% } %>
                     </tbody>
                 </table>
+
+                <br>
+
+                <!-- Pagination -->
+                <div class="pagination d-flex justify-content-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <%= currentPage == 1 ? "disabled" : "" %>">
+                                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                
+                            <% 
+                                int maxPagesToShow = 4;
+                                int startPage = Math.max(1, currentPage - maxPagesToShow / 2);
+                                int endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+                
+                                if (startPage > 1) {
+                            %>
+                                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                                <% if (startPage > 2) { %>
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <% } %>
+                            <% } %>
+                
+                            <% for (int i = startPage; i <= endPage; i++) { %>
+                                <li class="page-item <%= currentPage == i ? "active" : "" %>">
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                
+                            <% if (endPage < totalPages) { %>
+                                <% if (endPage < totalPages - 1) { %>
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <% } %>
+                                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a></li>
+                            <% } %>
+                
+                            <li class="page-item <%= currentPage == totalPages ? "disabled" : "" %>">
+                                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
+
             </div>
         </div>
     </div>
@@ -196,6 +245,7 @@
         </div>
     </div>
 <% } %>
+
 
 
 <!-- Modal valider conge -->

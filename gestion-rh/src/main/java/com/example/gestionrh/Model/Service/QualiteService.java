@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.QualiteRepository;
 import com.example.gestionrh.Model.Entity.Qualite;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +11,8 @@ import java.util.Optional;
 @Service
 public class QualiteService {
 
-	private final QualiteRepository qualiteRepository;
-
-	public QualiteService(QualiteRepository qualiteRepository) {this.qualiteRepository = qualiteRepository;}
-
-
+	@Autowired
+	private QualiteRepository qualiteRepository;
 
 	/* -- READ ONE -- */
 	public Optional<Qualite> getOne(Object id) { return qualiteRepository.findById(id); }

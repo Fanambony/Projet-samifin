@@ -1,7 +1,10 @@
 <%@ page import="jakarta.servlet.http.HttpSession" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
 
 <%
   String image = (String)session.getAttribute("image");
+  String nom = (String)session.getAttribute("userNom");
+  String prenom = (String)session.getAttribute("userPrenom");
   String defaultImage = "/assets/images/faces/user.jpeg";
   String imgSrc = (image != null && !image.isEmpty()) ? "data:image/jpeg;base64, " + image : defaultImage;
 %>
@@ -14,6 +17,57 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>SAMIFIN</title>
+
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+        // Function to fetch notifications
+        function fetchNotifications() {
+            $.ajax({
+                url: '/notification_destinataire/notifications',
+                type: 'GET',
+                dataType: 'json',
+                success: function(notifications) {
+                    let unreadCount = 0;
+                    let notificationDropdown = $("#notificationDropdownList");
+    
+                    notificationDropdown.empty();
+    
+                    notifications.forEach(notification => {
+                        if (!notification.lu) { 
+                            unreadCount++;
+                        }
+    
+                        let notificationItem = 
+                            '<a class="dropdown-item preview-item" href="/notification/detail-demande?idDemande=' + notification.notification.idDemande + '&idNotificationDestinataire=' + notification.id + '">'+
+                                '<div class="preview-thumbnail">'+
+                                    '<i class="mdi mdi-bell-ring-outline text-primary"></i>'+
+                                '</div>'+
+                                '<div class="preview-item-content d-flex align-items-start flex-column justify-content-center">'+
+                                    '<h6 class="preview-subject font-weight-normal mb-1"> ' + notification.notification.typeNotification + '</h6>'+
+                                    '<h6 class="preview-subject font-weight-normal mb-1"> ' + notification.notification.message +' </h6>'+
+                                    '<p class="text-muted mb-0">Reçu le : ' + notification.notification.dateCreation + '</p>'+
+                                '</div>'+
+                            '</a>'; 
+                        notificationDropdown.append(notificationItem);
+                    });
+    
+                    $("#notificationCount").text(unreadCount);
+                },
+                error: function(error) {
+                    console.log("Error fetching notifications:", error);
+                }
+            });
+        }
+    
+        // Fetch notifications on page load
+        fetchNotifications();
+    });
+    </script>
+    
+
+
   <!-- plugins:css -->
   <link rel="stylesheet" href="/assets/vendors/feather/feather.css">
   <link rel="stylesheet" href="/assets/vendors/ti-icons/css/themify-icons.css">
@@ -61,58 +115,29 @@
 
 	<ul class="navbar-nav navbar-nav-right">
 
-    <li class="nav-item dropdown">
-      <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-        <i class="icon-bell mx-0"></i>
-        <span class="count"></span>
+    <li class="nav-item dropdown" style="margin-top: 10px;">
+      <a class="nav-link count-indicator dropdown-toggle" href="/notification_destinataire/tous_notifications" title="Toutes les notifications">
+        <i class="mdi mdi-message-text-outline mx-0" style="font-size: 20px;"></i>
       </a>
+    </li>
+
+    <li class="nav-item dropdown">
+      <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown" title="Notifications non lues">
+        <i class="icon-bell mx-0"></i>
+        <strong><span class="count" id="notificationCount" style="color: rgb(255, 255, 255); font-size: 10px; width: 17px; height: 17px; background-color: rgb(255, 0, 0);">0</span></strong>
+      </a>
+    
       <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
         <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-        <a class="dropdown-item preview-item">
-          <div class="preview-thumbnail">
-            <div class="preview-icon bg-success">
-              <i class="ti-info-alt mx-0"></i>
-            </div>
-          </div>
-          <div class="preview-item-content">
-            <h6 class="preview-subject font-weight-normal">Application Error</h6>
-            <p class="font-weight-light small-text mb-0 text-muted">
-              Just now
-            </p>
-          </div>
-        </a>
-        <a class="dropdown-item preview-item">
-          <div class="preview-thumbnail">
-            <div class="preview-icon bg-warning">
-              <i class="ti-settings mx-0"></i>
-            </div>
-          </div>
-          <div class="preview-item-content">
-            <h6 class="preview-subject font-weight-normal">Settings</h6>
-            <p class="font-weight-light small-text mb-0 text-muted">
-              Private message
-            </p>
-          </div>
-        </a>
-        <a class="dropdown-item preview-item">
-          <div class="preview-thumbnail">
-            <div class="preview-icon bg-info">
-              <i class="ti-user mx-0"></i>
-            </div>
-          </div>
-          <div class="preview-item-content">
-            <h6 class="preview-subject font-weight-normal">New user registration</h6>
-            <p class="font-weight-light small-text mb-0 text-muted">
-              2 days ago
-            </p>
-          </div>
-        </a>
+        <div id="notificationDropdownList" class="preview-list"></div>
       </div>
+      
     </li>
 		
 		<li class="nav-item nav-profile dropdown">
       <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-        <img src="<%= imgSrc %>" alt="profile"/>
+        <img src="<%= imgSrc %>" alt="profile"/> <%= nom %> <%= prenom %>
+        <i class="mdi mdi-menu-down mdi-24px"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
         <a class="dropdown-item" href="/detail-utilisateur">
@@ -121,7 +146,7 @@
         </a>
         <a class="dropdown-item" href="/deconnecter">
           <i class="ti-power-off text-primary"></i>
-          Deconnecter
+          Déconnecter
         </a>
       </div>
 		</li>

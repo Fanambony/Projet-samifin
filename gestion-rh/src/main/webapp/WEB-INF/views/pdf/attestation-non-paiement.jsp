@@ -11,6 +11,7 @@
     List<String> libelles = (List<String>) request.getAttribute("libelles");
     List<Float> montants = (List<Float>) request.getAttribute("montants");
     List<String> justificatifs = (List<String>) request.getAttribute("justificatifs");
+
     Date datePiece = (Date)request.getAttribute("datePiece");
     Date dateDecision = (Date)request.getAttribute("dateDecision");
 
@@ -236,23 +237,30 @@
             <p class="entete"><strong>DECIDE</strong></p>
 
             <div class="decide">
-                <p><span class="article">Article premier: </span>Est autorisé le remboursement des frais médicaux au nom de : <%= request.getAttribute("nomAgent") %> 
+                <p><span class="article">Article premier </span> : Est autorisé le remboursement des frais médicaux au nom de : <%= request.getAttribute("nomAgent") %> 
                 <%= request.getAttribute("prenomAgent") %> , IM. <%= request.getAttribute("matricule") %> , Agent de renseignements d'un montant de 
                 <strong><%= FormatUtil.formatMontant((Double)request.getAttribute("montantTotal")) %></strong></p>
-                <p><span class="article">Article 2 : </span> Les dépenses y afférentes sont prises en charges par le Budget Général de l'Etat exercice 2024.</p>
-                <p>CODE MISSION : 010</p>
-                <p>CODE INDICATEUR D'OBJECTIF : 138-1-1-5-02</p>
-                <p>IMPUTATION BUDGETAIRE : 00-01-0-4D0-00000  Service de « Renseignements Financiers » (SAMIFIN)</p>
-                <p>SECTION CONVENTION : 000 « Ressources propres » paragraphe : 6561</p>
-                <p>FINANCEMENT: 10-001-001-A</p>
-                <p>CODE ORDSEC : 00-010-M-00000</p>
-                <p><span class="article">Article 3 : </span>Arrêtée 1a présente Décision la somme « <%= request.getAttribute("montantLettre") %> ».</p>
-                <p><span class="article">Article 4 : </span>La présente Décision sera enregistrée et communiquée partout où besoin sera.</p>
+                
+                <div class="article2">
+                    <p><span class="article">Article 2 </span> : Les dépenses y afférentes sont prises en charges par le Budget Général de l'Etat exercice 2024.</p>
+                    <p>CODE MISSION : 010</p>
+                    <p>CODE INDICATEUR D'OBJECTIF : 138-1-1-5-02</p>
+                    <p>IMPUTATION BUDGETAIRE : 00-01-0-4D0-00000  Service de « Renseignements Financiers » (SAMIFIN)</p>
+                    <p>SECTION CONVENTION : 000 « Ressources propres » paragraphe : 6561</p>
+                    <p>FINANCEMENT: 10-001-001-A</p>
+                    <p>CODE ORDSEC : 00-010-M-00000</p>
+                </div>
+                <div class="article3">
+                    <p><span class="article">Article 3 </span> : Arrêtée 1a présente Décision la somme « <%= request.getAttribute("montantLettre") %> ».</p>
+                </div>
+                <div class="article3">
+                    <p><span class="article">Article 4 </span> : La présente Décision sera enregistrée et communiquée partout où besoin sera.</p>
+                </div>
             </div>
 
             <div class="signature">
                 <p>Antananarivo, le <%= request.getAttribute("nowDate") != null ? DateUtil.formatDate((Date) request.getAttribute("nowDate")) : "" %></p>
-                <p><strong><%= request.getAttribute("ordonnateur") %></strong></p>
+                <p class="dg"><strong>RAJAONARISON Mamitiana</strong></p>
             </div>
         </div>
         <div class="footer">

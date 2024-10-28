@@ -2,6 +2,8 @@ package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.IndiceRepository;
 import com.example.gestionrh.Model.Entity.Indice;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +11,8 @@ import java.util.Optional;
 @Service
 public class IndiceService {
 
-	private final IndiceRepository indiceRepository;
-
-	public IndiceService(IndiceRepository indiceRepository) {this.indiceRepository = indiceRepository;}
-
-
+	@Autowired
+	private IndiceRepository indiceRepository;
 
 	/* -- READ ONE -- */
 	public Optional<Indice> getOne(Object id) { return indiceRepository.findById(id); }

@@ -10,6 +10,7 @@ import com.example.gestionrh.Model.Service.EtatUtilisateurService;
 import com.example.gestionrh.Model.Service.PasswordService;
 import com.example.gestionrh.Model.Service.TypeAbsenceService;
 import com.example.gestionrh.Model.Service.TypeCongeService;
+import com.example.gestionrh.Model.Service.UtilisateurService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
 import com.example.gestionrh.Model.Service.VHistoriqueCongeService;
 import com.example.gestionrh.utils.PaginationConfig;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 
@@ -59,6 +61,9 @@ public class DetailUtilisateurController{
     @Autowired
     private PasswordService passwordService;
 
+    @Autowired
+    private UtilisateurService utilisateurService;
+
 	@PostMapping("verifierLogin")
     public String Login(@RequestParam String mail, @RequestParam String mdp, HttpSession session, HttpServletRequest request) {
         try {
@@ -89,6 +94,8 @@ public class DetailUtilisateurController{
             session.setAttribute("userId", user.getUtilisateur().getId());
             session.setAttribute("userDirectionId", user.getFonction().getDirection().getId());
             session.setAttribute("userType", user.getUtilisateur().getTypeUtilisateur());
+            session.setAttribute("userNom", user.getUtilisateur().getNom());
+            session.setAttribute("userPrenom", user.getUtilisateur().getPrenom());
             return "redirect:/detail_utilisateur/page-conge";
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Mot de passe ou email non valide");
@@ -133,20 +140,87 @@ public class DetailUtilisateurController{
         }
     }
     
+    // @GetMapping("page-conge")
+    // public String Accueil(HttpServletRequest request, HttpSession session,
+    //                     @RequestParam(defaultValue = "0") int page,
+    //                     @RequestParam(required = false) Integer size) {
+    //     String idUtilisateur = (String) session.getAttribute("userId");
+
+    //     // Si size n'est pas spécifié dans l'URL, utilisez la valeur par défaut
+    //     int paginationSize = (size != null) ? size : paginationConfig.getDefaultPaginationSize();
+
+    //     Pageable pageable = PageRequest.of(page, paginationSize);
+        
+    //     // Récupérer les demandes avec pagination
+    //     Page<VEtatDemande> etatDemandesPage = vEtatDemandeService.getByIdUtilisateur(idUtilisateur, pageable);
+        
+    //     List<TypeConge> typeConges = typeCongeService.getAll();
+    //     List<TypeAbsence> typeAbsence = typeAbsenceService.getAll();
+    //     String message = request.getParameter("message");
+    //     String type = request.getParameter("type");
+
+    //     String idConge = "TCG001";
+    //     String idAutorisation = "TCG002";
+        
+    //     VHistoriqueConge historiqueConge = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, idConge);
+    //     VHistoriqueConge historiquePersmission = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, idAutorisation);
+        
+    //     // Attributs pour la vue
+    //     request.setAttribute("etatDemandesPage", etatDemandesPage);
+    //     request.setAttribute("totalPages", etatDemandesPage.getTotalPages());
+    //     request.setAttribute("currentPage", etatDemandesPage.getNumber());
+    //     request.setAttribute("size", paginationSize);
+        
+    //     request.setAttribute("typeConge", typeConges);
+    //     request.setAttribute("typeAbsence", typeAbsence);
+    //     request.setAttribute("historiqueConge", historiqueConge);
+    //     request.setAttribute("historiquePersmission", historiquePersmission);
+    //     request.setAttribute("message", message);
+    //     request.setAttribute("type", type);
+        
+    //     return "conge/conge";
+    // }
+
+    private boolean isAuthorizedForAccueil(String role) {
+        return role.equals("COLLABORATEUR") || role.equals("CHEF_DE_DEPARTEMENT") || role.equals("DIRECTEUR_GENERAL");
+    }
+
     @GetMapping("page-conge")
     public String Accueil(HttpServletRequest request, HttpSession session,
                         @RequestParam(defaultValue = "0") int page,
-                        @RequestParam(required = false) Integer size) {
-        String idUtilisateur = (String) session.getAttribute("userId");
+                        @RequestParam(required = false) Integer size,
+                        @RequestParam(required = false) String search) {
 
-        // Si size n'est pas spécifié dans l'URL, utilisez la valeur par défaut
+        Integer typeUtilisateur = (Integer) session.getAttribute("userType");
+
+        if (typeUtilisateur != null && typeUtilisateur == 15) {
+            return "redirect:/list-utilisateur"; // Redirect to another page for type 15
+        }
+
+        String idUtilisateur = (String) session.getAttribute("userId");
+        String userRole = utilisateurService.getUserRole(idUtilisateur);
+                            
+        if (!isAuthorizedForAccueil(userRole)) {
+            return "/utils/errorPage";
+        }
+
+        // Si la taille n'est pas spécifiée, utilisez une valeur par défaut
         int paginationSize = (size != null) ? size : paginationConfig.getDefaultPaginationSize();
 
         Pageable pageable = PageRequest.of(page, paginationSize);
-        
-        // Récupérer les demandes avec pagination
-        Page<VEtatDemande> etatDemandesPage = vEtatDemandeService.getByIdUtilisateur(idUtilisateur, pageable);
-        
+        Page<VEtatDemande> etatDemandesPage;
+
+        // Vérifier s'il y a un terme de recherche
+        if (search != null && !search.isEmpty()) {
+            // Si une recherche est effectuée, désactiver la pagination et récupérer tous les résultats
+            etatDemandesPage = new PageImpl<>(vEtatDemandeService.searchByUserAndTerm(idUtilisateur, search));
+            paginationSize = (int)etatDemandesPage.getTotalElements();  // Mettre à jour la taille pour afficher tous les résultats
+        } else {
+            // Sinon, appliquer la pagination par défaut
+            etatDemandesPage = vEtatDemandeService.getByIdUtilisateur(idUtilisateur, pageable);
+        }
+
+        // Récupérer autres données
         List<TypeConge> typeConges = typeCongeService.getAll();
         List<TypeAbsence> typeAbsence = typeAbsenceService.getAll();
         String message = request.getParameter("message");
@@ -154,22 +228,21 @@ public class DetailUtilisateurController{
 
         String idConge = "TCG001";
         String idAutorisation = "TCG002";
-        
         VHistoriqueConge historiqueConge = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, idConge);
         VHistoriqueConge historiquePersmission = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, idAutorisation);
-        
+
         // Attributs pour la vue
         request.setAttribute("etatDemandesPage", etatDemandesPage);
         request.setAttribute("totalPages", etatDemandesPage.getTotalPages());
         request.setAttribute("currentPage", etatDemandesPage.getNumber());
         request.setAttribute("size", paginationSize);
-        
         request.setAttribute("typeConge", typeConges);
         request.setAttribute("typeAbsence", typeAbsence);
         request.setAttribute("historiqueConge", historiqueConge);
         request.setAttribute("historiquePersmission", historiquePersmission);
         request.setAttribute("message", message);
         request.setAttribute("type", type);
+
         
         return "conge/conge";
     }

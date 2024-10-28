@@ -18,11 +18,11 @@ public class DirectionController{
 	@Autowired
 	private DirectionService directionService;
 
-	@GetMapping("gerer-direction")
-	public String gererDirection(HttpServletRequest request) {
-		List<Direction> directions = directionService.getAll();
-		request.setAttribute("directions", directions);
-		return "/direction/gestion-direction";
-	}
+	// @GetMapping("gerer-direction")
+	// public String gererDirection(HttpServletRequest request) {
+	// 	List<Direction> directions = directionService.getAll();
+	// 	request.setAttribute("directions", directions);
+	// 	return "/direction/gestion-direction";
+	// }
 	
 }

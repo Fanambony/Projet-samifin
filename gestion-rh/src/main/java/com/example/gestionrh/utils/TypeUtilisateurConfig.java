@@ -1,5 +1,6 @@
 package com.example.gestionrh.utils;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 
+@Configuration
 public class TypeUtilisateurConfig {
     private int collaborateur;
     private int direction;

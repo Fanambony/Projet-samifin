@@ -10,6 +10,7 @@ import com.example.gestionrh.utils.EtatCongeConfig;
 import com.example.gestionrh.utils.PaginationConfig;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,10 +54,23 @@ public class VHistoriqueCongeController{
 		return listVHistoriqueConge;
 	}
 
+	private boolean isAuthorizedForEtatConge(String role) {
+        return role.equals("ADMIN");
+    }
+	
 	@GetMapping("/etat-conge")
 	public String getEtatConge(HttpServletRequest request,
 							@RequestParam(defaultValue = "0") int page,
-							@RequestParam(required = false) Integer size) {
+							@RequestParam(required = false) Integer size,
+							HttpSession session
+							) {
+
+		String userId = (String)session.getAttribute("userId");
+		String userRole = utilisateurService.getUserRole(userId);
+							
+		if (!isAuthorizedForEtatConge(userRole)) {
+			return "/utils/errorPage";
+		}
 
 		int paginationSize = (size != null) ? size : paginationConfig.getDefaultPaginationSize();
 		Pageable pageable = PageRequest.of(page, paginationSize);
