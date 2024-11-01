@@ -48,12 +48,16 @@ public class UtilisateurService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  utilisateurRepository.deleteById(id); }
 
-	public Page<Utilisateur> getUtilisateurs(Pageable pageable) {
+	public Page<Utilisateur> getUtilisateurs(int etat, int typeUtilisateur, Pageable pageable) {
+        return utilisateurRepository.findAllExcludingEtatAndType(etat, typeUtilisateur, pageable);
+    }
+
+    public Page<Utilisateur> getAllUtilisateur(Pageable pageable) {
         return utilisateurRepository.findAll(pageable);
     }
 
-	public List<Utilisateur> getUtilisateurActive(int etat) {
-		return utilisateurRepository.findByEtat(etat);
+	public List<Utilisateur> getUtilisateurActiveEtNonAdmin(int etat, int typeUtilisateur) {
+		return utilisateurRepository.findByEtatAndTypeUtilisateurNot(etat, typeUtilisateur);
 	}
 
 	public String getUserRole(String userId) {
@@ -97,4 +101,5 @@ public class UtilisateurService {
 
         detailUtilisateurRepository.save(detailUtilisateur);
     }
+    
 }

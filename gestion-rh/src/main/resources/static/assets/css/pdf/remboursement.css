@@ -81,7 +81,7 @@ body {
 }
 
 .content h5 {
-    text-decoration: underline;
+    /* text-decoration: underline; */
     margin-top: 20px;
     /* margin-left: 50px; */
 }
@@ -113,7 +113,7 @@ table {
     margin: 20px 0;
 }
 table, th, td {
-    border: 1px solid black;
+    border: 1px solid rgb(151, 151, 151);
 }
 th, td {
     padding: 10px;
@@ -131,13 +131,13 @@ th, td {
 .checkbox {
     width: 20px;
     height: 20px;
-    border: 1px solid #000000;
+    border: 1px solid rgb(151, 151, 151);
     border-radius: 25%;
     display: inline-block;
     vertical-align: middle;
     position: relative;
     background-color: #fff;
-    margin-left: 10px;
+    margin-left: 5px;
 }
 .checkbox.checked {
     background-color: #e4e4e4;
@@ -149,7 +149,7 @@ th, td {
     left: 40%;
     width: 25px;
     height: 10px;
-    border: solid #000000;
+    border: solid #515151;
     border-width: 0 0 2px 2px;
     transform: rotate(-45deg);
     transform-origin: center;

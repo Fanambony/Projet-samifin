@@ -30,10 +30,4 @@ public class VUtilisateurDetaillerController{
 		List<VUtilisateurDetailler> listVUtilisateurDetailler = this.vUtilisateurDetaillerService.getAll();
 		return listVUtilisateurDetailler;
 	}
-
-	/* -- DELETE -- */
-	@DeleteMapping("delete/{numLigne}")
-	public void delete(@PathVariable Long numLigne) {
-		vUtilisateurDetaillerService.delete(numLigne);
-	}
 }

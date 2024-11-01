@@ -31,20 +31,6 @@
     .custom-detail-modal .modal-content {
         min-height: 400px; /* Ajustez la hauteur selon vos besoins */
     }
-
-    /* pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .page-item {
-        margin: 0 5px;
-    }
-    .page-item.active .page-link {
-        background-color: #007bff;
-        color: white;
-    }
     .custom-modal .form-group label {
         font-weight: bold;
     }
@@ -270,6 +256,5 @@
         </div>
     </div>
 <% } %>
-
 
 <%@include file="../utils/footer.jsp" %>

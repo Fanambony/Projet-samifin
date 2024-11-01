@@ -3,6 +3,7 @@
 <%@ page import="com.example.gestionrh.Model.Entity.TypeAbsence" %>
 <%@ page import="com.example.gestionrh.Model.Entity.VEtatDemande" %>
 <%@ page import="com.example.gestionrh.Model.Entity.VHistoriqueConge" %>
+<%@ page import="com.example.gestionrh.Model.Entity.VUtilisateurDetailler" %>
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -18,6 +19,8 @@
     String message = (String)request.getAttribute("message");
     String typeMessage = (String)request.getAttribute("type");
     Integer size = (Integer) request.getAttribute("size");
+    List<VUtilisateurDetailler> utilisateurDetaillers = (List<VUtilisateurDetailler>)request.getAttribute("utilisateurDetaillers");
+    int type_utilisateur = (Integer)session.getAttribute("userType");
 %>
 
 <%@include file="../utils/header.jsp" %>
@@ -91,19 +94,6 @@
         color: red;
     }
 
-    /* pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .page-item {
-        margin: 0 5px;
-    }
-    .page-item.active .page-link {
-        background-color: #007bff;
-        color: white;
-    }
     .custom-modal .form-group label {
         font-weight: bold;
     }
@@ -117,23 +107,12 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">GESTION DE CONGE</h4>
-                    
+
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <button type="button" class="btn btn-outline-primary btn-fw btn-block" data-toggle="modal" data-target="#faireDemandeModal">Faire une demande de congé</button>
                         </div>
-                        <form method="GET" action="page-conge" class="col-md-8">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <input type="text" name="search" class="form-control" placeholder="Rechercher...">
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
-                    
                     
                     <div class="table-responsive">
                         <table class="table table-striped table-borderless">
@@ -240,9 +219,6 @@
                             </li>
                         </ul>
                     </div>
-                    
-
-
                 </div>
             </div>
         </div>
@@ -319,7 +295,7 @@
                                 <label>Début de l'absence</label>
                                 <% for(TypeAbsence ta : typeAbsence) { %>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input" id="debut_<%= ta.getEtat() %>" name="debut_absence" value="<%= ta.getEtat() %>">
+                                        <input type="radio" class="form-check-input" id="debut_<%= ta.getEtat() %>" name="debut_absence" value="<%= ta.getEtat() %>" required>
                                         <label class="form-check-label" for="debut_<%= ta.getEtat() %>">
                                             <%= ta.getLibelle() %>
                                         </label>
@@ -337,7 +313,7 @@
                                 <label>Fin de l'absence</label>
                                 <% for(TypeAbsence ta : typeAbsence) { %>
                                 <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="fin_<%= ta.getEtat() %>" name="fin_absence" value="<%= ta.getEtat() %>">
+                                    <input type="radio" class="form-check-input" id="fin_<%= ta.getEtat() %>" name="fin_absence" value="<%= ta.getEtat() %>" required>
                                     <label class="form-check-label" for="fin_<%= ta.getEtat() %>">
                                         <%= ta.getLibelle() %>
                                     </label>
@@ -354,13 +330,25 @@
                             <textarea class="form-control" id="exampleTextarea1" rows="4" name="commentaire"></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label for="interimPerson">Personne intérimaire</label>
-                            <select class="form-control" id="interimPerson" name="interimPerson">
-                                <option value="">Sélectionnez une personne</option>
-                                    <option value=""> personne</option>
-                            </select>
-                        </div>
+                        <% if (type_utilisateur == 5 || type_utilisateur == 10) { %>
+                            <div class="form-group">
+                                <label for="interimPerson">Personne intérimaire</label>
+                                <select class="form-control" id="interimPerson" name="interimPerson">
+                                    <option value="" disabled selected>Sélectionnez une personne</option>
+                                    <% 
+                                        
+                                        if (utilisateurDetaillers != null && !utilisateurDetaillers.isEmpty()) {
+                                            for (VUtilisateurDetailler v : utilisateurDetaillers) { 
+                                    %>
+                                                <option value="<%= v.getIdUtilisateur() %>"><%= v.getNom() %> <%= v.getPrenom() %></option>
+                                    <% 
+                                            }
+                                        } 
+                                    %>
+                                </select>
+                            </div>
+                        <% } %>
+
 
                         <div class="form-group text-right">
                             <button type="button" class="btn btn-outline-secondary mr-2" data-dismiss="modal">Fermer</button>
@@ -379,6 +367,7 @@
         form.addEventListener('submit', function(event) {
             const dateDebut = document.getElementById('date_debut').value;
             const dateFin = document.getElementById('date_fin').value;
+            const today = new Date().toISOString().split('T')[0]; // Récupère la date d'aujourd'hui au format AAAA-MM-JJ
 
             let valid = true;
 
@@ -386,19 +375,25 @@
             document.getElementById('date_debut_error').textContent = '';
             document.getElementById('date_fin_error').textContent = '';
 
-            if (dateDebut && dateFin) {
-                if (new Date(dateDebut) > new Date(dateFin)) {
-                    document.getElementById('date_debut_error').textContent = "La date de début doit être antérieure à la date de fin.";
-                    document.getElementById('date_fin_error').textContent = "La date de fin doit être postérieure à la date de début.";
-                    valid = false;
-                }
+            // Vérifier que la date de début n'est pas dans le passé
+            if (dateDebut < today) {
+                document.getElementById('date_debut_error').textContent = "La date de début ne peut pas être antérieure à aujourd'hui.";
+                valid = false;
+            }
+
+            // Vérifier que la date de début est antérieure à la date de fin
+            if (dateDebut && dateFin && new Date(dateDebut) > new Date(dateFin)) {
+                document.getElementById('date_debut_error').textContent = "La date de début doit être antérieure à la date de fin.";
+                document.getElementById('date_fin_error').textContent = "La date de fin doit être postérieure à la date de début.";
+                valid = false;
             }
 
             if (!valid) {
-                event.preventDefault(); // Empêche l'envoi du formulaire
+                event.preventDefault(); // Empêche l'envoi du formulaire si des erreurs sont présentes
             }
         });
     });
+
 </script>
 
 <!-- Modal de confirmation -->
@@ -462,6 +457,39 @@
         }
     </script>
 <% } %>
+
+<%
+    String messageErreur = (String) request.getAttribute("errorMessage"); // ou le message que vous voulez afficher
+    String messageType = (messageErreur != null && !messageErreur.isEmpty()) ? "alert-danger" : "alert-success"; // Changez le type en fonction de la nature du message
+%>
+
+<!-- message d'erreur ou de succès -->
+<% if (messageErreur != null && !messageErreur.isEmpty()) { %>
+    <div id="messageBox" class="alert <%= messageType %>">
+        <span><%= messageErreur %></span>
+        <button onclick="closeMessage()">OK</button>
+    </div>
+    <script>
+        // Affiche le message avec effet de descente
+        var messageBox = document.getElementById('messageBox');
+        messageBox.classList.add('show');
+        
+        // Disparaît automatiquement après 5 secondes
+        setTimeout(function() {
+            closeMessage();
+        }, 5000); // 5000 ms = 5 secondes
+
+        function closeMessage() {
+            messageBox.classList.remove('show');
+            messageBox.classList.add('hide');
+            // Retire complètement l'alerte après la transition (0.5s)
+            setTimeout(function() {
+                messageBox.style.display = 'none';
+            }, 500); // 500 ms = 0.5 secondes
+        }
+    </script>
+<% } %>
+
 
 <!-- Conteneur du message -->
 <div id="messageBox" class="alert" style="display: none;"></div>
@@ -662,5 +690,5 @@
     document.querySelectorAll('input[name="debut_absence"]').forEach(radio => radio.addEventListener('change', calculerNombreDeJours));
     document.querySelectorAll('input[name="fin_absence"]').forEach(radio => radio.addEventListener('change', calculerNombreDeJours));
 </script>
-    
+
 <%@include file="../utils/footer.jsp" %>

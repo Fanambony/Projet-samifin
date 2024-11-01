@@ -54,6 +54,10 @@ public class VEtatDemandeService {
 		return vEtatDemandeRepository.findByIdEtatDemande(idEtatDemande);
 	}
 
+	public List<VEtatDemande> demandeValiderPourUtilisateur(String idUtilisateur, int idEtatDemande) {
+		return vEtatDemandeRepository.findByIdUtilisateurAndIdEtatDemande(idUtilisateur, idEtatDemande);
+	}
+
 	// public List<VEtatDemande> demandeValiderParUtilisateur(String idUtilisateur, int idEtatDemande) {
 	// 	return vEtatDemandeRepository.findByIdUttilisateurAndIdEtatDemande(idUtilisateur, idEtatDemande);
 	// }
@@ -78,9 +82,22 @@ public class VEtatDemandeService {
 			})
 			.collect(Collectors.toList());
 	}
+
+	public List<VEtatDemande> findCongeAnnuler(int etatDemande, String searchTerm) {
+        return vEtatDemandeRepository.findBySearchCongeAnnuler(etatDemande, searchTerm);
+    }
 	
 	public VEtatDemande getByDemande(String idDemande) {
 		return vEtatDemandeRepository.findByIdDemandeConge(idDemande);
+	}
+
+	public List<VEtatDemande> searchByNameAndSurname(String searchTerm) {
+		// Utiliser uniquement la requête sans filtrage supplémentaire
+		return vEtatDemandeRepository.findByNameAndSurname(searchTerm);
+	}
+	
+	public List<VEtatDemande> getDetailByIdUtilisateur(String idUtilisateur) {
+		return vEtatDemandeRepository.findByIdUtilisateur(idUtilisateur);
 	}
 	
 }

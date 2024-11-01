@@ -39,6 +39,11 @@ public class NotificationDestinataireService {
 		}
 	}
 
+	public void envoyerNotificationsUneUtilisateur(String idNotification, String idUtilisateur, Boolean lue) {
+		NotificationDestinataire notificationDestinataire = new NotificationDestinataire(idNotification, idUtilisateur, lue);
+		this.create(notificationDestinataire);
+	}
+
 	public void validerRefusNotifications(String idNotification, String idDestinataires, Boolean lue) {
 		NotificationDestinataire notificationDestinataire = new NotificationDestinataire(idNotification, idDestinataires, lue);
 		this.create(notificationDestinataire);

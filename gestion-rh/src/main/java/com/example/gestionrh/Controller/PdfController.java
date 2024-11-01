@@ -119,21 +119,22 @@ public class PdfController {
     @PostMapping("/demande-remboursement")
     public void generateDemandeRemboursementPdf(HttpServletRequest request, 
                                                 HttpServletResponse response,
-                                                @RequestParam(value = "numero", required = false) String numero,
+                                                // @RequestParam(value = "numero", required = false) String numero,
                                                 @RequestParam(value = "nom", required = false) String nom,
                                                 @RequestParam(value = "matricule", required = false) String matricule,
                                                 @RequestParam(value = "direction", required = false) String id_direction,
                                                 @RequestParam(value = "fonction", required = false) String id_fonction,
-                                                @RequestParam(value = "frais_medicaux", required = false) String fraisMedicaux,
                                                 @RequestParam(value = "nom_malade", required = false) String nomMalade,
                                                 @RequestParam(value = "lien", required = false) String lien,
                                                 @RequestParam(value = "montant", required = false) String montant,
+                                                @RequestParam(value = "montant_let", required = false) String montant_lettre,
                                                 @RequestParam(value = "date_consultation", required = false) String dateConsultation,
                                                 @RequestParam(value = "date_demande", required = false) String dateDemande,
                                                 @RequestParam(value = "avis", required = false) String avis,
                                                 @RequestParam(value = "ordonnance", required = false) String ordonnance,
                                                 @RequestParam(value = "factures", required = false) String factures,
-                                                @RequestParam(value = "bulletin", required = false) String bulletin
+                                                @RequestParam(value = "bulletin", required = false) String bulletin,
+                                                @RequestParam(value = "notice", required = false) String notice
                                                 ) throws Exception {
 
         // Validation de la date de consultation
@@ -147,15 +148,15 @@ public class PdfController {
         Fonction fonction = fonctionOptional.get();
 
         // Mettre les paramètres dans la requête pour les utiliser dans le JSP
-        request.setAttribute("numero", numero);
+        // request.setAttribute("numero", numero);
         request.setAttribute("nom", nom);
         request.setAttribute("matricule", matricule);
         request.setAttribute("direction", direction.getNom());
         request.setAttribute("fonction", fonction.getNom());
-        request.setAttribute("frais_medicaux", fraisMedicaux);
         request.setAttribute("nom_malade", nomMalade);
         request.setAttribute("lien", lien);
         request.setAttribute("montant", montant);
+        request.setAttribute("montant_let", montant_lettre);
         request.setAttribute("date_consultation", dateCons);
         request.setAttribute("date_demande", dateDem);
         request.setAttribute("avis", avis);
@@ -164,10 +165,12 @@ public class PdfController {
         boolean isOrdonnanceChecked = ordonnance != null;
         boolean isFacturesChecked = factures != null;
         boolean isBulletinChecked = bulletin != null;
+        boolean isNoticeChecked = notice != null;
 
         request.setAttribute("ordonnance_checked", isOrdonnanceChecked);
         request.setAttribute("factures_checked", isFacturesChecked);
         request.setAttribute("bulletin_checked", isBulletinChecked);
+        request.setAttribute("notice_checked", isNoticeChecked);
 
         // Capture du contenu JSP
         String jspPath = "/WEB-INF/views/pdf/demande-remboursement.jsp";

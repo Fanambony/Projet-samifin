@@ -1,7 +1,7 @@
 <%@ page import="org.springframework.data.domain.Page" %>
 <%@ page import="com.example.gestionrh.Model.Entity.VHistoriqueConge" %>
 <%@ page import="com.example.gestionrh.Model.Entity.VEtatDemande" %>
-<%@ page import="com.example.gestionrh.Model.Entity.Utilisateur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.VUtilisateurDetailler" %>
 <%@ page import="com.example.gestionrh.Model.Entity.DetailUtilisateur" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
@@ -9,7 +9,7 @@
 
 <%
     Page<VHistoriqueConge> historique_conge = (Page<VHistoriqueConge>) request.getAttribute("historique_conge");
-    Page<Utilisateur> utilisateur = (Page<Utilisateur>)request.getAttribute("utilisateurs");
+    Page<VUtilisateurDetailler> utilisateur = (Page<VUtilisateurDetailler>)request.getAttribute("utilisateurs");
     List<VEtatDemande> etat_demande = (List<VEtatDemande>)request.getAttribute("demandeValiderParUtilisateur");
 %>
 
@@ -93,85 +93,13 @@
     .custom-modal .modal-dialog {
         margin-top: 1%;
     }
-
-    /* pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .page-item {
-        margin: 0 5px;
-    }
-    .page-item.active .page-link {
-        background-color: #007bff;
-        color: white;
-    }
-    .custom-modal .form-group label {
-        font-weight: bold;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /* stat */
-    .stat-title {
-        font-weight: bold;
-        color: #007bff;
-        margin-bottom: 20px;
-    }
-
-    .stat-section {
-        border-left: 1px solid #ddd;
-        padding-left: 20px;
-    }
-
-    .stat-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        transition: transform 0.3s; /* Ajout d'une transition pour un effet de survol */
-    }
-
-    .stat-item:hover {
-        transform: scale(1.05); /* Agrandissement lors du survol */
-        color: #007bff; /* Changer la couleur de texte au survol */
-    }
-
-    .stat-item i {
-        font-size: 24px; /* Augmenter la taille de l'icône */
-        margin-right: 10px; /* Espacement entre l'icône et le texte */
-        color: #007bff; /* Couleur de l'icône */
-        transition: color 0.3s; /* Transition de couleur */
-    }
-
-    .stat-item:hover i {
-        color: #0056b3; /* Couleur d'icône au survol */
-    }
-
-    .card {
-        border-radius: 8px; /* Arrondir les coins de la carte */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre de la carte */
-    }
-
-    .no-data {
-        color: #6c757d; /* Couleur pour le texte "Aucune donnée" */
-    }
 </style>
 
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Etat de congé des personnels</h4>
+
             <div class="table-responsive pt-3">
                 <table class="table table-striped">
                     <thead>
@@ -185,7 +113,7 @@
                     </thead>
                     <tbody>
                         <%
-                            for(Utilisateur u : utilisateur) { 
+                            for(VUtilisateurDetailler u : utilisateur) { 
                                 byte[] imageBytes = u.getImage();
                                 String imageUtilisateur = (imageBytes != null && imageBytes.length > 0) ? Base64.getEncoder().encodeToString(imageBytes) : null;
                                 String imageParDefaut = "/assets/images/faces/user.jpeg";
@@ -196,19 +124,15 @@
                                     <img src="<%= imageSrc %>" alt="image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
                                 </td>
                                 <td>
-                                    <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
-                                        <div><%= du.getMatricule() %></div>
-                                    <% } %>
+                                    <div><%= u.getMatricule() %></div>
                                 </td>
                                 <td><%= u.getNom() %> <%= u.getPrenom() %></td>
                                 <td>
-                                    <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
-                                        <div><%= du.getFonction().getDirection().getNom() %></div>
-                                    <% } %>
+                                    <div><%= u.getDirection() %></div>
                                 </td>
                                 
                                 <td>
-                                    <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voir détails" data-target="#detailHistoriqueModal<%= u.getId() %>">
+                                    <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voir détails" data-target="#detailHistoriqueModal<%= u.getIdUtilisateur() %>">
                                         <i class="ti-eye"></i>
                                     </button>
                                 </td>
@@ -269,11 +193,11 @@
 </div>
 
 <!-- Section des modals -->
-<% for (Utilisateur u : utilisateur) { 
+<% for (VUtilisateurDetailler u : utilisateur) { 
     boolean hasEvents = false; // Variable pour vérifier si l'utilisateur a des demandes de congé
     StringBuilder eventsJson = new StringBuilder("[");
     for (VEtatDemande v : etat_demande) {
-        if (v.getIdUtilisateur().equals(u.getId())) { // Filtrer les demandes par utilisateur
+        if (v.getIdUtilisateur().equals(u.getIdUtilisateur())) { // Filtrer les demandes par utilisateur
             hasEvents = true; // L'utilisateur a des événements
             eventsJson.append("{")
                       .append("\"title\": \"").append(v.getTypeConge()).append("\",")
@@ -298,7 +222,7 @@
     eventsJson.append("]");
 %>
 
-<div class="modal fade custom-modal" id="detailHistoriqueModal<%= u.getId() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+<div class="modal fade custom-modal" id="detailHistoriqueModal<%= u.getIdUtilisateur() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -312,46 +236,35 @@
                     
                     <!-- Colonne gauche : Calendrier -->
                     <div class="col-md-8">
-                        <div id="calendar-conge<%= u.getId() %>" style="width: 100%;"></div>
+                        <div id="calendar-conge<%= u.getIdUtilisateur() %>" style="width: 100%;"></div>
                     </div>
                     
                     <!-- Colonne droite : Statistiques -->
-                    <div class="col-md-4">
-                        <div class="stat-section">
-                            <h5 class="stat-title">Statistiques</h5>
-                            
-                            <% if (u.getHistoriqueConges() != null && !u.getHistoriqueConges().isEmpty()) { %>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <% for (VHistoriqueConge hi : u.getHistoriqueConges()) { %>
-                                            <div class="stat-item">
-                                                <i class="ti-clipboard"></i>
-                                                <p><strong>Type d'absence :</strong> <span><%= hi.getTypeConge() %></span></p>
-                                            </div>
-                                            <div class="stat-item">
-                                                <i class="ti-time"></i>
-                                                <p><strong>Nombre total de congés :</strong> <span><%= hi.getSoldeDisponible() %></span></p>
-                                            </div>
-                                            <div class="stat-item">
-                                                <i class="ti-check-box"></i>
-                                                <p><strong>Nombre de congés pris :</strong> <span><%= hi.getNombreJoursPris() %></span></p>
-                                            </div>
-                                            <div class="stat-item">
-                                                <i class="ti-calendar"></i>
-                                                <p><strong>Solde disponible :</strong> <span><%= hi.getSoldeRestant() %> jours</span></p>
-                                            </div>
-                                        <% } %>
-                                    </div>
+                    <!-- Colonne droite : Statistiques -->
+                <div class="col-md-4">
+                    <div class="stat-section bg-light rounded p-4 shadow-sm">
+                        <h5 class="text-center mb-4">Statistiques du Solde de Congé</h5>
+                        
+                        <% if (u.getHistoriqueConges() != null && !u.getHistoriqueConges().isEmpty()) { %>
+                            <% for (VHistoriqueConge hi : u.getHistoriqueConges()) { %>
+                                <div class="mb-4 p-3 rounded border border-info shadow-sm bg-white">
+                                    <h6 class="text-info"><i class="ti-clipboard"></i> Type d'absence :</h6>
+                                    <p class="mb-1"><strong><%= hi.getTypeConge() %></strong></p>
+                                    <p class="mb-1 text-secondary"><i class="ti-time"></i> Nombre total de congés : <strong><%= hi.getSoldeDisponible() %> jours</strong></p>
+                                    <p class="mb-1 text-danger"><i class="ti-check-box"></i> Congés pris : <strong><%= hi.getNombreJoursPris() %> jours</strong></p>
+                                    <p class="mb-1 text-success"><i class="ti-calendar"></i> Solde disponible : <strong><%= hi.getSoldeRestant() %> jours</strong></p>
                                 </div>
-                            <% } else { %>
-                                <p class="no-data">Aucune donnée de congé disponible pour cet utilisateur.</p>
                             <% } %>
-                        </div>
+                        <% } else { %>
+                            <p class="text-danger"><strong>Aucune donnée de congé disponible.</strong> L'utilisateur n'a pas encore pris de congé.</p>
+                        <% } %>
                     </div>
+                </div>
+
                 </div>
                 
                 <% if (!hasEvents) { %>
-                    <p>Aucune demande de congé trouvée pour cet utilisateur.</p>
+                    <p class="text-danger"><strong>Aucune donnée de congé disponible.</strong> L'utilisateur n'a pas encore pris de congé.</p>
                 <% } %>
             </div>
             <div class="modal-footer">
@@ -363,8 +276,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        $('#detailHistoriqueModal<%= u.getId() %>').on('shown.bs.modal', function () {
-            var calendarEl = document.getElementById('calendar-conge<%= u.getId() %>');
+        $('#detailHistoriqueModal<%= u.getIdUtilisateur() %>').on('shown.bs.modal', function () {
+            var calendarEl = document.getElementById('calendar-conge<%= u.getIdUtilisateur() %>');
     
             var eventsData = <%= eventsJson.toString() %>; // Injecter les événements filtrés par utilisateur
     

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.List;
 import java.util.List;
 import java.util.List;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -55,6 +56,9 @@ public class Utilisateur {
 	@JsonIgnore
 	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
 	List<Notification> notifications;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<InterimUtilisateur> interimUtilisateurs;
 	@ManyToOne
 	@JoinColumn(name = "genre", insertable = false, updatable = false)
 	Genre genre;
@@ -157,6 +161,12 @@ public class Utilisateur {
 	public void setNotifications(List<Notification> notifications){
 		this.notifications = notifications;
 	}
+	public List<InterimUtilisateur> getInterimUtilisateurs(){
+		return this.interimUtilisateurs;
+	}
+	public void setInterimUtilisateurs(List<InterimUtilisateur> interimUtilisateurs){
+		this.interimUtilisateurs = interimUtilisateurs;
+	}
 	public Genre getGenre(){
 		return this.genre;
 	}
@@ -179,7 +189,7 @@ public class Utilisateur {
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, Byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs, List<Famille> familles, List<SoldeFinAnnee> soldeFinAnnees, List<NotificationDestinataire> notificationDestinataires, List<Notification> notifications, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer genre, Integer typeUtilisateur, Integer etat, Byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<DemandeConge> demandeConges, List<SoldeUtilisateur> soldeUtilisateurs, List<Famille> familles, List<SoldeFinAnnee> soldeFinAnnees, List<NotificationDestinataire> notificationDestinataires, List<Notification> notifications, List<InterimUtilisateur> interimUtilisateurs, Genre genre, Etat etat_utilisateur, Type type_utilisateur){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
@@ -195,6 +205,7 @@ public class Utilisateur {
 		setSoldeFinAnnees(soldeFinAnnees);
 		setNotificationDestinataires(notificationDestinataires);
 		setNotifications(notifications);
+		setInterimUtilisateurs(interimUtilisateurs);
 		setGenre(genre);
 		setEtat_utilisateur(etat_utilisateur);
 		setType_utilisateur(type_utilisateur);

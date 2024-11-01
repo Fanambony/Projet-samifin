@@ -56,12 +56,6 @@ public class VSoldesUtilisateurController{
 		return listVSoldesUtilisateur;
 	}
 
-	/* -- DELETE -- */
-	@DeleteMapping("delete/{numLigne}")
-	public void delete(@PathVariable Long numLigne) {
-		vSoldesUtilisateurService.delete(numLigne);
-	}
-
 	private boolean isAuthorizedForGenererSolde(String role) {
         return role.equals("ADMIN");
     }
@@ -80,6 +74,7 @@ public class VSoldesUtilisateurController{
 		
 		List<Object[]> soldeGenrer = soldeUtilisateurService.getAnneeAndDateGenererGrouped();
 		request.setAttribute("soldeGenrer", soldeGenrer);
+		// request.setAttribute("lien", "generer-solde");
         return "/conge/generer-solde";
     }
 

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.Date;
 import java.sql.Date;
 import java.util.List;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -43,6 +44,9 @@ public class DemandeConge {
 	@JsonIgnore
 	@OneToMany(mappedBy = "demande_conge", cascade = CascadeType.ALL)
 	List<Notification> notifications;
+	@JsonIgnore
+	@OneToMany(mappedBy = "demande_conge", cascade = CascadeType.ALL)
+	List<InterimUtilisateur> interimUtilisateurs;
 	@ManyToOne
 	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
 	Type type_conge;
@@ -148,6 +152,12 @@ public class DemandeConge {
 	public void setNotifications(List<Notification> notifications){
 		this.notifications = notifications;
 	}
+	public List<InterimUtilisateur> getInterimUtilisateurs(){
+		return this.interimUtilisateurs;
+	}
+	public void setInterimUtilisateurs(List<InterimUtilisateur> interimUtilisateurs){
+		this.interimUtilisateurs = interimUtilisateurs;
+	}
 	public Type getType_conge(){
 		return this.type_conge;
 	}
@@ -188,7 +198,7 @@ public class DemandeConge {
     //CONSTRUCTORS
 
  	public DemandeConge(){}
-	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, Boolean estAnnuler, String motifAnnulation, List<Notification> notifications, Type type_conge, Utilisateur utilisateur, Type type_absence, Type type_absence, Etat etat_demande, Utilisateur utilisateur){
+	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, Boolean estAnnuler, String motifAnnulation, List<Notification> notifications, List<InterimUtilisateur> interimUtilisateurs, Type type_conge, Utilisateur utilisateur, Type type_absence, Type type_absence, Etat etat_demande, Utilisateur utilisateur){
 		setId(id);
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
@@ -203,6 +213,7 @@ public class DemandeConge {
 		setEstAnnuler(estAnnuler);
 		setMotifAnnulation(motifAnnulation);
 		setNotifications(notifications);
+		setInterimUtilisateurs(interimUtilisateurs);
 		setType_conge(type_conge);
 		setUtilisateur(utilisateur);
 		setType_absence(type_absence);

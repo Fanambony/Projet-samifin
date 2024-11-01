@@ -32,7 +32,7 @@ public class Notification {
 	Utilisateur utilisateur;
 	@ManyToOne
 	@JoinColumn(name = "id_demande", insertable = false, updatable = false)
-	DemandeConge demande_conge;
+	Demande demande_conge;
 
     //SETTERS AND GETTERS
 
@@ -84,17 +84,17 @@ public class Notification {
 	public void setUtilisateur(Utilisateur utilisateur){
 		this.utilisateur = utilisateur;
 	}
-	public DemandeConge getDemande_conge(){
+	public Demande getDemande_conge(){
 		return this.demande_conge;
 	}
-	public void setDemande_conge(DemandeConge demande_conge){
+	public void setDemande_conge(Demande demande_conge){
 		this.demande_conge = demande_conge;
 	}
 
     //CONSTRUCTORS
 
  	public Notification(){}
-	public Notification(String id, String message, Date dateCreation, String typeNotification, String expediteur, String idDemande, List<NotificationDestinataire> notificationDestinataires, Utilisateur utilisateur, DemandeConge demande_conge){
+	public Notification(String id, String message, Date dateCreation, String typeNotification, String expediteur, String idDemande, List<NotificationDestinataire> notificationDestinataires, Utilisateur utilisateur, Demande demande_conge){
 		setId(id);
 		setMessage(message);
 		setDateCreation(dateCreation);
@@ -105,4 +105,5 @@ public class Notification {
 		setUtilisateur(utilisateur);
 		setDemande_conge(demande_conge);
 	}
+
 }

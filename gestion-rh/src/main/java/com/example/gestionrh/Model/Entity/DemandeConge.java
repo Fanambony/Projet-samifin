@@ -41,6 +41,9 @@ public class DemandeConge {
 	@JsonIgnore
 	@OneToMany(mappedBy = "demande_conge", cascade = CascadeType.ALL)
 	List<Notification> notifications;
+	@JsonIgnore
+	@OneToMany(mappedBy = "demande_conge", cascade = CascadeType.ALL)
+	List<InterimUtilisateur> interimUtilisateurs;
 	@ManyToOne
 	@JoinColumn(name = "id_type_conge", insertable = false, updatable = false)
 	TypeConge type_conge;
@@ -144,6 +147,12 @@ public class DemandeConge {
 	public void setNotifications(List<Notification> notifications){
 		this.notifications = notifications;
 	}
+	public List<InterimUtilisateur> getInterimUtilisateurs(){
+		return this.interimUtilisateurs;
+	}
+	public void setInterimUtilisateurs(List<InterimUtilisateur> interimUtilisateurs){
+		this.interimUtilisateurs = interimUtilisateurs;
+	}
 	public TypeConge getType_conge(){
 		return this.type_conge;
 	}
@@ -182,7 +191,7 @@ public class DemandeConge {
 	}
 
  	public DemandeConge(){}
-	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, Boolean estAnnuler, String motifAnnulation, List<Notification> notifications, TypeConge type_conge, Utilisateur utilisateur, TypeAbsence fin_type_absence, TypeAbsence type_absence, EtatDemande etat_demande, Utilisateur validateur){
+	public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, Boolean estAnnuler, String motifAnnulation, List<Notification> notifications, List<InterimUtilisateur> interimUtilisateurs, TypeConge type_conge, Utilisateur utilisateur, TypeAbsence fin_type_absence, TypeAbsence type_absence, EtatDemande etat_demande, Utilisateur validateur){
 		setId(id);
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
@@ -197,6 +206,7 @@ public class DemandeConge {
 		setEstAnnuler(estAnnuler);
 		setMotifAnnulation(motifAnnulation);
 		setNotifications(notifications);
+		setInterimUtilisateurs(interimUtilisateurs);
 		setType_conge(type_conge);
 		setUtilisateur(utilisateur);
 		setType_absence(type_absence);
@@ -205,7 +215,7 @@ public class DemandeConge {
 		setValidateur(validateur);
 	}
 
-	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande){
+	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, Boolean estAnnuler){
 		setIdTypeConge(idTypeConge);
 		setIdUtilisateur(idUtilisateur);
 		setDateDemande(dateDemande);
@@ -215,6 +225,21 @@ public class DemandeConge {
 		setFinAbsence(finAbsence);
 		setCommentaire(commentaire);
 		setEtatDemande(etatDemande);
+		setEstAnnuler(estAnnuler);
+	}
+
+	public DemandeConge(String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur, Boolean estAnnuler){
+		setIdTypeConge(idTypeConge);
+		setIdUtilisateur(idUtilisateur);
+		setDateDemande(dateDemande);
+		setDateDebut(dateDebut);
+		setDebutAbsence(debutAbsence);
+		setDateFin(dateFin);
+		setFinAbsence(finAbsence);
+		setCommentaire(commentaire);
+		setEtatDemande(etatDemande);
+		setIdValidateur(idValidateur);
+		setEstAnnuler(estAnnuler);
 	}
 
 	// public DemandeConge(String id, String idTypeConge, String idUtilisateur, Date dateDemande, Date dateDebut, Integer debutAbsence, Date dateFin, Integer finAbsence, String commentaire, Integer etatDemande, String idValidateur){

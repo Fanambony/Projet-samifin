@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Optional" %>
 <%@ page import="org.springframework.data.domain.Page" %>
-<%@ page import="com.example.gestionrh.Model.Entity.Utilisateur" %>
+<%@ page import="com.example.gestionrh.Model.Entity.VUtilisateurDetailler" %>
 <%@ page import="com.example.gestionrh.Model.Entity.DetailUtilisateur" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Direction" %>
 <%@ page import="com.example.gestionrh.Model.Entity.Fonction" %>
@@ -22,7 +22,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
-    Page<Utilisateur> utilisateur = (Page<Utilisateur>)request.getAttribute("utilisateurs");
+    Page<VUtilisateurDetailler> utilisateurDetailler = (Page<VUtilisateurDetailler>)request.getAttribute("utilisateurDetailler");
     List<Direction> direction = (List<Direction>)request.getAttribute("directions");
     List<Fonction> fonction = (List<Fonction>)request.getAttribute("fonctions");
     List<Genre> genre = (List<Genre>)request.getAttribute("genre");
@@ -85,23 +85,6 @@
         font-size: 1.2rem;
         color: white;
     }
-
-    /* pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
-
-    .page-item {
-        margin: 0 5px;
-    }
-
-    .page-item.active .page-link {
-        background-color: #007bff;
-        color: white;
-    }
-
 
     /* Conteneur du switch */
     .switch {
@@ -192,29 +175,6 @@
                 </div>
 
                 </br>
-                    
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-sm-1 col-form-label">Direction :</label>
-                        <div class="col-sm-3">
-                            <select class="form-control">
-                                <option value="">Toutes les directions</option>
-                                <% for(Direction d : direction) { %>
-                                    <option><%= d.getNom() %></option>
-                                <% } %>
-                            </select>
-                        </div>
-                        <label class="col-sm-1 col-form-label">Etat :</label>
-                        <div class="col-sm-3">
-                            <select class="form-control">
-                                <option value="">Toutes les etats</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-2">
-                            <button type="submit" class="btn btn-primary mr-2">Valider</button>
-                        </div>
-                    </div>
-                </div>
 
                 <table class="table table-striped">
                     <thead>
@@ -229,7 +189,7 @@
                     </thead>
                     <tbody>
                         <%
-                            for(Utilisateur u : utilisateur) { 
+                            for(VUtilisateurDetailler u : utilisateurDetailler) { 
                                 byte[] imageBytes = u.getImage();
                                 String imageUtilisateur = (imageBytes != null && imageBytes.length > 0) ? Base64.getEncoder().encodeToString(imageBytes) : null;
                                 String imageParDefaut = "/assets/images/faces/user.jpeg";
@@ -240,34 +200,30 @@
                                 <img src="<%= imageSrc %>" alt="image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
                             </td>
                             <td>
-                                <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
-                                    <div><%= du.getMatricule() %></div>
-                                <% } %>
+                                <div><%= u.getMatricule() %></div>
                             </td>
                             <td><%= u.getNom() %> <%= u.getPrenom() %></td>
                             <td>
-                                <% for (DetailUtilisateur du : u.getDetailUtilisateurs()) { %>
-                                    <div><%= du.getFonction().getDirection().getNom() %></div>
-                                <% } %>
+                                <div><%= u.getDirection() %></div>
                             </td>
                             <td>
                                 <label class="badge 
-                                    <%= ("Activé".equals(u.getEtat_utilisateur().getLibelle())) ? "badge-success" : 
-                                        ("Désactivé".equals(u.getEtat_utilisateur().getLibelle())) ? "badge-danger" : 
+                                    <%= ("Activé".equals(u.getEtat())) ? "badge-success" : 
+                                        ("Désactivé".equals(u.getEtat())) ? "badge-danger" : 
                                         "badge-warning" %>">
-                                    <%= u.getEtat_utilisateur().getLibelle() %>
+                                    <%= u.getEtat() %>
                                 </label>
                             </td>
                             
                             <td>
-                                <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voir les détails" data-target="#userDetailModal<%= u.getId() %>">
+                                <button type="button" class="btn btn-info btn-rounded btn-icon" data-toggle="modal" title="Voir les détails" data-target="#userDetailModal<%= u.getIdUtilisateur() %>">
                                     <i class="ti-eye"></i>
                                 </button>
-                                <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" title="Modifier l'utilisateur" data-target="#userModifModal<%= u.getId() %>">
+                                <button type="button" class="btn btn-success btn-rounded btn-icon" data-toggle="modal" title="Modifier l'utilisateur" data-target="#userModifModal<%= u.getIdUtilisateur() %>">
                                     <i class="ti-pencil"></i>
                                 </button>
 
-                                <a href="/famille/gererFamille?idUtilisateur=<%= u.getId() %>"><button type="button" class="btn btn-warning btn-rounded btn-icon" title="Gérer la famille">
+                                <a href="/famille/gererFamille?idUtilisateur=<%= u.getIdUtilisateur() %>"><button type="button" class="btn btn-warning btn-rounded btn-icon" title="Gérer la famille">
                                     <i class="mdi mdi-account-multiple"></i>
                                 </button></a>
                             </td>
@@ -282,20 +238,20 @@
                 <div class="pagination d-flex justify-content-center">
                     <ul class="pagination">
                         <!-- Lien vers la page précédente -->
-                        <li class="page-item <%= utilisateur.isFirst() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= utilisateur.getNumber() - 1 %>&size=<%= utilisateur.getSize() %>">&laquo;</a>
+                        <li class="page-item <%= utilisateurDetailler.isFirst() ? "disabled" : "" %>">
+                            <a class="page-link" href="?page=<%= utilisateurDetailler.getNumber() - 1 %>&size=<%= utilisateurDetailler.getSize() %>">&laquo;</a>
                         </li>
                 
                         <% 
                             int maxPagesToShow = 4;
-                            int currentPage = utilisateur.getNumber() + 1; // Passe en index 1-based
-                            int totalPages = utilisateur.getTotalPages();
+                            int currentPage = utilisateurDetailler.getNumber() + 1; // Passe en index 1-based
+                            int totalPages = utilisateurDetailler.getTotalPages();
                             int startPage = Math.max(1, currentPage - maxPagesToShow / 2);
                             int endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
                 
                             if (startPage > 1) { 
                         %>
-                            <li class="page-item"><a class="page-link" href="?page=0&size=<%= utilisateur.getSize() %>">1</a></li>
+                            <li class="page-item"><a class="page-link" href="?page=0&size=<%= utilisateurDetailler.getSize() %>">1</a></li>
                             <% if (startPage > 2) { %>
                                 <li class="page-item disabled"><span class="page-link">...</span></li>
                             <% } %>
@@ -304,7 +260,7 @@
                         <!-- Liens pour les pages visibles -->
                         <% for (int i = startPage; i <= endPage; i++) { %>
                             <li class="page-item <%= (i == currentPage) ? "active" : "" %>">
-                                <a class="page-link" href="?page=<%= i - 1 %>&size=<%= utilisateur.getSize() %>"><%= i %></a>
+                                <a class="page-link" href="?page=<%= i - 1 %>&size=<%= utilisateurDetailler.getSize() %>"><%= i %></a>
                             </li>
                         <% } %>
                 
@@ -312,12 +268,12 @@
                             <% if (endPage < totalPages - 1) { %>
                                 <li class="page-item disabled"><span class="page-link">...</span></li>
                             <% } %>
-                            <li class="page-item"><a class="page-link" href="?page=<%= totalPages - 1 %>&size=<%= utilisateur.getSize() %>"><%= totalPages %></a></li>
+                            <li class="page-item"><a class="page-link" href="?page=<%= totalPages - 1 %>&size=<%= utilisateurDetailler.getSize() %>"><%= totalPages %></a></li>
                         <% } %>
                 
                         <!-- Lien vers la page suivante -->
-                        <li class="page-item <%= utilisateur.isLast() ? "disabled" : "" %>">
-                            <a class="page-link" href="?page=<%= utilisateur.getNumber() + 1 %>&size=<%= utilisateur.getSize() %>">&raquo;</a>
+                        <li class="page-item <%= utilisateurDetailler.isLast() ? "disabled" : "" %>">
+                            <a class="page-link" href="?page=<%= utilisateurDetailler.getNumber() + 1 %>&size=<%= utilisateurDetailler.getSize() %>">&raquo;</a>
                         </li>
                     </ul>
                 </div>
@@ -331,13 +287,13 @@
 <!-- Modal détails utilisateur -->
 
 <% 
-    for(Utilisateur u : utilisateur) { 
+    for(VUtilisateurDetailler u : utilisateurDetailler) { 
         byte[] imageBytes = u.getImage();
         String imageUtilisateur = (imageBytes != null && imageBytes.length > 0) ? Base64.getEncoder().encodeToString(imageBytes) : null;
         String imageParDefaut = "/assets/images/faces/user.jpeg";
         String imageSrc = (imageUtilisateur != null && !imageUtilisateur.isEmpty()) ? "data:image/jpeg;base64, " + imageUtilisateur : imageParDefaut;
     %>
-    <div class="modal fade custom-modal" id="userDetailModal<%= u.getId() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+    <div class="modal fade custom-modal" id="userDetailModal<%= u.getIdUtilisateur() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -360,29 +316,29 @@
                                         <strong>Prénom :</strong> <%= u.getPrenom() %>
                                     </li>
                                     <li class="list-group-item">
-                                        <strong>Genre :</strong> <%= u.getGenre().getLibelle() %>
+                                        <strong>Genre :</strong> <%= u.getGenre() %>
                                     </li>
                                     <li class="list-group-item">
                                         <strong>Date de naissance :</strong> <%= DateUtil.formatDate(u.getDateNaissance()) %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Email :</strong> <%= u.getDetailUtilisateurs().get(0).getEmail() %>
+                                        <strong>Email :</strong> <%= u.getEmail() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Téléphone :</strong> <%= u.getDetailUtilisateurs().get(0).getTelephone() %>
+                                        <strong>Téléphone :</strong> <%= u.getTelephone() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Matricule :</strong> <%= u.getDetailUtilisateurs().get(0).getMatricule() %>
+                                        <strong>Matricule :</strong> <%= u.getMatricule() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Date d'entrée :</strong> <%= DateUtil.formatDate(u.getDetailUtilisateurs().get(0).getDateEntre()) %>
+                                        <strong>Date d'entrée :</strong> <%= DateUtil.formatDate(u.getDateEntre()) %>
                                     </li>
                                     <li class="list-group-item">
                                         <strong>État :</strong>
-                                        <span class="badge <%= ("Activé".equals(u.getEtat_utilisateur().getLibelle())) ? "badge-success" : "badge-danger" %>">
-                                            <%= ("Activé".equals(u.getEtat_utilisateur().getLibelle())) 
-                                                ? "<i class='fas fa-check-circle'></i> " + u.getEtat_utilisateur().getLibelle() 
-                                                : "<i class='fas fa-times-circle'></i> " + u.getEtat_utilisateur().getLibelle() %>
+                                        <span class="badge <%= ("Activé".equals(u.getEtat())) ? "badge-success" : "badge-danger" %>">
+                                            <%= ("Activé".equals(u.getEtat())) 
+                                                ? "<i class='fas fa-check-circle'></i> " + u.getEtat() 
+                                                : "<i class='fas fa-times-circle'></i> " + u.getEtat() %>
                                         </span>
                                     </li>
                                     
@@ -394,37 +350,37 @@
                             <div class="col-md-4 text-center">
                                 <img src="<%= imageSrc %>" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
                                 <h4><%= u.getPrenom() %> <%= u.getNom() %></h4>
-                                <p><%= u.getType_utilisateur().getLibelle() %></p>
+                                <p><%= u.getTypeUtilisateur() %></p>
                             </div>
                             <!-- Colonne droite pour les informations -->
                             <div class="col-md-4">
                                 <ul class="list-group">
                                     <li class="list-group-item" >
-                                        <strong>Numero de decision :</strong> <%= u.getDetailUtilisateurs().get(0).getNumeroDecision() %>
+                                        <strong>Numero de decision :</strong> <%= u.getNumeroDecision() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Direction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getDirection().getNom() %>
+                                        <strong>Direction :</strong> <%= u.getDirection() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Fonction :</strong> <%= u.getDetailUtilisateurs().get(0).getFonction().getNom() %>
+                                        <strong>Fonction :</strong> <%= u.getFonction() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Qualité :</strong> <%= u.getDetailUtilisateurs().get(0).getQualite().getLibelle() %>
+                                        <strong>Qualité :</strong> <%= u.getQualite() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Catégorie :</strong> <%= u.getDetailUtilisateurs().get(0).getCategorie().getLibelle() %>
+                                        <strong>Catégorie :</strong> <%= u.getCategorie() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Corps d'appartenance :</strong> <%= u.getDetailUtilisateurs().get(0).getCorps_appartenance().getLibelle() %>
+                                        <strong>Corps d'appartenance :</strong> <%= u.getCorpsAppartenance() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Indice :</strong> <%= u.getDetailUtilisateurs().get(0).getIndice().getLibelle() %>
+                                        <strong>Indice :</strong> <%= u.getIndice() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Service Employeur :</strong> <%= u.getDetailUtilisateurs().get(0).getService_employeur().getLibelle() %>
+                                        <strong>Service Employeur :</strong> <%= u.getServiceEmployeur() %>
                                     </li>
                                     <li class="list-group-item" >
-                                        <strong>Localite de service :</strong> <%= u.getDetailUtilisateurs().get(0).getLocalite_service().getLibelle() %>
+                                        <strong>Localite de service :</strong> <%= u.getLocaliteService() %>
                                     </li>
                                 </ul>
                             </div>
@@ -441,8 +397,8 @@
 
 
 <!-- Modal modifier utilisateur -->
-<% for(Utilisateur u : utilisateur) { %>
-    <div class="modal fade custom-modal" id="userModifModal<%= u.getId() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+<% for(VUtilisateurDetailler u : utilisateurDetailler) { %>
+    <div class="modal fade custom-modal" id="userModifModal<%= u.getIdUtilisateur() %>" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -489,7 +445,7 @@
                                         <div class="col-sm-8">
                                             <select name="genre" id="genre" class="form-control">
                                                 <% for(Genre g : genre) {
-                                                    String selected = g.getEtat().equals(u.getGenre().getEtat()) ? "selected" : "";
+                                                    String selected = g.getEtat().equals(u.getEtatGenre()) ? "selected" : "";
                                                 %>
                                                     <option value="<%= g.getEtat() %>" <%= selected %>><%= g.getLibelle() %></option>
                                                 <% } %>
@@ -498,46 +454,44 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <% for(DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Matricule</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="matricule" id="matricule" value="<%= detail.getMatricule() %>">
-                                                <span id="error-matricule" style="color: red; display: none;">Ce matricule existe déjà. Veuillez en saisir un autre.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Date d'Entrée</label>
-                                            <div class="col-sm-8">
-                                                <input type="date" class="form-control" name="dateEntree" id="dateEntree" value="<%= detail.getDateEntre() %>">
-                                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Matricule</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" name="matricule" id="matricule" value="<%= u.getMatricule() %>">
+                                            <span id="error-matricule" style="color: red; display: none;">Ce matricule existe déjà. Veuillez en saisir un autre.</span>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Email</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="email" id="email" value="<%= detail.getEmail() %>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label">Téléphone</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telephone" id="telephone" value="<%= detail.getTelephone() %>">
-                                            </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Date d'Entrée</label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control" name="dateEntree" id="dateEntree" value="<%= u.getDateEntre() %>">
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Email</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" name="email" id="email" value="<%= u.getEmail() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Téléphone</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" name="telephone" id="telephone" value="<%= u.getTelephone() %>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -546,7 +500,7 @@
                                             <div class="col-sm-8">
                                                 <select id="direction" name="direction" class="form-control">
                                                     <% for(Direction d : direction) { %>
-                                                        <option value="<%= d.getId() %>" <%= d.getId().equals(detail.getFonction().getDirection().getId()) ? "selected" : "" %>><%= d.getNom() %></option>
+                                                        <option value="<%= d.getId() %>" <%= d.getId().equals(u.getIdDirection()) ? "selected" : "" %>><%= d.getNom() %></option>
                                                     <% } %>
                                                 </select>
                                             </div>
@@ -556,7 +510,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Fonction</label>
                                             <div class="col-sm-8">
-                                                <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= detail.getFonction().getId() %>">
+                                                <select id="fonction" name="fonction" class="form-control" data-selected-function="<%= u.getIdFonction() %>">
                                                     <!-- Les options seront mises à jour dynamiquement par JavaScript -->
                                                 </select>
                                             </div>
@@ -571,7 +525,7 @@
                                             <div class="col-sm-8">
                                                 <select name="qualite" id="qualite" class="form-control">
                                                     <% for(Qualite q : qualites) { 
-                                                        String selected = q.getId().equals(detail.getQualite().getId()) ? "selected" : "";
+                                                        String selected = q.getId().equals(u.getIdQualite()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= q.getId() %>" <%= selected %>><%= q.getLibelle() %></option>
                                                     <% } %>
@@ -586,7 +540,7 @@
                                             <div class="col-sm-8">
                                                 <select name="categorie" id="categorie" class="form-control">
                                                     <% for(Categorie c : categories) { 
-                                                        String selected = c.getId().equals(detail.getCategorie().getId()) ? "selected" : "";
+                                                        String selected = c.getId().equals(u.getIdCategorie()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= c.getId() %>" <%= selected %>><%= c.getLibelle() %></option>
                                                     <% } %>
@@ -603,7 +557,7 @@
                                             <div class="col-sm-8">
                                                 <select name="appartenance" id="appartenance" class="form-control">
                                                     <% for(CorpsAppartenance ca : corpsAppartenances) { 
-                                                        String selected = ca.getId().equals(detail.getCorps_appartenance().getId()) ? "selected" : "";
+                                                        String selected = ca.getId().equals(u.getIdCorpsAppartenance()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= ca.getId() %>" <%= selected %>><%= ca.getLibelle() %></option>
                                                     <% } %>
@@ -617,7 +571,7 @@
                                             <div class="col-sm-8">
                                                 <select name="indice" id="indice" class="form-control">
                                                     <% for(Indice i : indices) { 
-                                                        String selected = i.getId().equals(detail.getIndice().getId()) ? "selected" : "";
+                                                        String selected = i.getId().equals(u.getIdIndice()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= i.getId() %>" <%= selected %>><%= i.getLibelle() %></option>
                                                     <% } %>
@@ -634,7 +588,7 @@
                                             <div class="col-sm-8">
                                                 <select name="employeur" id="employeur" class="form-control">
                                                     <% for(ServiceEmployeur se : serviceEmployeurs) { 
-                                                        String selected = se.getId().equals(detail.getService_employeur().getId()) ? "selected" : "";
+                                                        String selected = se.getId().equals(u.getIdServiceEmployeur()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= se.getId() %>" <%= selected %>><%= se.getLibelle() %></option>
                                                     <% } %>
@@ -648,7 +602,7 @@
                                             <div class="col-sm-8">
                                                 <select name="localite" id="localite" class="form-control">
                                                     <% for(LocaliteService ls : localiteServices) { 
-                                                        String selected = ls.getId().equals(detail.getLocalite_service().getId()) ? "selected" : "";
+                                                        String selected = ls.getId().equals(u.getIdLocaliteService()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= ls.getId() %>" <%= selected %>><%= ls.getLibelle() %></option>
                                                     <% } %>
@@ -665,7 +619,7 @@
                                             <div class="col-sm-8">
                                                 <select name="typeUtilisateur" id="typeUtilisateur" class="form-control">
                                                     <% for(TypeUtilisateur tu : typeUtilisateur) { 
-                                                        String selected = tu.getEtat().equals(u.getType_utilisateur().getEtat()) ? "selected" : "";
+                                                        String selected = tu.getEtat().equals(u.getEtatTypeUtilisateur()) ? "selected" : "";
                                                     %>
                                                         <option value="<%= tu.getEtat() %>" <%= selected %>><%= tu.getLibelle() %></option>
                                                     <% } %>
@@ -677,7 +631,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Numéro de décision</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="decision" name="decision" value="<%= detail.getNumeroDecision() %>">
+                                                <input type="text" class="form-control" id="decision" name="decision" value="<%= u.getNumeroDecision() %>">
                                             </div>
                                         </div>
                                     </div>
@@ -703,7 +657,7 @@
                                                 <label class="switch">
                                                     <input type="checkbox" name="etatUtilisateur" id="etatUtilisateur" 
                                                         value="1" 
-                                                        <%= u.getEtat_utilisateur().getEtat() == 1 ? "checked" : "" %> 
+                                                        <%= u.getEtatUtilisateur() == 1 ? "checked" : "" %> 
                                                         onchange="toggleEtat()">
                                                     <span class="slider round"></span>
                                                 </label>
@@ -717,9 +671,8 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="id_utilisateur" value="<%= u.getId() %>">
-                                <input type="hidden" name="id_detail_utilisateur" value="<%= detail.getId() %>">
-                            <% } %>
+                                <input type="hidden" name="id_utilisateur" value="<%= u.getIdUtilisateur() %>">
+                                <input type="hidden" name="id_detail_utilisateur" value="<%= u.getIdDetailUtilisateur() %>">
                         </div>
                     </div>
                     <div class="modal-footer">

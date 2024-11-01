@@ -48,9 +48,21 @@ public class Utilisateur {
 	@ManyToOne
 	@JoinColumn(name = "genre", insertable = false, updatable = false)
 	Genre genre;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<SoldeFinAnnee> soldeFinAnnees;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<NotificationDestinataire> notificationDestinataires;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<Notification> notifications;
+	@JsonIgnore
+	@OneToMany(mappedBy = "utilisateur", cascade = CascadeType.ALL)
+	List<InterimUtilisateur> interimUtilisateurs;
 
-	@Transient
-	List<VHistoriqueConge> historiqueConges;
+	// @Transient
+	// List<VHistoriqueConge> historiqueConges;
 
     //SETTERS AND GETTERS
 
@@ -144,18 +156,46 @@ public class Utilisateur {
 	public void setGenre(Genre genre){
 		this.genre = genre;
 	}
+	public List<SoldeFinAnnee> getSoldeFinAnnees(){
+		return this.soldeFinAnnees;
+	}
+	public void setSoldeFinAnnees(List<SoldeFinAnnee> soldeFinAnnees){
+		this.soldeFinAnnees = soldeFinAnnees;
+	}
+	public List<NotificationDestinataire> getNotificationDestinataires(){
+		return this.notificationDestinataires;
+	}
+	public void setNotificationDestinataires(List<NotificationDestinataire> notificationDestinataires){
+		this.notificationDestinataires = notificationDestinataires;
+	}
+	public List<Notification> getNotifications(){
+		return this.notifications;
+	}
+	public void setNotifications(List<Notification> notifications){
+		this.notifications = notifications;
+	}
+	public List<InterimUtilisateur> getInterimUtilisateurs(){
+		return this.interimUtilisateurs;
+	}
+	public void setInterimUtilisateurs(List<InterimUtilisateur> interimUtilisateurs){
+		this.interimUtilisateurs = interimUtilisateurs;
+	}
 
-    public List<VHistoriqueConge> getHistoriqueConges() {
-        return historiqueConges;
-    }
-    public void setHistoriqueConges(List<VHistoriqueConge> historiqueConges) {
-        this.historiqueConges = historiqueConges;
-    }
+    // public List<VHistoriqueConge> getHistoriqueConges() {
+    //     return historiqueConges;
+    // }
+    // public void setHistoriqueConges(List<VHistoriqueConge> historiqueConges) {
+    //     this.historiqueConges = historiqueConges;
+    // }
 
     //CONSTRUCTORS
 
  	public Utilisateur(){}
-	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, Integer etat, byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<SoldeUtilisateur> soldeUtilisateurs, List<DemandeConge> demandeConges, List<Famille> familles, TypeUtilisateur type_utilisateur, EtatUtilisateur etat_utilisateur, Genre genre){
+	public Utilisateur(String id, String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, 
+	Integer etat, byte[] image, List<DetailUtilisateur> detailUtilisateurs, List<SoldeUtilisateur> soldeUtilisateurs, 
+	List<DemandeConge> demandeConges, List<Famille> familles, TypeUtilisateur type_utilisateur, EtatUtilisateur etat_utilisateur, 
+	Genre genre, List<SoldeFinAnnee> soldeFinAnnees, List<NotificationDestinataire> notificationDestinataires, 
+	List<Notification> notifications, List<InterimUtilisateur> interimUtilisateurs){
 		setId(id);
 		setNom(nom);
 		setPrenom(prenom);
@@ -171,6 +211,10 @@ public class Utilisateur {
 		setType_utilisateur(type_utilisateur);
 		setEtat_utilisateur(etat_utilisateur);
 		setGenre(genre);
+		setSoldeFinAnnees(soldeFinAnnees);
+		setNotificationDestinataires(notificationDestinataires);
+		setNotifications(notifications);
+		setInterimUtilisateurs(interimUtilisateurs);
 	}
 	public Utilisateur(String nom, String prenom, Date dateNaissance, Integer idGenre, Integer typeUtilisateur, Integer etat){
 		setNom(nom);

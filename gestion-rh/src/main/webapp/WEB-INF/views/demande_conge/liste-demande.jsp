@@ -43,19 +43,6 @@
             <div class="table-responsive">
 
                 <br>
-                    
-                <div class="row mb-3">
-                    <form method="GET" action="page-conge" class="col-md-8">
-                        <div class="row align-items-center">
-                            <div class="col-md-5">
-                                <input type="text" name="search" class="form-control" placeholder="Rechercher...">
-                            </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-primary btn-block">Rechercher</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
 
                 <table class="table table-striped">
                     <thead>

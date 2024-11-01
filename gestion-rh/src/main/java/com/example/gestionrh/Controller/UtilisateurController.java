@@ -14,6 +14,7 @@ import com.example.gestionrh.Model.Entity.Qualite;
 import com.example.gestionrh.Model.Entity.ServiceEmployeur;
 import com.example.gestionrh.Model.Entity.TypeUtilisateur;
 import com.example.gestionrh.Model.Entity.Utilisateur;
+import com.example.gestionrh.Model.Entity.VUtilisateurDetailler;
 import com.example.gestionrh.Model.Service.CategorieService;
 import com.example.gestionrh.Model.Service.CorpsAppartenanceService;
 import com.example.gestionrh.Model.Service.DetailUtilisateurService;
@@ -29,13 +30,17 @@ import com.example.gestionrh.Model.Service.QualiteService;
 import com.example.gestionrh.Model.Service.ServiceEmployeurService;
 import com.example.gestionrh.Model.Service.TypeUtilisateurService;
 import com.example.gestionrh.Model.Service.UtilisateurService;
+import com.example.gestionrh.Model.Service.VUtilisateurDetaillerService;
+import com.example.gestionrh.utils.EtatUtilisateurConfig;
 import com.example.gestionrh.utils.PaginationConfig;
+import com.example.gestionrh.utils.TypeUtilisateurConfig;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -105,6 +110,15 @@ public class UtilisateurController{
     @Autowired
     private CategorieService categorieService;
 
+    @Autowired
+    private VUtilisateurDetaillerService vUtilisateurDetaillerService;
+
+    @Autowired
+	private TypeUtilisateurConfig typeUtilisateurConf;
+
+	@Autowired
+	private EtatUtilisateurConfig etatUtilisateurConfig;
+
 
     @PostMapping("modifier-image")
     public String uploadImage(HttpSession session, @RequestParam("file") MultipartFile file) {
@@ -149,7 +163,8 @@ public class UtilisateurController{
 	public String utilisateur(HttpServletRequest request, 
                                 @RequestParam(defaultValue = "0") int page, 
                                 @RequestParam(required = false) Integer size,
-                                HttpSession session
+                                HttpSession session,
+                                @RequestParam(value = "search", required = false) String searchTerm
                                 ) {
 
         String userId = (String)session.getAttribute("userId");
@@ -163,7 +178,17 @@ public class UtilisateurController{
 
         Pageable pageable = PageRequest.of(page, paginationSize);
 
-        Page<Utilisateur> utilisateurPage = utilisateurService.getUtilisateurs(pageable);
+        Page<VUtilisateurDetailler> vUtilisateurDetaillerPage;
+        if(searchTerm != null && !searchTerm.isEmpty()) {
+            vUtilisateurDetaillerPage = new PageImpl<>(vUtilisateurDetaillerService.searchUtilisateurs(searchTerm));
+            paginationSize = (int)vUtilisateurDetaillerPage.getTotalElements();
+        } else {
+            vUtilisateurDetaillerPage = vUtilisateurDetaillerService.getAll(pageable);
+        }
+
+        // Page<VUtilisateurDetailler> utilisateurDetaillerPage = vUtilisateurDetaillerService.getAll(pageable);
+
+        // Page<Utilisateur> utilisateurPage = utilisateurService.getAllUtilisateur(pageable);
 		// List<Utilisateur> utilisateurs = utilisateurService.getAll();
         List<Direction> directions = directionService.getAll();
         List<Fonction> fonctions = fonctionService.getAll();
@@ -178,7 +203,8 @@ public class UtilisateurController{
         List<Indice> indices = indiceService.getAll();
         List<CorpsAppartenance> corpsAppartenances = corpsAppartenanceService.getAll();
 
-        request.setAttribute("utilisateurs", utilisateurPage);
+        // request.setAttribute("utilisateurs", utilisateurPage);
+        request.setAttribute("utilisateurDetailler", vUtilisateurDetaillerPage);
         request.setAttribute("directions", directions);
         request.setAttribute("fonctions", fonctions);
         request.setAttribute("genre", genre);
@@ -191,6 +217,7 @@ public class UtilisateurController{
         request.setAttribute("localiteServices", localiteServices);
         request.setAttribute("indices", indices);
         request.setAttribute("corpsAppartenances", corpsAppartenances);
+        // request.setAttribute("lien", "/list-utilisateur");
 		return "/utilisateur/list-utilisateur";
 	}
 
@@ -245,6 +272,7 @@ public class UtilisateurController{
         
         request.setAttribute("famille", familles);
         request.setAttribute("utilisateur", user);
+        // request.setAttribute("lien", "/bulletin-consultation");
         return "/sante/bulletin-consultation";
     }
 
@@ -262,6 +290,7 @@ public class UtilisateurController{
         List<Direction> directions = directionService.getAll();
         request.setAttribute("directions", directions);
         request.setAttribute("utilisateur", user);
+        // request.setAttribute("lien", "/demande-remboursement");
         return "/sante/demande-remboursement";
     }
 
@@ -281,13 +310,16 @@ public class UtilisateurController{
             return "/utils/errorPage";
         }
 
-        int etatUtilisateurActive = 1;
-        List<Utilisateur> listUtilisateurs = utilisateurService.getUtilisateurActive(etatUtilisateurActive);
+        int etatUtilisateurActive = etatUtilisateurConfig.getActive();
+        int admin = typeUtilisateurConf.getAdmin();
+        
+        List<Utilisateur> listUtilisateurs = utilisateurService.getUtilisateurActiveEtNonAdmin(etatUtilisateurActive, admin);
         
         List<Famille> familles = familleService.getAll();
 
         request.setAttribute("listUtilisateur", listUtilisateurs);
         request.setAttribute("familles", familles);
+        // request.setAttribute("lien", "/attestation-non-paiement");
         return "/sante/attestation-non-paiement";
     }
 
@@ -296,8 +328,6 @@ public class UtilisateurController{
     public List<Famille> getFamillesByAgent(@PathVariable String agentId) {
         return familleService.findByIdEmploye(agentId);
     }
-
-
 
     @PostMapping("/modifier-mot-de-passe")
     public String modifierPassword(
@@ -377,6 +407,7 @@ public class UtilisateurController{
         request.setAttribute("indices", indices);
         request.setAttribute("corpsAppartenances", corpsAppartenances);
         request.setAttribute("categories", categories);
+        // request.setAttribute("lien", "/ajout-utilisateur");
 
         return "/utilisateur/ajout-utilisateur";
     }

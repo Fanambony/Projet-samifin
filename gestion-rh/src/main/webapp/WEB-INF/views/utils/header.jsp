@@ -65,7 +65,22 @@
         fetchNotifications();
     });
     </script>
-    
+
+<script>
+  function updateUrl(event) {
+    event.preventDefault()
+      const currentUrl = new URL(window.location.href);
+      var mot_cle = document.getElementById("navbar-search-input").value;
+      if(!currentUrl.searchParams.has('search')) {
+        currentUrl.searchParams.append('search', mot_cle);
+      } else {
+        currentUrl.searchParams.set('search', mot_cle);
+
+      }
+      console.log("--" + currentUrl);
+      window.location.href = currentUrl.toString();
+  }
+</script>
 
 
   <!-- plugins:css -->
@@ -78,11 +93,14 @@
   <link rel="stylesheet" href="/assets/vendors/ti-icons/css/themify-icons.css">
   <link rel="stylesheet" type="text/css" href="/assets/js/select.dataTables.min.css">
   <link rel="stylesheet" href="/assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="/assets/vendors/select2/select2.min.css">
+  <link rel="stylesheet" href="/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="/assets/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="/assets/images/favicon.png" />
+  
 </head>
 <body>
   <div class="container-scroller">
@@ -98,20 +116,19 @@
 	<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
 		<span class="icon-menu"></span>
 	</button>
-	
-	<ul class="navbar-nav mr-lg-2">
-		<li class="nav-item nav-search d-none d-lg-block">
-		<div class="input-group">
-			<div class="input-group-prepend hover-cursor" id="navbar-search-icon">
-			<span class="input-group-text" id="search">
-				<i class="icon-search"></i>
-			</span>
-			</div>
-			<input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
-		</div>
-		</li>
-	</ul>
 
+  <form class="form-inline w-100 ml-5" onsubmit="updateUrl(event)" method="get">
+    <div class="input-group w-100">
+      <input type="text" class="form-control col-5" id="navbar-search-input" placeholder="Rechercher..." aria-label="search" aria-describedby="search">
+      <div class="input-group-append col-2">
+        <button type="submit" class="btn btn-outline-secondary btn-md">
+          <i class="ti-search"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  
 
 	<ul class="navbar-nav navbar-nav-right">
 

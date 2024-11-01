@@ -27,7 +27,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Ordonnateur</label>
                             <div class="col-sm-9">
-                                <select name="ordonnateur" class="form-control">
+                                <select name="ordonnateur" class="form-control  js-example-basic-single">
                                     <% for(Utilisateur u : listUtilisateur) { %>
                                         <option value="<%= u.getNom() %> <%= u.getPrenom() %>"><%= u.getNom() %> <%= u.getPrenom() %></option>
                                     <% } %>
@@ -42,7 +42,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Agent</label>
                             <div class="col-sm-9">
-                                <select name="agent" class="form-control" onchange="updateAgentDetails()">
+                                <select name="agent" class="form-control js-example-basic-single" onchange="updateAgentDetails()">
                                     <option disabled selected>Choisir un agent</option>
                                     <% for (Utilisateur u : listUtilisateur) { 
                                         for (DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
@@ -66,7 +66,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </div>
 
                 <div class="row">

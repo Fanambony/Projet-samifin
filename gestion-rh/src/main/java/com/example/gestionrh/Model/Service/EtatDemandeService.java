@@ -29,8 +29,8 @@ public class EtatDemandeService {
 	/* -- DELETE -- */
 	public void delete(Object id) {  etatDemandeRepository.deleteById(id); }
 
-	public Integer getEtatSoumis() {
-		return etatDemandeRepository.findEtatSoumis();
-	}
+	// public Integer getEtatSoumis() {
+	// 	return etatDemandeRepository.findEtatSoumis();
+	// }
 
 }

@@ -6,6 +6,7 @@
     boolean ordonnanceChecked = (Boolean) request.getAttribute("ordonnance_checked");
     boolean facturesChecked = (Boolean) request.getAttribute("factures_checked");
     boolean bulletinChecked = (Boolean) request.getAttribute("bulletin_checked");
+    boolean noticeChecked = (Boolean) request.getAttribute("notice_checked");
 %>
 
 <!DOCTYPE html>
@@ -41,16 +42,17 @@
         <div class="container">
             <h4>DEMANDE DE REMBOURSEMENT DE FRAIS MEDICAUX</h4>
             <br/>
-            <h5>N° <%= request.getAttribute("numero") %></h5>
+            <h5>N° ______ /SAMIFIN/DG/DAF/24</h5>
             <br/>
             <p class="haut"><strong>Mme/Mr :</strong> <%= request.getAttribute("nom") %></p>
             <p class="haut"><strong>Matricule :</strong> <%= request.getAttribute("matricule") %></p>
             <p class="haut"><strong>Direction/Service :</strong> <%= request.getAttribute("direction") %></p>
             <p class="haut"><strong>Fonction ou Grade :</strong> <%= request.getAttribute("fonction") %></p>
-            <p class="haut"><strong>Sollicite le remboursement des frais médicaux de :</strong> <%= request.getAttribute("frais_medicaux") %></p>
+            <br/>
+            <p class="haut">Sollicite le remboursement des frais médicaux de :</p>
             <p class="haut"><strong>Nom du Malade :</strong> <%= request.getAttribute("nom_malade") %></p>
             <p class="haut"><strong>Lien :</strong> <%= request.getAttribute("lien") %></p>
-            <p class="haut"><strong>Montant :</strong> <%= request.getAttribute("montant") %></p>
+            <p class="haut"><strong>Montant :</strong> <%= request.getAttribute("montant") %> Ar (<%= request.getAttribute("montant_let") %> Ariary)</p>
 
             <br/>
             <p>Pièces fournies :</p>
@@ -69,6 +71,10 @@
                             <div class="checkbox <% if (bulletinChecked) { %> checked <% } %>"></div>
                         </td>
                         <td> Bulletin de consultation</td>
+                        <td>
+                            <div class="checkbox <% if (noticeChecked) { %> checked <% } %>"></div>
+                        </td>
+                        <td> Notice</td>
                     </tr>
                 </tbody>
             </table>
@@ -88,4 +94,11 @@
         </div>
     </div>
 
-<%@include file="../utils/footerPDF.jsp" %>
+    <div class="footer">
+        <!-- Pied de page de la deuxième page -->
+        <p>SAMIFIN-Lot I 102 A Lohanosy Ambohijanaka - Antananarivo 102 - Tél: (+261)34 30 332 23</p>
+        <p>BP 710 - Site web: www.samifin.gov.mg - Email: contact@samifin.net</p>
+    </div>
+
+</body>
+</html>

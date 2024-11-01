@@ -3,6 +3,7 @@ package com.example.gestionrh.Model.Entity;
 import jakarta.persistence.*;
 import java.sql.Date;
 
+import java.util.List;
 
 @Entity
 @Table(name = "v_utilisateur_detailler")
@@ -26,6 +27,18 @@ public class VUtilisateurDetailler {
 	String idFonction;
 	@Column(name = "id_direction")
 	String idDirection;
+	@Column(name = "id_qualite")
+	String idQualite;
+	@Column(name = "id_categorie")
+	String idCategorie;
+	@Column(name = "id_corps_appartenance")
+	String idCorpsAppartenance;
+	@Column(name = "id_indice")
+	String idIndice;
+	@Column(name = "id_service_employeur")
+	String idServiceEmployeur;
+	@Column(name = "id_localite_service")
+	String idLocaliteService;
 	@Column(name = "nom")
 	String nom;
 	@Column(name = "prenom")
@@ -58,6 +71,21 @@ public class VUtilisateurDetailler {
 	String direction;
 	@Column(name = "mdp_provisoir")
 	Boolean mdpProvisoir;
+	@Column(name = "qualite")
+	String qualite;
+	@Column(name = "categorie")
+	String categorie;
+	@Column(name = "corps_appartenance")
+	String corpsAppartenance;
+	@Column(name = "indice")
+	String indice;
+	@Column(name = "service_employeur")
+	String serviceEmployeur;
+	@Column(name = "localite_service")
+	String localiteService;
+
+	@Transient
+	List<VHistoriqueConge> historiqueConges;
 
     //SETTERS AND GETTERS
 
@@ -108,6 +136,42 @@ public class VUtilisateurDetailler {
 	}
 	public void setIdDirection(String idDirection){
 		this.idDirection = idDirection;
+	}
+	public String getIdQualite(){
+		return this.idQualite;
+	}
+	public void setIdQualite(String idQualite){
+		this.idQualite = idQualite;
+	}
+	public String getIdCategorie(){
+		return this.idCategorie;
+	}
+	public void setIdCategorie(String idCategorie){
+		this.idCategorie = idCategorie;
+	}
+	public String getIdCorpsAppartenance(){
+		return this.idCorpsAppartenance;
+	}
+	public void setIdCorpsAppartenance(String idCorpsAppartenance){
+		this.idCorpsAppartenance = idCorpsAppartenance;
+	}
+	public String getIdIndice(){
+		return this.idIndice;
+	}
+	public void setIdIndice(String idIndice){
+		this.idIndice = idIndice;
+	}
+	public String getIdServiceEmployeur(){
+		return this.idServiceEmployeur;
+	}
+	public void setIdServiceEmployeur(String idServiceEmployeur){
+		this.idServiceEmployeur = idServiceEmployeur;
+	}
+	public String getIdLocaliteService(){
+		return this.idLocaliteService;
+	}
+	public void setIdLocaliteService(String idLocaliteService){
+		this.idLocaliteService = idLocaliteService;
 	}
 	public String getNom(){
 		return this.nom;
@@ -205,11 +269,54 @@ public class VUtilisateurDetailler {
 	public void setMdpProvisoir(Boolean mdpProvisoir){
 		this.mdpProvisoir = mdpProvisoir;
 	}
+	public String getQualite(){
+		return this.qualite;
+	}
+	public void setQualite(String qualite){
+		this.qualite = qualite;
+	}
+	public String getCategorie(){
+		return this.categorie;
+	}
+	public void setCategorie(String categorie){
+		this.categorie = categorie;
+	}
+	public String getCorpsAppartenance(){
+		return this.corpsAppartenance;
+	}
+	public void setCorpsAppartenance(String corpsAppartenance){
+		this.corpsAppartenance = corpsAppartenance;
+	}
+	public String getIndice(){
+		return this.indice;
+	}
+	public void setIndice(String indice){
+		this.indice = indice;
+	}
+	public String getServiceEmployeur(){
+		return this.serviceEmployeur;
+	}
+	public void setServiceEmployeur(String serviceEmployeur){
+		this.serviceEmployeur = serviceEmployeur;
+	}
+	public String getLocaliteService(){
+		return this.localiteService;
+	}
+	public void setLocaliteService(String localiteService){
+		this.localiteService = localiteService;
+	}
+
+	public List<VHistoriqueConge> getHistoriqueConges() {
+        return historiqueConges;
+    }
+    public void setHistoriqueConges(List<VHistoriqueConge> historiqueConges) {
+        this.historiqueConges = historiqueConges;
+    }
 
     //CONSTRUCTORS
 
  	public VUtilisateurDetailler(){}
-	public VUtilisateurDetailler(Long numLigne, String idUtilisateur, Integer etatGenre, Integer etatTypeUtilisateur, Integer etatUtilisateur, String idDetailUtilisateur, String idFonction, String idDirection, String nom, String prenom, Date dateNaissance, String genre, String typeUtilisateur, String etat, byte[] image, String matricule, String email, String mdp, String telephone, Date dateEntre, String numeroDecision, String fonction, String direction, Boolean mdpProvisoir){
+	public VUtilisateurDetailler(Long numLigne, String idUtilisateur, Integer etatGenre, Integer etatTypeUtilisateur, Integer etatUtilisateur, String idDetailUtilisateur, String idFonction, String idDirection, String idQualite, String idCategorie, String idCorpsAppartenance, String idIndice, String idServiceEmployeur, String idLocaliteService, String nom, String prenom, Date dateNaissance, String genre, String typeUtilisateur, String etat, byte[] image, String matricule, String email, String mdp, String telephone, Date dateEntre, String numeroDecision, String fonction, String direction, Boolean mdpProvisoir, String qualite, String categorie, String corpsAppartenance, String indice, String serviceEmployeur, String localiteService){
 		setNumLigne(numLigne);
 		setIdUtilisateur(idUtilisateur);
 		setEtatGenre(etatGenre);
@@ -218,6 +325,12 @@ public class VUtilisateurDetailler {
 		setIdDetailUtilisateur(idDetailUtilisateur);
 		setIdFonction(idFonction);
 		setIdDirection(idDirection);
+		setIdQualite(idQualite);
+		setIdCategorie(idCategorie);
+		setIdCorpsAppartenance(idCorpsAppartenance);
+		setIdIndice(idIndice);
+		setIdServiceEmployeur(idServiceEmployeur);
+		setIdLocaliteService(idLocaliteService);
 		setNom(nom);
 		setPrenom(prenom);
 		setDateNaissance(dateNaissance);
@@ -234,6 +347,12 @@ public class VUtilisateurDetailler {
 		setFonction(fonction);
 		setDirection(direction);
 		setMdpProvisoir(mdpProvisoir);
+		setQualite(qualite);
+		setCategorie(categorie);
+		setCorpsAppartenance(corpsAppartenance);
+		setIndice(indice);
+		setServiceEmployeur(serviceEmployeur);
+		setLocaliteService(localiteService);
 	}
 
 }

@@ -21,9 +21,11 @@ public interface VEtatDemandeRepository extends JpaRepository<VEtatDemande, Obje
 
     VEtatDemande findByIdDemandeConge(String idDemande);
     
-
+    List<VEtatDemande> findByIdUtilisateurAndIdEtatDemande(String idUtilisateur, int idEtatDemande);
 
     List<VEtatDemande> findByIdEtatDemande(int idEtatDemande);
+
+    List<VEtatDemande> findByIdUtilisateur(String idUtilisateur);
     // @Query("SELECT v FROM VEtatDemande v WHERE v.idUtilisateur = :idUtilisateur AND " +
     //     "(v.typeConge LIKE %:searchTerm% OR v.etatDemande LIKE %:searchTerm%)")
     // List<VEtatDemande> findByUtilisateurAndSearchTerm(@Param("idUtilisateur") String idUtilisateur,
@@ -34,17 +36,39 @@ public interface VEtatDemandeRepository extends JpaRepository<VEtatDemande, Obje
     //     "CAST(v.dateDemande AS string) LIKE %:searchTerm%)")
     // List<VEtatDemande> findByUtilisateurAndSearchTerm(@Param("idUtilisateur") String idUtilisateur,
     //                                                 @Param("searchTerm") String searchTerm);
-    @Query(value = "SELECT * FROM v_etat_demande v WHERE v.id_utilisateur = :idUtilisateur AND " +
-               "(v.type_conge LIKE %:searchTerm% OR v.etat_demande LIKE %:searchTerm% OR " +
-               "CAST(v.nombre_jours_conge AS CHAR) LIKE %:searchTerm% OR " +
-               "TO_CHAR(v.date_demande, 'DD FMMonth YYYY') LIKE %:searchTerm%)", 
+        @Query(value = "SELECT * FROM v_etat_demande v " +
+        "WHERE v.id_utilisateur = :idUtilisateur AND " +
+        "(v.type_conge ILIKE CONCAT('%', :searchTerm, '%') OR " +
+        "v.etat_demande ILIKE CONCAT('%', :searchTerm, '%') OR " +
+        "CAST(v.nombre_jours_conge AS CHAR) ILIKE CONCAT('%', :searchTerm, '%') OR " +
+        "TO_CHAR(v.date_demande, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%'))", 
         nativeQuery = true)
-    List<VEtatDemande> findByUtilisateurAndSearchTerm(@Param("idUtilisateur") String idUtilisateur,
-                                                  @Param("searchTerm") String searchTerm);
-
-    
+        List<VEtatDemande> findByUtilisateurAndSearchTerm(@Param("idUtilisateur") String idUtilisateur,
+                                                        @Param("searchTerm") String searchTerm);
 
 
+        @Query(value = "SELECT * FROM v_etat_demande v " +
+        "WHERE v.id_etat_demande = :etatDemande AND " +
+        "(TO_CHAR(v.date_demande, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR v.nom_utilisateur ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR v.prenom_utilisateur ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR v.type_conge ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR TO_CHAR(v.date_debut, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR TO_CHAR(v.date_fin, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR CAST(v.nombre_jours_conge AS CHAR) ILIKE CONCAT('%', :searchTerm, '%'))",
+        nativeQuery = true)
+        List<VEtatDemande> findBySearchCongeAnnuler(@Param("etatDemande") int etatDemande, @Param("searchTerm") String searchTerm);
+                                   
 
-    
+
+        @Query(value = "SELECT * FROM v_etat_demande v " +
+        "WHERE v.nom_utilisateur ILIKE CONCAT('%', :searchTerm, '%') OR " +
+        "v.prenom_utilisateur ILIKE CONCAT('%', :searchTerm, '%') OR " +
+        "TO_CHAR(v.date_demande, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%') OR " +
+        "v.type_conge ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR TO_CHAR(v.date_debut, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR TO_CHAR(v.date_fin, 'DD FMMonth YYYY') ILIKE CONCAT('%', :searchTerm, '%') " +
+        "OR CAST(v.nombre_jours_conge AS CHAR) ILIKE CONCAT('%', :searchTerm, '%')",
+        nativeQuery = true)
+        List<VEtatDemande> findByNameAndSurname(@Param("searchTerm") String searchTerm);
 }

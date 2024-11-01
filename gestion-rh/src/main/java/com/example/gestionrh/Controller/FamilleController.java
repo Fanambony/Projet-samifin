@@ -66,6 +66,7 @@ public class FamilleController{
     
 			request.setAttribute("filiations", filiations);
             request.setAttribute("utilisateur", utilisateur);
+			// request.setAttribute("lien", "/list-utilisateur");
 			return "/famille/gerer-famille";
         } else {
             return "redirect:/";

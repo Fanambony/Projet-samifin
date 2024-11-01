@@ -1,20 +1,26 @@
 package com.example.gestionrh.Controller;
 
 import com.example.gestionrh.Model.Entity.DemandeConge;
+import com.example.gestionrh.Model.Entity.InterimUtilisateur;
 import com.example.gestionrh.Model.Entity.Notification;
+import com.example.gestionrh.Model.Entity.TypeAbsence;
+import com.example.gestionrh.Model.Entity.TypeConge;
 import com.example.gestionrh.Model.Entity.Utilisateur;
 import com.example.gestionrh.Model.Entity.VEtatDemande;
 import com.example.gestionrh.Model.Entity.VHistoriqueConge;
 import com.example.gestionrh.Model.Entity.VUtilisateurDetailler;
 import com.example.gestionrh.Model.Service.DemandeCongeService;
-import com.example.gestionrh.Model.Service.EtatDemandeService;
+import com.example.gestionrh.Model.Service.InterimUtilisateurService;
 import com.example.gestionrh.Model.Service.NotificationDestinataireService;
 import com.example.gestionrh.Model.Service.NotificationService;
+import com.example.gestionrh.Model.Service.TypeAbsenceService;
+import com.example.gestionrh.Model.Service.TypeCongeService;
 import com.example.gestionrh.Model.Service.UtilisateurService;
 import com.example.gestionrh.Model.Service.VEtatDemandeService;
 import com.example.gestionrh.Model.Service.VHistoriqueCongeService;
 import com.example.gestionrh.Model.Service.VUtilisateurDetaillerService;
 import com.example.gestionrh.utils.EtatCongeConfig;
+import com.example.gestionrh.utils.EtatUtilisateurConfig;
 import com.example.gestionrh.utils.PaginationConfig;
 import com.example.gestionrh.utils.TypeUtilisateurConfig;
 
@@ -25,14 +31,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.Optional;
 import java.util.List;
 import java.time.LocalDate;
+
 
 @Controller
 @RequestMapping("demande_conge")
@@ -41,8 +50,8 @@ public class DemandeCongeController{
 	@Autowired
 	private DemandeCongeService demandeCongeService;
 
-	@Autowired
-	private EtatDemandeService etatDemandeService;
+	// @Autowired
+	// private EtatDemandeService etatDemandeService;
 
 	@Autowired
 	private VEtatDemandeService vEtatDemandeService;
@@ -63,10 +72,96 @@ public class DemandeCongeController{
 	private NotificationDestinataireService notificationDestinataireService;
 
 	@Autowired
+	private InterimUtilisateurService interimUtilisateurService;
+
+	@Autowired
+	private TypeCongeService typeCongeService;
+
+	@Autowired
+	private TypeAbsenceService typeAbsenceService;
+
+	@Autowired
     private PaginationConfig paginationConfig;
 
 	@Autowired
 	private TypeUtilisateurConfig typeUtilisateurConf;
+
+	@Autowired
+	private EtatUtilisateurConfig etatUtilisateurConfig;
+
+	@Autowired
+	private EtatCongeConfig etatCongeConfig;
+
+	@PostMapping("/regularisation-conge")
+	public String regularisationConge(@RequestParam("agent") String idUtilisateur,
+									@RequestParam("typeConge") String typeConge,
+									@RequestParam("date_debut") String date_debut_string,
+									@RequestParam("debut_absence") int debut_absence,
+									@RequestParam("date_fin") String date_fin_string,
+									@RequestParam("fin_absence") int fin_absence,
+									@RequestParam("commentaire") String commentaire,
+									@RequestParam("nombreJours") double nombreJours,
+									HttpSession session,
+									RedirectAttributes redirectAttributes) {
+
+		Date date_demande = new Date(System.currentTimeMillis());
+		int etat_conge_valider = etatCongeConfig.getEtatValider();
+
+		Date date_debut = Date.valueOf(date_debut_string);
+		Date date_fin = Date.valueOf(date_fin_string);
+		String utilisateur = (String)session.getAttribute("userId");
+
+		VHistoriqueConge historiqueConge = vHistoriqueCongeService.historiqueCongeParUtilisateur(idUtilisateur, typeConge);
+		
+		double solde_restant = 0;
+
+		if (historiqueConge != null) {
+			solde_restant = historiqueConge.getSoldeRestant();
+		}
+
+		if (solde_restant >= nombreJours) {
+			DemandeConge demandeConge = new DemandeConge(typeConge, idUtilisateur, date_demande, date_debut, debut_absence, date_fin, fin_absence, commentaire, etat_conge_valider, utilisateur, false);
+			demandeCongeService.create(demandeConge);
+			redirectAttributes.addFlashAttribute("message", "Le congé a été bien enregistré."); // Message de succès
+
+			String id_demande = demandeConge.getId();
+
+			String message = "La régularisation de votre congé du " + date_debut + " au " + date_fin + " a été effectuée avec succès.";
+			String type_notification = "Régularisation de congé";
+
+			Date date_creation = Date.valueOf(LocalDate.now());
+
+			Notification notification = new Notification(message, date_creation, type_notification, utilisateur, id_demande);
+			notificationService.create(notification);
+
+			String id_notification = notification.getId();
+
+			notificationDestinataireService.envoyerNotificationsUneUtilisateur(id_notification, idUtilisateur, false);
+
+		} else {
+			redirectAttributes.addFlashAttribute("error", "Erreur : le solde restant est insuffisant."); // Message d'erreur
+		}
+		return "redirect:/demande_conge/regulariser-conge";
+	}
+
+
+	@GetMapping("regulariser-conge")
+	public String regulariserConge(HttpServletRequest request) {
+
+		List<TypeConge> typeConges = typeCongeService.getAll();
+		List<TypeAbsence> typeAbsences = typeAbsenceService.getAll();
+
+		int etatUtilisateurActive = etatUtilisateurConfig.getActive();
+        int admin = typeUtilisateurConf.getAdmin();
+        
+        List<Utilisateur> listUtilisateurs = utilisateurService.getUtilisateurActiveEtNonAdmin(etatUtilisateurActive, admin);
+
+		request.setAttribute("typeConge", typeConges);
+		request.setAttribute("typeAbsences", typeAbsences);
+		request.setAttribute("utilisateurs", listUtilisateurs);
+		return "/conge/regularisation-conge";
+	}
+	
 
 	@PostMapping("annuler-conge") 
 	public String annuler(@RequestParam("idDemande") String idDemande,
@@ -91,7 +186,8 @@ public class DemandeCongeController{
 	public String annulerConge(HttpServletRequest request,
 								@RequestParam(defaultValue = "0") int page, 
                                 @RequestParam(required = false) Integer size,
-								HttpSession session
+								HttpSession session,
+								@RequestParam(value = "search", required = false) String searchCongeAnnuler
 								) {
 
 		String userId = (String)session.getAttribute("userId");
@@ -107,7 +203,18 @@ public class DemandeCongeController{
 		
 		EtatCongeConfig etatConge = new EtatCongeConfig();
 		int etat_demande_valide = etatConge.getEtatValider();
-		Page<VEtatDemande> list_demande_valider = vEtatDemandeService.findByIdEtatDemandeAndDateDebutAfter(etat_demande_valide, pageable);
+		// Page<VEtatDemande> list_demande_valider = vEtatDemandeService.findByIdEtatDemandeAndDateDebutAfter(etat_demande_valide, pageable);
+
+		Page<VEtatDemande> list_demande_valider;
+
+		if (searchCongeAnnuler != null && !searchCongeAnnuler.isEmpty()) {
+			list_demande_valider = new PageImpl<>(vEtatDemandeService.findCongeAnnuler(etat_demande_valide, searchCongeAnnuler));
+			paginationSize = (int)list_demande_valider.getTotalElements();
+		} else {
+			list_demande_valider = vEtatDemandeService.findByIdEtatDemandeAndDateDebutAfter(etat_demande_valide, pageable);
+		}
+
+		// request.setAttribute("lien", "/demande_conge/annulation-conge");
 		request.setAttribute("list_demande_valider", list_demande_valider);
 		return "conge/annulation-conge";
 	}
@@ -180,7 +287,7 @@ public class DemandeCongeController{
 		}
 
 		if (solde_restant >= solde_demander) {
-			demande_conge.setEtatDemande(etat);        
+			demande_conge.setEtatDemande(etat);
 			demandeCongeService.create(demande_conge);
 			redirectAttributes.addFlashAttribute("message", "Demande envoyée avec succès");
 			redirectAttributes.addFlashAttribute("type", "success");
@@ -251,18 +358,43 @@ public class DemandeCongeController{
 								@RequestParam("debut_absence") int debut_absence,
 								@RequestParam("date_fin") String date_fin_string,
 								@RequestParam("fin_absence") int fin_absence,
-								@RequestParam("commentaire") String commentaire
+								@RequestParam("commentaire") String commentaire,
+								@RequestParam(value = "interimPerson", required = false) String interimPerson
 								) {
 		
 		Date date_demande = new Date(System.currentTimeMillis());
-		int etat_conge_soumis = etatDemandeService.getEtatSoumis();
+		// int etat_conge_soumis = etatDemandeService.getEtatSoumis();
+		int etat_conge_soumis = etatCongeConfig.getEtatSoumis();
 
 		Date date_debut = Date.valueOf(date_debut_string);
 		Date date_fin = Date.valueOf(date_fin_string);
 		String utilisateur = (String)session.getAttribute("userId");
-			
-		DemandeConge demandeConge = new DemandeConge(typeConge, utilisateur, date_demande, date_debut, debut_absence, date_fin, fin_absence, commentaire, etat_conge_soumis);
+		int type_utilisateur_connecter = (Integer)session.getAttribute("userType");
+
+
+		List<VEtatDemande> listDemandeParUtilisateur = vEtatDemandeService.getDetailByIdUtilisateur(utilisateur);
+
+		// Vérification des chevauchements de dates
+		for (VEtatDemande demande : listDemandeParUtilisateur) {
+			if (date_debut.before(demande.getDateFin()) && date_fin.after(demande.getDateDebut())) {
+				String errorMessage = "Les dates de conge chevauchent une demande existante.";
+				return "redirect:/detail_utilisateur/page-conge?errorMessage=" + errorMessage;
+			}
+		}
+
+
+		DemandeConge demandeConge = new DemandeConge(typeConge, utilisateur, date_demande, date_debut, debut_absence, date_fin, fin_absence, commentaire, etat_conge_soumis, false);
 		demandeCongeService.create(demandeConge);
+
+		String id_demande = demandeConge.getId();
+
+		if(interimPerson != null) {
+			Optional<Utilisateur> utilisateurOptional = utilisateurService.getOne(interimPerson);
+			Utilisateur user = utilisateurOptional.get();
+			InterimUtilisateur interimUtilisateur = new InterimUtilisateur(interimPerson, date_debut, date_fin, type_utilisateur_connecter, user.getTypeUtilisateur(), id_demande);
+			interimUtilisateurService.create(interimUtilisateur);
+		}
+
 		return "redirect:/detail_utilisateur/page-conge";
 	}
 	
@@ -328,9 +460,6 @@ public class DemandeCongeController{
 		demandeCongeService.create(d);
 		String expediteur = (String)session.getAttribute("userId");
 
-
-
-
 		// Notification
 		String id_demande = d.getId();
 		Optional<Utilisateur> utilisateurOptional = utilisateurService.getOne(expediteur);
@@ -353,10 +482,6 @@ public class DemandeCongeController{
 
 		notificationDestinataireService.validerRefusNotifications(id_notification, id_destinataire, false);
 		// notificationDestinataireService.envoyerNotifications(id_notification, listDestinataireAdmin, false);
-
-
-
-
 
 		return "redirect:/v_etat_demande/liste-demande";
 	}
