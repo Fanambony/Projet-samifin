@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.sql.Date" %>
 <%@ page import="java.util.Collections" %>
+<%@ page import="com.example.gestionrh.utils.DateUtil" %>
 
 <%
     List<Object[]> soldeGenrer = (List<Object[]>)request.getAttribute("soldeGenrer");
@@ -37,8 +38,8 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     .card-header {
-        background-color: #007bff;
-        color: white;
+        background-color: #e6e6e6;
+        color: rgb(0, 0, 0);
         font-weight: bold;
     }
     .btn-generate {
@@ -98,11 +99,11 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Etat de congé des personnels</h4>
+            <h4 class="card-title">GÉNÉRATION DE SOLDE DE CONGÉ</h4>
 
             <div class="card">
                 <div class="card-header">
-                    Génération de Solde de Congé
+                    Mise a jours du Solde de Congé
                 </div>
                 <div class="card-body text-center">
                     <h2 class="mt-3">L'année à générer est <strong><%= nextYear %></strong></h2>
@@ -128,7 +129,7 @@
 
             <div class="card mt-4">
                 <div class="card-header">
-                    Historique des Soldes de Congé
+                    Historique des mises a jours
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -146,7 +147,7 @@
                             %>
                             <tr>
                                 <td><%= annee %></td>
-                                <td><%= dateGenerer %></td>
+                                <td><%= DateUtil.formatDate(dateGenerer) %></td>
                             </tr>
                             <%
                                 }

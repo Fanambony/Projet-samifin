@@ -53,7 +53,7 @@
 <div class="col-12 grid-margin">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">REGULARISATION DE CONGE QUI EST DEJA PASSER</h4>
+        <h4 class="card-title">RÉGULARISATION DES CONGÉS DÉJÀ ÉCHUS</h4>
 
         <form class="form-sample" method="post" action="/demande_conge/regularisation-conge">
             <div class="row">

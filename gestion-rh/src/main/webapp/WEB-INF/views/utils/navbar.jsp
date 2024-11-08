@@ -11,6 +11,12 @@
       %>
 
       <li class="nav-item">
+        <a class="nav-link" href="/list-utilisateur">
+          <i class="ti-user menu-icon"></i>
+          <span class="menu-title">Gestion des utilisateurs</span>
+        </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
           <i class="ti-heart menu-icon"></i>
           <span class="menu-title">Santé</span>
@@ -22,12 +28,7 @@
           </ul>
         </div>
       </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/list-utilisateur">
-            <i class="ti-user menu-icon"></i>
-            <span class="menu-title">Gestion des utilisateurs</span>
-          </a>
-        </li>
+        
         <li class="nav-item">
           <a class="nav-link" href="/v_soldes_utilisateur/generer-solde">
             <i class="ti-clipboard menu-icon"></i>
@@ -44,15 +45,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/demande_conge/regulariser-conge">
             <i class="ti-briefcase menu-icon"></i>
-            <span class="menu-title">Régularisation de conge</span>
+            <span class="menu-title">Régulariser congé</span>
           </a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="/direction/gerer-direction">
-            <i class="ti-briefcase menu-icon"></i>
-            <span class="menu-title">Gestion de la direction</span>
-          </a>
-        </li> -->
       <% } %>
 
       <%
@@ -91,7 +86,7 @@
         <li class="nav-item">
           <a class="nav-link" href="/v_etat_demande/liste-demande">
             <i class="ti-check-box menu-icon"></i>
-            <span class="menu-title">Validation congé</span>
+            <span class="menu-title">Valider congé</span>
           </a>
         </li>
 

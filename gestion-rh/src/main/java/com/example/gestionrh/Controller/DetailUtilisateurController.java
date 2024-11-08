@@ -166,7 +166,7 @@ public class DetailUtilisateurController{
     }
 
     private boolean isAuthorizedForAccueil(String role) {
-        return role.equals("COLLABORATEUR") || role.equals("CHEF_DE_DEPARTEMENT") || role.equals("DIRECTEUR_GENERAL");
+        return role.equals("COLLABORATEUR") || role.equals("DIRECTEUR DE RATTACHEMENT") || role.equals("DIRECTEUR GENERAL");
     }
 
     @GetMapping("page-conge")
@@ -248,7 +248,8 @@ public class DetailUtilisateurController{
 
         List<VUtilisateurDetailler> utilisateurDetaillers = null;
         if (typeUtilisateur == type_utilisateur_DG || typeUtilisateur == type_utilisateur_directeur) {
-            utilisateurDetaillers = vUtilisateurDetaillerService.getByIdDirection(id_direction, idUtilisateur, etat_desactiver);
+            int etat_admin = typeUtilisateurConfig.getAdmin();
+            utilisateurDetaillers = vUtilisateurDetaillerService.getByIdDirection(id_direction, idUtilisateur, etat_desactiver, etat_admin);
             request.setAttribute("utilisateurDetaillers", utilisateurDetaillers);
         }
         // request.setAttribute("lien", "/detail_utilisateur/page-conge");

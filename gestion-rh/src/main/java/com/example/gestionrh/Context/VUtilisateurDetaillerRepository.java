@@ -12,8 +12,9 @@ import java.util.List;
 public interface VUtilisateurDetaillerRepository extends JpaRepository<VUtilisateurDetailler, Object> {
     List<VUtilisateurDetailler> findByEtatTypeUtilisateurAndIdDirection(int typeUtilisateur, String idDirection);
     List<VUtilisateurDetailler> findByEtatTypeUtilisateur(int typeUtilisateur);
-    List<VUtilisateurDetailler> findByIdDirectionAndIdUtilisateurNotAndEtatUtilisateurNot(String idDirection, String idUtilisateur, int etatDesactiver);
+    List<VUtilisateurDetailler> findByIdDirectionAndIdUtilisateurNotAndEtatUtilisateurNotAndEtatTypeUtilisateurNot(String idDirection, String idUtilisateur, int etatDesactiver, int etat_admin);
     Page<VUtilisateurDetailler> findAll(Pageable pageable);
+    VUtilisateurDetailler findByIdUtilisateur(String idUtilisateur);
 
     @Query(value = "SELECT * FROM v_utilisateur_detailler u " +
                "WHERE u.nom ILIKE CONCAT('%', %:searchTerm%, '%') " +

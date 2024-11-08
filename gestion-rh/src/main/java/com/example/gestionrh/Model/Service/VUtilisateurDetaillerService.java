@@ -1,7 +1,6 @@
 package com.example.gestionrh.Model.Service;
 
 import com.example.gestionrh.Context.VUtilisateurDetaillerRepository;
-import com.example.gestionrh.Model.Entity.Utilisateur;
 import com.example.gestionrh.Model.Entity.VUtilisateurDetailler;
 
 import org.springframework.data.domain.Page;
@@ -41,8 +40,8 @@ public class VUtilisateurDetaillerService {
 		return vUtilisateurDetaillerRepository.findByEtatTypeUtilisateur(typeUtilisateur);
 	}
 
-	public List<VUtilisateurDetailler> getByIdDirection(String idDirection, String idUtilisateur, int etatDesactiver) {
-		return vUtilisateurDetaillerRepository.findByIdDirectionAndIdUtilisateurNotAndEtatUtilisateurNot(idDirection, idUtilisateur, etatDesactiver);
+	public List<VUtilisateurDetailler> getByIdDirection(String idDirection, String idUtilisateur, int etatDesactiver, int etat_admin) {
+		return vUtilisateurDetaillerRepository.findByIdDirectionAndIdUtilisateurNotAndEtatUtilisateurNotAndEtatTypeUtilisateurNot(idDirection, idUtilisateur, etatDesactiver, etat_admin);
 	}
 
 	public Page<VUtilisateurDetailler> getAll(Pageable pageable) {
@@ -64,4 +63,8 @@ public class VUtilisateurDetaillerService {
 	public Page<VUtilisateurDetailler> getDetailUtilisateursParDirection(int etat, int typeUtilisateur, String idDirection, Pageable pageable) {
         return vUtilisateurDetaillerRepository.findAllExcludingEtatAndTypeParDirection(etat, typeUtilisateur, idDirection, pageable);
     }
+
+	public VUtilisateurDetailler getByIdUtilisateur(String idUtilisateur) {
+		return vUtilisateurDetaillerRepository.findByIdUtilisateur(idUtilisateur);
+	}
 }

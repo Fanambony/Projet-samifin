@@ -6,7 +6,7 @@
 body {
     margin: 0;
     padding: 0;
-    /* font-family: 'Times New Roman', Times, serif; */
+    font-family: 'Times New Roman', Times, serif;
     position: relative;
 }
 .header, .footer {
@@ -79,7 +79,7 @@ body {
     margin-left: 50px;
 }
 .paragraphe {
-    text-indent: 3em; /* Ajustez la valeur selon vos besoins */
+    text-indent: 3em;
 }
 
 

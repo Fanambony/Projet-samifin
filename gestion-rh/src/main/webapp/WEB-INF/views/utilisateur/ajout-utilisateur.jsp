@@ -29,7 +29,7 @@
 <div class="col-12 grid-margin">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">AJOUTER UTILISATEURS</h4>
+            <h4 class="card-title">AJOUTER UN UTILISATEUR</h4>
             <form class="form-sample" method="post" action="ajoutUtilisateur">
                 <p class="card-description">
                     Informations Personnelles
@@ -76,6 +76,12 @@
                     </div>
                     
                 </div>
+
+                
+                <p class="card-description">
+                    Informations Professionnelles
+                </p>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -127,6 +133,7 @@
                             <label class="col-sm-3 col-form-label">Type d'utilisateur</label>
                             <div class="col-sm-9">
                                 <select class="form-control" id="type_utilisateur" name="type_utilisateur" required>
+                                    <option value="" disabled selected>Veuillez sélectionner un type d'utilisateur</option>
                                     <% for(TypeUtilisateur tu : typeUser) { %>
                                         <option value="<%= tu.getEtat() %>"><%= tu.getLibelle() %></option>
                                     <% } %>
@@ -135,9 +142,6 @@
                         </div>
                     </div>
                 </div>
-                <p class="card-description">
-                    Informations Professionnelles
-                </p>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -262,7 +266,7 @@
                 
 
                 <div class="form-group d-flex">
-                    <button type="submit" class="btn btn-primary mr-2">Soumettre</button>
+                    <button type="submit" class="btn btn-primary mr-2">Enregistrer</button>
                     <button class="btn btn-light">Annuler</button>
                 </div>
             </form>

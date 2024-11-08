@@ -35,7 +35,7 @@ public class VEtatDemandeController{
 	private TypeUtilisateurConfig typeUtilisateurConf;
 
 	private boolean isAuthorizedForValidationConge(String role) {
-        return role.equals("ADMIN") || role.equals("CHEF_DE_DEPARTEMENT") || role.equals("DIRECTEUR_GENERAL");
+        return role.equals("ADMIN") || role.equals("DIRECTEUR DE RATTACHEMENT") || role.equals("DIRECTEUR GENERAL");
     }
 
 	@GetMapping("/liste-demande")

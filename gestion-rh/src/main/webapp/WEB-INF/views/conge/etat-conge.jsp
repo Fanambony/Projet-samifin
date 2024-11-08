@@ -98,7 +98,7 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Etat de congé des personnels</h4>
+            <h4 class="card-title">ETAT DE CONGÉ DES PERSONNELLES</h4>
 
             <div class="table-responsive pt-3">
                 <table class="table table-striped">

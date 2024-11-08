@@ -87,7 +87,7 @@
 <div class="col-lg-12 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Etat de congé des personnels</h4>
+            <h4 class="card-title">MES CONGÉS</h4>
 
             <div class="row">
                 <!-- Colonne pour le calendrier -->

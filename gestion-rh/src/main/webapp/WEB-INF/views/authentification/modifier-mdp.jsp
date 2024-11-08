@@ -45,7 +45,7 @@
                             <div class="brand-logo">
                                 <img src="/assets/images/logo.png" alt="logo">
                             </div>
-                            <h4>Modifier votre mot de passe</h4>
+                            <h4>Modifiez votre mot de passe</h4>
                             <h6 class="font-weight-light">Entrez un nouveau mot de passe pour continuer.</h6>
                             <form class="pt-3" action="/detail_utilisateur/modifier-mdp-provisoir" method="post">
                                 <div class="form-group">
@@ -57,7 +57,7 @@
                                     <p id="error-message" class="error-message">Les mots de passe ne correspondent pas.</p>
                                 </div>
                                 <div class="mt-3">
-                                    <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Modifier le mot de passe</button>
+                                    <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Changer le mot de passe</button>
                                 </div>
                             </form>
                         </div>

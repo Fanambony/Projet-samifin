@@ -237,7 +237,7 @@ public class UtilisateurController{
     }
 
     private boolean isAuthorizedForSante(String role) {
-        return role.equals("COLLABORATEUR") || role.equals("CHEF_DE_DEPARTEMENT") || role.equals("DIRECTEUR_GENERAL");
+        return role.equals("COLLABORATEUR") || role.equals("DIRECTEUR DE RATTACHEMENT") || role.equals("DIRECTEUR GENERAL");
     }
 
     @GetMapping("bulletin-consultation")

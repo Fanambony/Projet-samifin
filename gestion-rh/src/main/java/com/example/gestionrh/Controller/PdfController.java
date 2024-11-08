@@ -3,9 +3,11 @@ package com.example.gestionrh.Controller;
 import com.example.gestionrh.Model.Entity.Direction;
 import com.example.gestionrh.Model.Entity.Fonction;
 import com.example.gestionrh.Model.Entity.Utilisateur;
+import com.example.gestionrh.Model.Entity.VUtilisateurDetailler;
 import com.example.gestionrh.Model.Service.DirectionService;
 import com.example.gestionrh.Model.Service.FonctionService;
 import com.example.gestionrh.Model.Service.UtilisateurService;
+import com.example.gestionrh.Model.Service.VUtilisateurDetaillerService;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Date;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 
@@ -40,6 +44,9 @@ public class PdfController {
 
     @Autowired
     private UtilisateurService utilisateurService;
+
+    @Autowired 
+    private VUtilisateurDetaillerService vUtilisateurDetaillerService;
 
     @PostMapping("/bulletin-consultation")
     public void generateBulletinConsultation(HttpServletRequest request, 
@@ -126,7 +133,7 @@ public class PdfController {
                                                 @RequestParam(value = "fonction", required = false) String id_fonction,
                                                 @RequestParam(value = "nom_malade", required = false) String nomMalade,
                                                 @RequestParam(value = "lien", required = false) String lien,
-                                                @RequestParam(value = "montant", required = false) String montant,
+                                                @RequestParam(value = "montant", required = false) double montant,
                                                 @RequestParam(value = "montant_let", required = false) String montant_lettre,
                                                 @RequestParam(value = "date_consultation", required = false) String dateConsultation,
                                                 @RequestParam(value = "date_demande", required = false) String dateDemande,
@@ -279,6 +286,46 @@ public class PdfController {
         }
     }
 
+    @GetMapping("/certificat-administratif")
+    public void genererCertificatAdministratif(@RequestParam("utilisateur") String idUtilisateur,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response
+                                                ) throws Exception {
+        VUtilisateurDetailler utilisateur = vUtilisateurDetaillerService.getByIdUtilisateur(idUtilisateur);
+
+        request.setAttribute("nom", utilisateur.getNom());
+        request.setAttribute("prenom", utilisateur.getPrenom());
+        request.setAttribute("matricule", utilisateur.getMatricule());
+        request.setAttribute("fonction", utilisateur.getFonction());
+        request.setAttribute("corps", utilisateur.getCorpsAppartenance());
+        request.setAttribute("indice", utilisateur.getIndice());
+        request.setAttribute("date_entre", utilisateur.getDateEntre());
+
+
+
+        String jspPath = "/WEB-INF/views/pdf/certificat-administratif.jsp";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(jspPath);
+        StringWriter writer = new StringWriter();
+        HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper(response) {
+            @Override
+            public PrintWriter getWriter() {
+                return new PrintWriter(writer);
+            }
+        };
+        dispatcher.include(request, wrapper);
+
+        // Convert the JSP output to a PDF
+        String renderedHtmlContent = writer.toString();
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=\"certificat_administratif.pdf\"");
+
+        try (OutputStream os = response.getOutputStream()) {
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.withHtmlContent(renderedHtmlContent, request.getRequestURL().toString());
+            builder.toStream(os);
+            builder.run();
+        }
+    }
 
     // @PostMapping("/attestation-non-paiement")
     // public void generateAttestationNonPaiement(

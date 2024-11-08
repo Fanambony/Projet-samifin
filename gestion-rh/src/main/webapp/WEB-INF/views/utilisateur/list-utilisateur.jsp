@@ -171,7 +171,7 @@
             <div class="table-responsive">
 
                 <div>
-                    <a href="/ajout-utilisateur"><button type="button" class="btn btn-outline-primary btn-fw">Ajouter une nouvelle utilisateur</button></a>
+                    <a href="/ajout-utilisateur"><button type="button" class="btn btn-outline-primary btn-fw">Ajouter un utilisateur</button></a>
                 </div>
 
                 </br>
@@ -183,7 +183,7 @@
                             <th>Matricule</th>
                             <th>Agent</th>
                             <th>Direction</th>
-                            <th>Etat</th>
+                            <th>État</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -387,9 +387,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex justify-content-between">
+                    <a href="/generer_pdf/certificat-administratif?utilisateur=<%= u.getIdUtilisateur() %>" class="btn btn-primary">Certificat administratif</a>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -759,44 +761,6 @@
     });
 </script>
 
-<!-- verifier age -->
-<script>
-    $(document).ready(function() {
-        $('#dtn').on('change', function() {
-            var dob = new Date($(this).val());
-            var today = new Date();
-            var age = today.getFullYear() - dob.getFullYear();
-            var monthDifference = today.getMonth() - dob.getMonth();
-            
-            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-
-            if (age < 18) {
-                $('#error-date-naissance').show(); // Afficher le message d'erreur
-                $('#dtn').val(''); // Réinitialiser la date
-            } else {
-                $('#error-date-naissance').hide(); // Cacher le message si l'âge est correct
-            }
-        });
-
-        $('form').on('submit', function(e) {
-            var dob = new Date($('#dtn').val());
-            var today = new Date();
-            var age = today.getFullYear() - dob.getFullYear();
-            var monthDifference = today.getMonth() - dob.getMonth();
-            
-            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-
-            if (age < 18) {
-                e.preventDefault(); // Empêche l'envoi du formulaire
-                $('#error-date-naissance').show(); // Afficher le message d'erreur
-            }
-        });
-    });
-</script>
 
 <!-- verifier matricule -->
 <script>

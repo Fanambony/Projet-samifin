@@ -1,6 +1,7 @@
 <%@ page import="com.example.gestionrh.utils.DateUtil" %>
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.example.gestionrh.utils.FormatUtil" %>
 
 <%
     boolean ordonnanceChecked = (Boolean) request.getAttribute("ordonnance_checked");
@@ -52,7 +53,7 @@
             <p class="haut">Sollicite le remboursement des frais médicaux de :</p>
             <p class="haut"><strong>Nom du Malade :</strong> <%= request.getAttribute("nom_malade") %></p>
             <p class="haut"><strong>Lien :</strong> <%= request.getAttribute("lien") %></p>
-            <p class="haut"><strong>Montant :</strong> <%= request.getAttribute("montant") %> Ar (<%= request.getAttribute("montant_let") %> Ariary)</p>
+            <p class="haut"><strong>Montant :</strong> <%= FormatUtil.formatMontant((Double)request.getAttribute("montant")) %> (<%= request.getAttribute("montant_let") %> Ariary)</p>
 
             <br/>
             <p>Pièces fournies :</p>

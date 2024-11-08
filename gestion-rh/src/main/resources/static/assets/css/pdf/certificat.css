@@ -1,0 +1,97 @@
+@page {
+    size: A4;
+    margin: 0;
+    font-size: 5px;
+}
+body {
+    margin: 0;
+    padding: 0;
+    /* font-family: 'Times New Roman', Times, serif; */
+    position: relative;
+}
+.header, .footer {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    z-index: 1000; 
+}
+.header {
+    top: 0;
+    padding: 5px 10px; 
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    margin: auto;
+}
+.header p{
+    font-size: 12px;
+    line-height: 1.25;
+}
+.footer {
+    bottom: 0;
+    padding: 10px 5px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    box-sizing: border-box;
+}
+.footer p {
+    font-size: 10px;
+    margin: 0;
+    line-height: 1.25;
+}
+.header img {
+    max-width: 80px;
+}
+.content {
+    margin-top: 100px; 
+    padding: 50px;
+}
+.container {
+    width: 100%;
+}
+.drapeau{
+    width: 300px;
+    margin-left: 250px;
+    text-align: center;
+    margin-top: 10px;
+}
+.lettre{
+    width: 250px;
+    float: left;
+    margin-top: -40px;
+    text-align: center;
+}
+.sary{
+    width: 250px;
+    float: right;
+    margin-top: -65px;
+}
+.sary img {
+    max-width: 150px;
+    margin-left: 85px;
+}
+
+.content h4 {
+    margin-left: 190px;
+    text-decoration: underline;
+}
+
+.content strong{
+    text-decoration: underline;
+}
+
+.paragraphe {
+    text-indent: 3em;
+}
+
+.content p{
+    font-size: 16px;
+}
+
+.ville{
+    margin-left: 350px;
+}
+.daf {
+    margin-left: 350px;
+    margin-top: 125px;
+}

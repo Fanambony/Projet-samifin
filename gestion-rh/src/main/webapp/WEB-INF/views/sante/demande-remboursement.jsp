@@ -106,7 +106,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Montant en lettres</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="montant_let" id="montantLettres"/>
+                            <input type="text" class="form-control" name="montant_let" id="montantLettres" readonly/>
                         </div>
                     </div>
                 </div>

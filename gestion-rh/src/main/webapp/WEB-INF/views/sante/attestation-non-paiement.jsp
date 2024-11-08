@@ -42,7 +42,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Agent</label>
                             <div class="col-sm-9">
-                                <select name="agent" class="form-control js-example-basic-single" onchange="updateAgentDetails()">
+                                <select name="agent" class="form-control js-example-basic-single" onchange="updateAgentDetails()" required>
                                     <option disabled selected>Choisir un agent</option>
                                     <% for (Utilisateur u : listUtilisateur) { 
                                         for (DetailUtilisateur detail : u.getDetailUtilisateurs()) { %>
@@ -127,7 +127,7 @@
 
                 <p class="card-description">Détail des achats des médicaments</p>
 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addItemModal">Ajouter un libelle</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addItemModal">Ajouter médicaments</button>
 
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
@@ -162,7 +162,7 @@
                         <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Montant en lettres</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="totalInWords" name="montantLettre"/>
+                                <input type="text" class="form-control" id="totalInWords" name="montantLettre" readonly/>
                             </div>
                         </div>
                     </div>
@@ -174,9 +174,9 @@
 
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Date</label>
+                        <label class="col-sm-3 col-form-label">Date achats</label>
                         <div class="col-sm-9">
-                            <input type="date" class="form-control" name="datePiece"/>
+                            <input type="date" class="form-control" name="datePiece" required/>
                         </div>
                     </div>
                 </div>
@@ -226,7 +226,7 @@
     <div class="modal-dialog modal-md" role="document"> <!-- modal-md pour un modal plus large -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addItemModalLabel">Ajouter un Libelle</h5>
+                <h5 class="modal-title" id="addItemModalLabel">Détail des achats des médicaments</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
